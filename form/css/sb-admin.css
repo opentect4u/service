@@ -1,0 +1,187 @@
+h1 {
+  color: #444;
+  font-family: Poppins,sans-serif;
+  letter-spacing: 2px;
+}
+
+nav {
+
+  font-family: Poppins,sans-serif;
+  letter-spacing: 2px;
+
+}
+
+table{
+
+  letter-spacing: 1px;
+
+}
+/**********************NAV MANUE**********************/
+
+.dropbtn {
+  color: #f5f5f5;
+  padding: 16px;
+  font-size: 16px;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 250px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 25px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+/**********************SUB MANUE**********************/
+
+.sub-dropbtn {
+  color: black;
+  padding: 12px 25px;
+  text-decoration: none;
+  display: block;
+}
+
+.sub-dropdown {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+}
+
+.sub-dropdown-content {
+  
+  position: absolute;
+  left: 100.5%;
+  margin-top: -42px;
+  display: none;
+  background-color: #f1f1f1;
+  min-width: 250px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.sub-dropdown-content a {
+  color: black;
+  position: relative;
+  padding: 12px 25px;
+  text-decoration: none;
+  display: block;
+}
+
+.sub-dropdown-content a:hover {background-color: #ddd;}
+
+.sub-dropdown:hover .sub-dropdown-content {display: block;}
+
+/**********************WRAPER CLASS********************/
+
+.wraper {
+  margin-left: 50px; 
+  margin-right: 50px;
+}
+
+.contant-wraper {
+  border-top: 2px solid #32678d;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  background-color: white;
+  margin-bottom: 100px;
+  overflow: auto;
+}
+
+.form-wraper {
+  border-top: 2px solid #1d9db1;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  background-color: white;
+  margin-left: 25%;
+  margin-bottom: 100px;
+}
+
+/**********************Address FOOTER CSS**********************/
+
+.address-footer {
+  min-height: 100%;
+    height: 100%;
+  right: 0;
+  bottom: 0;
+  width: calc(100% - 0px);
+  height: 60px;
+  background-color: #e9ecef;
+}
+
+
+/**********************FOOTER CSS**********************/
+
+footer.sticky-footer {
+  position: relative;
+  clear: both;
+  width: 100%;
+  height: 56px;
+  background-color: #e9ecef;
+  line-height: 55px; 
+}
+
+@media (min-width: 992px) {
+  footer.sticky-footer {
+    width: calc(100% - 0px); 
+  }
+  
+}
+
+
+/************************FORM HEADER********************/
+
+.form-header{padding:.25rem 1.25rem;letter-spacing: 4px;margin:0 -15px 25px -15px;font-family: Poppins,sans-serif;background-color:#57b846;color:#fff;border-bottom:1px solid yellow;}
+
+
+/************************SECTION********************/
+
+section {
+
+  min-height:570px; 
+  
+}
+
+/************************Badge**********************/
+
+.badge-success {
+    color: #fff;
+    background-color: #28a745;
+}
+.badge-primary {
+  color: #fff;
+  background-color: #007bff;
+}
+.badge-warning {
+  color: #212529;
+  background-color: #ffc107;
+}
+.badge-danger {
+  color: #fff;
+  background-color: #dc3545;
+}
+
+/******************Submit Button**********************************/
+.subbtn {
+    background-color: #57b846; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+}

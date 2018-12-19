@@ -1,0 +1,48 @@
+table {
+	table-layout:fixed; /* force a solid grid */
+	border-collapse:collapse;
+	margin: 0 auto 1em;
+	width: 330px;
+	
+}
+	table th, table td {
+		white-space:nowrap; /* don't want wrapping text */
+		padding:2px 20px 2px 5px; /* right padding for required field marker */
+		
+	}
+
+	table th {
+		padding:2px 0 2px 5px;
+		text-align:right;
+	}
+
+	td.required, tr.required td {
+		background:url("../req.gif") center right no-repeat;
+	}
+
+	table input {
+		width:100%; /* simply scale inputs to table cell size */
+	}
+
+	td.input-group input {
+			width:auto; /* but not for radios or checks */ 
+		}
+
+.alignlabel{
+
+	display: inline-block;
+	width: 140px;
+	text-align: right;
+	color: black;
+}
+
+.error {
+	color: red;
+	margin-left: 5px;
+}
+
+label.error {
+	display: inline;
+}
+
+
