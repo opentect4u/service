@@ -6,35 +6,9 @@
 		require("../login/session.php");
 		require("../dash/menu.php");
 
-        if($_SERVER['REQUEST_METHOD']=="GET"){
-            $transDt  = $_GET['trans_dt'];
-            $transCd  = $_GET['trans_cd'];
-
-            $sql     = "Select * from td_mc_trans where trans_dt = '$transDt' and trans_cd = $transCd";
-            
-            $result  = mysqli_query($db,$sql);
-
-            $data    = mysqli_fetch_assoc($result);
-
-            $custCd  = $data['cust_cd'];
-            $mcType  = $data['mc_type_id'];
-            $srvCtr  = $data['srv_ctr'];
-            $qty     = $data['mc_qty'];
-            $submt   = $data['cust_person'];
-            $subph   = $data['cust_per_ph'];
-            $rcvby   = $data['engg_invol'];
-            $rkms    = $data['remarks'];
-
-            $mcSql    = "Select * from td_mc_status where trans_dt='$transDt' and trans_cd=$transCd";
-
-            $mcresult = mysqli_query($db,$mcSql);
-        }
-
         if($_SERVER['REQUEST_METHOD']=="POST"){
             $transDt      = $_POST['trans_dt'];
-            $transNo      = $_POST['trans_cd'];
             $cust         = $_POST['cust_cd'];
-
             $mcType       = $_POST['mc_type'];
             $mcQty        = $_POST['mc_qty'];
             $serv         = $_POST['srv_ctr'];
@@ -47,42 +21,41 @@
             $mcProb         = implode('*/*',$_POST["prob"]);
             $mcProb         = explode('*/*',$mcProb);
 
-            $slNo           = $_POST['sl_no'];
+            $slNo           = implode('*/*',$_POST["sl_no"]);
+            $slNo           = explode('*/*',$slNo);
 
-            $mcStatus       = $_POST['status'];
+            //$slNo           = $_POST['sl_no'];
+
+            $mcStatus       = implode('*/*',$_POST["status"]);
+            $mcStatus       = explode('*/*',$mcStatus);
             
             $crtby          = $_SESSION['userId'];
             $crtdt          = date('Y-m-d h:i:s');
 
-           
-            $sql            = "update td_mc_trans
-                               set cust_cd      =  $cust,
-                                   mc_type_id   =  $mcType,
-                                   mc_qty       =  $mcQty,
-                                   srv_ctr      =  $serv,
-                                   cust_person  =  '$subBy',
-                                   cust_per_ph  =  '$phone',
-                                   engg_invol   =  '$rcvBy',
-                                   remarks      =  '$rkms',
-                                   modified_by  =  '$crtby',
-                                   modified_dt  =  '$crtdt'
-                            where  trans_dt     =  '$transDt'      
-                            and    trans_cd     =  $transNo";
-                             
+            $select         = "select ifnull(max(trans_cd),0) + 1 trans_no
+                               from td_mc_trans
+                               where trans_dt = '$transDt'";
+
+            $no             = mysqli_query($db,$select);
+
+            $trans_no       = mysqli_fetch_assoc($no);
+
+            $transNo        = $trans_no['trans_no'];
+
+
+            $sql            = "insert into td_mc_trans(trans_dt,trans_cd,cust_cd,trans_type,mc_type_id,mc_qty,
+                               srv_ctr,cust_person,cust_per_ph,engg_invol,remarks,created_by,created_dt)
+                               values('$transDt',$transNo,$cust,'I',$mcType,$mcQty,$serv,'$subBy',
+                                      '$phone','$rcvBy','$rkms','$crtby','$crtdt')";
+
             $result         = mysqli_query($db,$sql);
 
             for($i = 0; $i < sizeof($slNo); $i++){
 
-              $update       = "update td_mc_status
-                               set mc_prob     = '$mcProb[$i]',
-                                   warr_status = '$mcStatus[$i]'
-                               where trans_dt     =  '$transDt'
-                               and    trans_cd     =  $transNo
-                               and    sl_no        =  $slNo[$i]"; 
+              $insert       = "insert into td_mc_status(trans_dt,trans_cd,cust_cd,sl_no,mc_prob,warr_status,status)
+                               values('$transDt',$transNo,$cust,'$slNo[$i]','$mcProb[$i]','$mcStatus[$i]','I')";
 
-              echo $update;
-                                
-              $result1       = mysqli_query($db,$update);
+              $result1       = mysqli_query($db,$insert);
 
                 if($result1){
                     $_SESSION['flag'] = true;
@@ -114,7 +87,7 @@
 ?>		
 
 <head>
-    <title>Edit Device In</title>
+    <title>New Device Service</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -147,7 +120,7 @@
     <div class="content-wrapper">
 
         <div class="container-fluid">
-            <h2 style="margin-left:60px;text-align:center">Edit Device In</h2>
+            <h2 style="margin-left:60px;text-align:center">Device Service</h2>
             <hr class="new">
 
             <div class="card mb-3">
@@ -164,7 +137,7 @@
                                       action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" >
 
                                     <div class="form-header">
-                                        <h4>In Details</h4>
+                                        <h4>Service Details</h4>
                                     </div>
 
                                     <div class="form-group row">
@@ -175,22 +148,21 @@
                                                    name="trans_dt"
                                                    class="form-control required"
                                                    id="trans_dt"
-                                                   value=<?php echo $transDt; ?>
+                                                   value=<?php echo date('Y-m-d'); ?>
                                                    readonly
                                             />
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="trans_dt" class="col-sm-2 col-form-label">Transaction No.:</label>
+                                        <label for="mc_sl_no" class="col-sm-2 col-form-label">Serial No.:</label>
 
                                         <div class="col-sm-8">
                                             <input type="text"
-                                                   name="trans_cd"
+                                                   name="mc_sl_no"
                                                    class="form-control required"
-                                                   id="trans_cd"
-                                                   value=<?php echo $transCd; ?>
-                                                   readonly
+                                                   id="mc_sl_no"
+                                                   required
                                             />
                                         </div>
                                     </div>
@@ -205,13 +177,10 @@
                                                 <option value="">Select Customer</option>
                                                 <?php
 
-                                                    while($data = mysqli_fetch_assoc($cust)){ ?>
-                                                        <option value='<?php echo $data['cust_cd'];?>'
-                                                                <?php echo($custCd==$data['cust_cd'])?'selected':'';?>>
-                                                                 <?php echo $data['cust_name']; ?>
-                                                        </option>);
-                                                <?php        
-                                                    }  
+                                                    while($data = mysqli_fetch_assoc($cust)){
+                                                        echo ("<option value=".$data['cust_cd'].">".
+                                                               $data['cust_name']."</option>");
+                                                    }
                                                 ?>    
                                             </Select>
                                         </div>
@@ -227,12 +196,9 @@
                                                 <option value="">Select Device</option>
                                                 <?php
 
-                                                    while($data = mysqli_fetch_assoc($mc)){ ?>
-                                                        <option value='<?php echo $data['mc_id']; ?>'
-                                                          <?php echo($mcType==$data['mc_id'])?'selected':'';?>>
-                                                          <?php echo $data['mc_type'] ?>
-                                                        </option>
-                                                <?php         
+                                                    while($data = mysqli_fetch_assoc($mc)){
+                                                        echo ("<option value=".$data['mc_id'].">".
+                                                               $data['mc_type']."</option>");
                                                     }
                                                 ?>    
                                             </Select>
@@ -247,7 +213,6 @@
                                                    class= "form-control"
                                                    name = "mc_qty"
                                                    id   = "mc_qty"
-                                                   value = <?php echo $qty; ?>
                                                    required
                                             />
                                         </div>
@@ -262,13 +227,10 @@
                                                     id="srv_ctr">
                                                 <option value="">Select Service Center</option>
                                                 <?php
-                                                    while($data = mysqli_fetch_assoc($srv)){  ?>
-                                                      <option value='<?php echo $data['sl_no']; ?>'
-                                                          <?php echo($srvCtr==$data['sl_no'])?'selected':'';?>>
-                                                          <?php echo $data['center_name']; ?>
-                                                      </option>
 
-                                                <?php    
+                                                    while($data = mysqli_fetch_assoc($srv)){
+                                                        echo ("<option value=".$data['sl_no'].">".
+                                                               $data['center_name']."</option>");
                                                     }
                                                 ?>    
                                             </Select>
@@ -283,7 +245,6 @@
                                                    class= "form-control"
                                                    name = "cust_person"
                                                    id   = "cust_person"
-                                                   value = <?php echo $submt; ?>
                                                    required
                                             />
                                         </div>
@@ -297,7 +258,6 @@
                                                    class= "form-control"
                                                    name = "cust_per_ph"
                                                    id   = "cust_per_ph"
-                                                   value = <?php echo $subph; ?>
                                                    required
                                             />
                                         </div>
@@ -311,7 +271,6 @@
                                                    class= "form-control"
                                                    name = "engg_invol"
                                                    id   = "engg_invol"
-                                                   value = <?php echo $rcvby; ?>
                                                    required
                                             />
                                         </div>
@@ -321,13 +280,13 @@
                                         <label for="remarks" class="col-sm-2 col-form-label">Remarks:</label>
 
                                         <div class="col-sm-8">
-                                            <textarea type="text" class= "form-control" name = "remarks" id   = "remarks" required><?php echo $rkms; ?></textarea>
+                                            <textarea type="text" class= "form-control" name = "remarks" id   = "remarks" required></textarea>
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
 
-                                    <?php require("editSlnoTab.php");?>
+                                    <?php require("slNotab.php");?>
 
                                     <div class="form-group row">
 
@@ -348,6 +307,32 @@
         </div>
     </div>
 </div>
+<!--<script>
+
+    $("#form").validate();
+
+    $(document).ready(function(){
+
+        $('#emp_catg').change(function(){
+
+            if($(this).val() == 1){
+
+                $('.grade_pay').show();
+
+            }
+            else{
+
+                $('.band_pey').text('Pay:');
+
+                $('.grade_pey').hide();
+
+            }
+
+        });
+
+    });
+
+</script>-->
 
 <?php
         require("../dash/footer.php");

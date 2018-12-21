@@ -87,7 +87,7 @@
 ?>		
 
 <head>
-    <title>New Service In</title>
+    <title>New Device In</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -120,7 +120,7 @@
     <div class="content-wrapper">
 
         <div class="container-fluid">
-            <h2 style="margin-left:60px;text-align:center">Service In</h2>
+            <h2 style="margin-left:60px;text-align:center">Device In</h2>
             <hr class="new">
 
             <div class="card mb-3">

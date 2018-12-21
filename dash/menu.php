@@ -27,6 +27,7 @@
       <li><a href="../add/parts.php">Parts</a></li>
       <li><a href="../add/service.php">Service Center</a></li>
       <li><a href="../add/problem.php">Problems</a></li>
+      <li><a href="../add/tech.php">Technician</a></li>
   </ul>
   </div>
   <hr class="new">
@@ -46,8 +47,9 @@
   </button>
   <div class="dropdown-container">
     <ul>
-      <li><a href="../booking/book.php">Service In</a></li>
-      <li><a href="#">Service Out</a></li>
+      <li><a href="../booking/book.php">Device In</a></li>
+      <li><a href="../booking/service.php">Device Service</a></li>
+      <li><a href="#">Device Out</a></li>
     </ul>  
   </div>
   <hr class="new">

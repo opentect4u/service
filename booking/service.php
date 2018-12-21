@@ -11,8 +11,8 @@
             $_SESSION['flag']=false;
         }
 
-        $sql    = "select trans_dt,trans_cd,cust_cd,mc_type_id,mc_qty
-                   from   td_mc_trans where trans_type = 'I'";
+        $sql    = "select trans_dt,mc_sl_no,mc_type_id,cust_cd
+                   from   td_mc_service where approval_status = 'U'";
 
         $result = mysqli_query($db,$sql);
 
@@ -20,7 +20,7 @@
 
 <html>
 <head>
-    <title>Manage Device In</title>
+    <title>Manage Device Service</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -43,11 +43,11 @@
 <div style="min-height: 500px;">
 <div class="content-wrapper">
     <div class="container-fluid">
-        <h2 style="margin-left:60px;text-align:center">Manage Device In</h2>
+        <h2 style="margin-left:60px;text-align:center">Manage Device Service</h2>
         <hr class="new">
         <div class="card mb-3">
             <div class="card-header" style="margin-left:60px;">
-                <a class="button" href="../booking/addServiceIn.php"><i class="fa fa-plus"></i>
+                <a class="button" href="../booking/addService.php"><i class="fa fa-plus"></i>
                     <span>New</span>
                 </a>
             </div>
@@ -59,10 +59,9 @@
                             <thead>
                                 <tr class="w3-light-grey">
                                     <th>Date</th>
-                                    <th>No.</th>
+                                    <th>Serial No.</th>
+                                    <th>Device Type</th>
                                     <th>Customer</th>
-                                    <th>M/C Type</th>
-                                    <th>Quantity</th>
                                     <th>Edit</th>
                                     <th>Delete</th>
                                 </tr>
@@ -74,7 +73,9 @@
                                             while($data = mysqli_fetch_assoc($result)){
 
                                                 $date = date('d/m/Y',strtotime($data['trans_dt']));
-                                                $no   = $data['trans_cd']; 
+                                                $no   = $data['mc_sl_no']; 
+
+
 
                                                 $cust = $data['cust_cd'];
 
@@ -98,16 +99,14 @@
 
                                                  $mcName    = $name['mc_type'];
 
-                                                $mcQty        = $data['mc_qty'];  
-
+                                                
 
                                 ?>
                                 <tr>
                                     <td><?php echo $date; ?></td>
                                     <td style="text-align:center"><?php echo $no; ?></td>
-                                    <td><?php echo $cName; ?></td>
                                     <td><?php echo $mcName; ?></td>
-                                    <td style="text-align:center"><?php echo $mcQty; ?></td>
+                                    <td><?php echo $cName; ?></td>
                                     <td><a href="editServiceIn.php?trans_dt=<?php echo$data['trans_dt']; ?>&trans_cd=<?php echo $no;?>">
                                         <i class="fa fa-edit fa-2x" style="color: #57b846"></i>
                                         <a>
@@ -129,10 +128,9 @@
                             <tfoot>
                                 <tr>
                                     <th>Date</th>
-                                    <th>No.</th>
+                                    <th>Serial No.</th>
+                                    <th>Device Type</th>
                                     <th>Customer</th>
-                                    <th>M/C Type</th>
-                                    <th>Quantity</th>
                                     <th>Edit</th>
                                     <th>Delete</th>
                                 </tr>
