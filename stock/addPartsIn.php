@@ -18,27 +18,41 @@
             $serv           = $_POST['srv_ctr'];
             $crtby          = $_SESSION['userId'];
             $crtdt          = date('Y-m-d h:i:s');
+            $rkms           = $_POST['remarks'];
+
+            $select         = "select ifnull(max(trans_no),0) + 1 trans_no
+                               from td_parts_trans
+                               where trans_dt = '$transDt'";
+
+            $no             = mysqli_query($db,$select);
+
+            $trans_no       = mysqli_fetch_assoc($no);
+
+            $transNo        = $trans_no['trans_no']; 
 
             for($i = 0; $i < sizeof($comp); $i++){
 
-                 $select       = "select ifnull(max(trans_no),0) + 1 trans_no
-                                  from td_parts_stock
-                                  where trans_dt = '$transDt'";
-
-                 $no          = mysqli_query($db,$select);
-
-                 $trans_no     = mysqli_fetch_assoc($no);
-
-                 $transNo      = $trans_no['trans_no']; 
-
-                 $sql          = "insert into td_parts_stock(trans_dt,trans_no,trans_type,bill_no,arrival_dt,
-                                  comp_sl_no,comp_qty,serv_ctr,balance,created_by,created_dt)
-                                  values('$transDt',$transNo,'I','$billNo','$arvdt',$comp[$i],$compqty[$i],
-                                          $serv,0,'$crtby','$crtdt')";
-
-
+                 $sql       = "insert into td_parts_trans(trans_dt,trans_no,trans_type,bill_no,arrival_dt,
+                                                          comp_sl_no,comp_qty,serv_ctr,remarks,created_by,created_dt)
+                              values('$transDt',$transNo,'I','$billNo','$arvdt',$comp[$i],$compqty[$i],
+                                          $serv,'$rkms','$crtby','$crtdt')";
 
                  $result       = mysqli_query($db,$sql);
+
+                 $Select = "select * from td_parts_stock where srv_ctr = $serv and parts_no = $comp[$i]";
+                 $res    =  mysqli_query($db,$select);
+
+                 if(mysqli_num_rows() = 0){
+
+                    $balance   = "insert into td_parts_stock(trans_dt,trans_no,srv_ctr,
+                                                             parts_no,parts_desc,qty,balance)
+                              values('$transDt',$transNo,$serv,$billNo','$arvdt',$comp[$i],$compqty[$i],
+                                          $serv,'$rkms','$crtby','$crtdt')";
+
+                 }
+
+
+
 
                 if($result){
                     $_SESSION['flag'] = true;
@@ -46,6 +60,16 @@
                 }
 
             }
+
+            $qty  = sizeof($comp);
+
+
+            
+
+                 $result       = mysqli_query($db,$sql);
+
+
+
 
         }
 
@@ -176,11 +200,19 @@
                                         </div>
                                     </div>
 
+                                    <div class="form-group row">   
+                                         <label for="remarks" class="col-sm-2 col-form-label">Remarks:</label>
+
+                                         <div class="col-sm-8">
+                                            <textarea type="text" class= "form-control" name = "remarks" id = "remarks" required></textarea>
+                                        </div>
+                                    </div> 
+
                                     <div class="form-group row">
 
                                     <?php require("partsIntab.php");
                                           ?>
-
+                                    </div>
                                     <div class="form-group row">
 
                                         <div class="col-sm-10">

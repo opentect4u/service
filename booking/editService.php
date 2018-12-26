@@ -6,87 +6,107 @@
 		require("../login/session.php");
 		require("../dash/menu.php");
 
-        if($_SERVER['REQUEST_METHOD']=="GET"){
-            $transDt  = $_GET['trans_dt'];
-            $transCd  = $_GET['trans_cd'];
-
-            $sql     = "Select * from td_mc_trans where trans_dt = '$transDt' and trans_cd = $transCd";
-            
-            $result  = mysqli_query($db,$sql);
-
-            $data    = mysqli_fetch_assoc($result);
-
-            $custCd  = $data['cust_cd'];
-            $mcType  = $data['mc_type_id'];
-            $srvCtr  = $data['srv_ctr'];
-            $qty     = $data['mc_qty'];
-            $submt   = $data['cust_person'];
-            $subph   = $data['cust_per_ph'];
-            $rcvby   = $data['engg_invol'];
-            $rkms    = $data['remarks'];
-
-            $mcSql    = "Select * from td_mc_status where trans_dt='$transDt' and trans_cd=$transCd";
-
-            $mcresult = mysqli_query($db,$mcSql);
-        }
-
         if($_SERVER['REQUEST_METHOD']=="POST"){
             $transDt      = $_POST['trans_dt'];
-            $transNo      = $_POST['trans_cd'];
-            $cust         = $_POST['cust_cd'];
-
-            $mcType       = $_POST['mc_type'];
-            $mcQty        = $_POST['mc_qty'];
-            $serv         = $_POST['srv_ctr'];
-            $subBy        = $_POST['cust_person'];
-            $phone        = $_POST['cust_per_ph'];
-            $rcvBy        = $_POST['engg_invol'];
+            $mcSlNo       = $_POST['mc_sl_no'];
             $rkms         = $_POST['remarks'];
+            $eng          = $_POST['service_by'];
+
+            $max          = "select max(trans_dt)maxDt,max(trans_cd)maxCd 
+                             from td_mc_status
+                             where sl_no = $mcSlNo
+                             and   status = 'I'";
+
+            $maxResult    = mysqli_query($db,$max);            
+            
+            $maxdata      = mysqli_fetch_assoc($maxResult);
+
+            $maxDt        = $maxdata['maxDt'];
+            $maxNo        = $maxdata['maxCd'];
 
 
-            $mcProb         = implode('*/*',$_POST["prob"]);
-            $mcProb         = explode('*/*',$mcProb);
 
-            $slNo           = $_POST['sl_no'];
+            $mcSelect     = "select * from td_mc_status 
+                             where sl_no = $mcSlNo
+                             and   trans_dt = '$maxDt'
+                             and   trans_cd = $maxNo";
 
-            $mcStatus       = $_POST['status'];
+            $mcResult     = mysqli_query($db,$mcSelect);
+
+            $row          = mysqli_fetch_assoc($mcResult);
+
+            $cust         = $row['cust_cd'];
+            $mcProb       = $row['mc_prob'];
+            $Status       = $row['warr_status'];
+
+
+            $mcStatus     = "Select * from td_mc_trans
+                             where trans_dt = '$maxDt'
+                             and   trans_cd = $maxNo
+                             and   trans_type = 'I'";
+
+            $statusResult =  mysqli_query($db,$mcStatus);
+
+            $rowStatus    = mysqli_fetch_assoc($statusResult);
+
+            $srvCtr       = $rowStatus['srv_ctr'];
+
+            $parts         = implode('*/*',$_POST["comp_sl_no"]);
+            $parts         = explode('*/*',$parts);
+
+            $qty           = implode('*/*',$_POST["comp_qty"]);
+            $qty           = explode('*/*',$qty);
             
             $crtby          = $_SESSION['userId'];
             $crtdt          = date('Y-m-d h:i:s');
 
-           
-            $sql            = "update td_mc_trans
-                               set cust_cd      =  $cust,
-                                   mc_type_id   =  $mcType,
-                                   mc_qty       =  $mcQty,
-                                   srv_ctr      =  $serv,
-                                   cust_person  =  '$subBy',
-                                   cust_per_ph  =  '$phone',
-                                   engg_invol   =  '$rcvBy',
-                                   remarks      =  '$rkms',
-                                   modified_by  =  '$crtby',
-                                   modified_dt  =  '$crtdt'
-                            where  trans_dt     =  '$transDt'      
-                            and    trans_cd     =  $transNo";
-                             
+            $select         = "select ifnull(max(trans_cd),0) + 1 trans_cd
+                               from td_mc_service
+                               where trans_dt = '$transDt'";
+
+            $no             = mysqli_query($db,$select);
+
+            $trans_no       = mysqli_fetch_assoc($no);
+
+            $transNo        = $trans_no['trans_cd'];
+
+
+            $sql            = "insert into td_mc_service(trans_dt,trans_cd,mc_sl_no,service_by,remarks,
+                                                         in_dt,in_cd,created_by,created_dt)
+                               values('$transDt',$transNo,'$mcSlNo','$eng','$rkms',
+                                      '$maxDt',$maxNo,'$crtby','$crtdt')";
+
             $result         = mysqli_query($db,$sql);
 
-            for($i = 0; $i < sizeof($slNo); $i++){
 
-              $update       = "update td_mc_status
-                               set mc_prob     = '$mcProb[$i]',
-                                   warr_status = '$mcStatus[$i]'
-                               where trans_dt     =  '$transDt'
-                               and    trans_cd     =  $transNo
-                               and    sl_no        =  $slNo[$i]"; 
+            $insert         = "insert into td_mc_status(trans_dt,trans_cd,cust_cd,sl_no,mc_prob,warr_status,status)
+                               values('$transDt',$transNo,$cust,'$mcSlNo','$mcProb','$Status','S')";
 
-              echo $update;
-                                
-              $result1       = mysqli_query($db,$update);
+            $result1        = mysqli_query($db,$insert);
 
-                if($result1){
+
+            for($i = 0; $i < sizeof($parts); $i++){
+
+                $select     = "select ifnull(max(trans_no),0) + 1 trans_no
+                               from td_parts_stock
+                               where trans_dt = '$transDt'";
+
+                $No         = mysqli_query($db,$select);
+
+                $row        = mysqli_fetch_assoc($No);
+
+                $transCd    = $row['trans_no'];
+
+                $out        = "insert into td_parts_stock(trans_dt,trans_no,trans_type,bill_no,arrival_dt,comp_sl_no,
+                                                         comp_qty,serv_ctr,remarks,created_by,created_dt)
+                                                   values('$transDt',$transCd,'O','Out','$transDt',$parts[$i],$qty[$i],
+                                                           $srvCtr,'$rkms','$crtby','$crtdt')";
+              
+                $result2       = mysqli_query($db,$out);
+
+                if($result2){
                     $_SESSION['flag'] = true;
-                    header("location:book.php");
+                    header("location:service.php");
                 }
 
             }
@@ -106,15 +126,15 @@
         $select = "Select mc_id,mc_type from md_mc_type";
         $mc     = mysqli_query($db,$select);
 
-        $select = "Select sl_no,center_name from md_service_centre";
-        $srv    = mysqli_query($db,$select);
+        $select = "Select emp_code,tech_name from md_tech";
+        $tech   = mysqli_query($db,$select);
 
 
 
 ?>		
 
 <head>
-    <title>Edit Device In</title>
+    <title>New Device Service</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -147,7 +167,7 @@
     <div class="content-wrapper">
 
         <div class="container-fluid">
-            <h2 style="margin-left:60px;text-align:center">Edit Device In</h2>
+            <h2 style="margin-left:60px;text-align:center">Device Service</h2>
             <hr class="new">
 
             <div class="card mb-3">
@@ -164,7 +184,7 @@
                                       action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" >
 
                                     <div class="form-header">
-                                        <h4>In Details</h4>
+                                        <h4>Service Details</h4>
                                     </div>
 
                                     <div class="form-group row">
@@ -175,22 +195,21 @@
                                                    name="trans_dt"
                                                    class="form-control required"
                                                    id="trans_dt"
-                                                   value=<?php echo $transDt; ?>
+                                                   value=<?php echo date('Y-m-d'); ?>
                                                    readonly
                                             />
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="trans_dt" class="col-sm-2 col-form-label">Transaction No.:</label>
+                                        <label for="mc_sl_no" class="col-sm-2 col-form-label">Serial No.:</label>
 
                                         <div class="col-sm-8">
                                             <input type="text"
-                                                   name="trans_cd"
+                                                   name="mc_sl_no"
                                                    class="form-control required"
-                                                   id="trans_cd"
-                                                   value=<?php echo $transCd; ?>
-                                                   readonly
+                                                   id="mc_sl_no"
+                                                   required
                                             />
                                         </div>
                                     </div>
@@ -199,21 +218,12 @@
                                         <label for="cust_cd" class="col-sm-2 col-form-label">Customer:</label>
 
                                         <div class="col-sm-8">
-                                            <Select class="form-control required"
-                                                    name ="cust_cd"
-                                                    id="cust_cd">
-                                                <option value="">Select Customer</option>
-                                                <?php
-
-                                                    while($data = mysqli_fetch_assoc($cust)){ ?>
-                                                        <option value='<?php echo $data['cust_cd'];?>'
-                                                                <?php echo($custCd==$data['cust_cd'])?'selected':'';?>>
-                                                                 <?php echo $data['cust_name']; ?>
-                                                        </option>);
-                                                <?php        
-                                                    }  
-                                                ?>    
-                                            </Select>
+                                            <input type="text"
+                                                    name="cust_cd"
+                                                    class="form-control required"
+                                                    id="cust_cd"
+                                                    readonly 
+                                            />
                                         </div>
                                     </div>
 
@@ -221,99 +231,57 @@
                                         <label for="mc_type" class="col-sm-2 col-form-label">M/C Type:</label>
 
                                         <div class="col-sm-8">
+                                             <input type="text"
+                                                    name="mc_type"
+                                                    class="form-control required"
+                                                    id="mc_type"
+                                                    readonly
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="in_dt" class="col-sm-2 col-form-label">Received On:</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="text"
+                                                   class= "form-control"
+                                                   name = "in_dt"
+                                                   id   = "in_dt"
+                                                   readonly
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="mc_prob" class="col-sm-2 col-form-label">Problem:</label>
+
+                                        <div class="col-sm-8">
+                                             <input type="text"
+                                                   class= "form-control"
+                                                   name = "mc_prob"
+                                                   id   = "mc_prob"
+                                                   readonly
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="cust_person" class="col-sm-2 col-form-label">Technician:</label>
+
+                                        <div class="col-sm-8">
                                             <Select class="form-control required"
-                                                    name ="mc_type"
-                                                    id="mc_type">
-                                                <option value="">Select Device</option>
+                                                    name ="service_by"
+                                                    id="service_by">
+                                                <option value="">Select Technician</option>
                                                 <?php
 
-                                                    while($data = mysqli_fetch_assoc($mc)){ ?>
-                                                        <option value='<?php echo $data['mc_id']; ?>'
-                                                          <?php echo($mcType==$data['mc_id'])?'selected':'';?>>
-                                                          <?php echo $data['mc_type'] ?>
-                                                        </option>
-                                                <?php         
+                                                    while($data = mysqli_fetch_assoc($tech)){
+                                                        echo ("<option value=".$data['emp_code'].">".
+                                                               $data['tech_name']."</option>");
                                                     }
                                                 ?>    
                                             </Select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="mc_qty" class="col-sm-2 col-form-label">Quantity:</label>
-
-                                        <div class="col-sm-8">
-                                            <input type="number"
-                                                   class= "form-control"
-                                                   name = "mc_qty"
-                                                   id   = "mc_qty"
-                                                   value = <?php echo $qty; ?>
-                                                   required
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="srv_ctr" class="col-sm-2 col-form-label">Service Center:</label>
-
-                                        <div class="col-sm-8">
-                                            <Select class="form-control required"
-                                                    name ="srv_ctr"
-                                                    id="srv_ctr">
-                                                <option value="">Select Service Center</option>
-                                                <?php
-                                                    while($data = mysqli_fetch_assoc($srv)){  ?>
-                                                      <option value='<?php echo $data['sl_no']; ?>'
-                                                          <?php echo($srvCtr==$data['sl_no'])?'selected':'';?>>
-                                                          <?php echo $data['center_name']; ?>
-                                                      </option>
-
-                                                <?php    
-                                                    }
-                                                ?>    
-                                            </Select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="cust_person" class="col-sm-2 col-form-label">Submited By:</label>
-
-                                        <div class="col-sm-8">
-                                            <input type="text"
-                                                   class= "form-control"
-                                                   name = "cust_person"
-                                                   id   = "cust_person"
-                                                   value = <?php echo $submt; ?>
-                                                   required
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="cust_per_ph" class="col-sm-2 col-form-label">Phone No.:</label>
-
-                                        <div class="col-sm-8">
-                                            <input type="text"
-                                                   class= "form-control"
-                                                   name = "cust_per_ph"
-                                                   id   = "cust_per_ph"
-                                                   value = <?php echo $subph; ?>
-                                                   required
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="engg_invol" class="col-sm-2 col-form-label">Received By:</label>
-
-                                        <div class="col-sm-8">
-                                            <input type="text"
-                                                   class= "form-control"
-                                                   name = "engg_invol"
-                                                   id   = "engg_invol"
-                                                   value = <?php echo $rcvby; ?>
-                                                   required
-                                            />
                                         </div>
                                     </div>
 
@@ -321,13 +289,13 @@
                                         <label for="remarks" class="col-sm-2 col-form-label">Remarks:</label>
 
                                         <div class="col-sm-8">
-                                            <textarea type="text" class= "form-control" name = "remarks" id   = "remarks" required><?php echo $rkms; ?></textarea>
+                                            <textarea type="text" class= "form-control" name = "remarks" id   = "remarks" required></textarea>
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
 
-                                    <?php require("editSlnoTab.php");?>
+                                    <?php require("serviceTab.php");?>
 
                                     <div class="form-group row">
 
@@ -348,6 +316,32 @@
         </div>
     </div>
 </div>
+<!--<script>
+
+    $("#form").validate();
+
+    $(document).ready(function(){
+
+        $('#emp_catg').change(function(){
+
+            if($(this).val() == 1){
+
+                $('.grade_pay').show();
+
+            }
+            else{
+
+                $('.band_pey').text('Pay:');
+
+                $('.grade_pey').hide();
+
+            }
+
+        });
+
+    });
+
+</script>-->
 
 <?php
         require("../dash/footer.php");

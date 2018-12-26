@@ -11,8 +11,14 @@
             $_SESSION['flag']=false;
         }
 
-        $sql    = "select trans_dt,mc_sl_no,mc_type_id,cust_cd
-                   from   td_mc_service where approval_status = 'U'";
+        $sql    = "select a.trans_dt trans_dt,a.trans_cd trans_cd,a.mc_sl_no mc_sl_no,
+                          b.mc_type_id mc_type_id,b.cust_cd cust_cd 
+                   from td_mc_service a, td_mc_trans b 
+                   where a.in_dt = b.trans_dt 
+                   and   a.in_cd = b.trans_cd
+                   and   a.trans_dt = CURRENT_DATE";
+
+
 
         $result = mysqli_query($db,$sql);
 
@@ -107,7 +113,7 @@
                                     <td style="text-align:center"><?php echo $no; ?></td>
                                     <td><?php echo $mcName; ?></td>
                                     <td><?php echo $cName; ?></td>
-                                    <td><a href="editServiceIn.php?trans_dt=<?php echo$data['trans_dt']; ?>&trans_cd=<?php echo $no;?>">
+                                    <td><a href="editService.php?trans_dt=<?php echo$data['trans_dt']; ?>&trans_cd=<?php echo $no;?>">
                                         <i class="fa fa-edit fa-2x" style="color: #57b846"></i>
                                         <a>
                                     </td>
