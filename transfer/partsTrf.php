@@ -11,8 +11,8 @@
             $_SESSION['flag']=false;
         }
 
-        $sql    = "select distinct trans_dt,bill_no,serv_ctr,srv_to
-                   from   td_parts_stock where approval_status = 'U' and trans_type = 'T'";
+        $sql    = "select distinct trans_dt,trans_no,bill_no,serv_ctr,srv_to
+                   from   td_parts_trans where trans_dt = current_date and trans_type = 'T'";
 
         $result = mysqli_query($db,$sql);
 
@@ -47,7 +47,7 @@
         <hr class="new">
         <div class="card mb-3">
             <div class="card-header" style="margin-left:60px;">
-                <a class="button" href="../stock/addTrf.php"><i class="fa fa-plus"></i>
+                <a class="button" href="../transfer/addTrf.php"><i class="fa fa-plus"></i>
                     <span>New</span>
                 </a>
             </div>
@@ -72,6 +72,7 @@
 
                                                 $date = date('d/m/Y',strtotime($data['trans_dt']));
                                                 $bill = $data['bill_no']; 
+                                                $transNo = $data['trans_no'];
                                                 
                                                 $srvc = $data['serv_ctr'];  
 
@@ -89,12 +90,13 @@
                                     <td><?php echo $date; ?></td>
                                     <td><?php echo $bill; ?></td>
                                     <td><?php echo $srvName; ?></td>
-                                    <td><a href="editTrf.php?bill_no=<?php echo$bill; ?>">
+                                    <td><a href="editTrf.php?trans_dt=<?php echo$data['trans_dt']; ?>
+                                                            &trans_no=<?php echo$transNo; ?>">
                                         <i class="fa fa-edit fa-2x" style="color: #57b846"></i>
                                         <a>
                                     </td>
                                     <td>
-                                        <a href="javascript: void(0)" class="del" id="<?php echo $bill; ?>">
+                                        <a href="javascript: void(0)" class="del" id="<?php echo $bill;?>">
                                             <i class="fa fa-eraser fa-2x"style="color: #57b846"></i>
                                         </a>
                                     </td>  
@@ -136,7 +138,7 @@
 
                 var delCd = $(this).attr('id');
 
-                window.location = "http://"+"<?php echo  $_SERVER['HTTP_HOST']; ?>"+"/service/stock/delTrf.php?bill_no="+delCd;
+                window.location = "http://"+"<?php echo  $_SERVER['HTTP_HOST']; ?>"+"/service/transfer/delTrf.php?bill_no="+delCd;
 
             }
 

@@ -7,21 +7,20 @@
 		require("../dash/menu.php");
 
         if($_SERVER['REQUEST_METHOD']=="GET"){
-            $bill_no = $_GET['bill_no'];
+            $trans_dt = $_GET['trans_dt'];
+            $transNo  = $_GET['trans_no'];
 
-            $sql = "select * from td_parts_stock where bill_no = '$bill_no' and trans_type = 'D'";
+            $sql = "select * from td_parts_trans where trans_dt = '$trans_dt' and trans_no = $transNo";
 
             $result = mysqli_query($db,$sql);
 
             $rtv    = mysqli_fetch_assoc($result);
 
-            $trans_dt = $rtv['trans_dt'];
-            $ord_by   = $rtv['oder_by'];
-
-            $srv_ctr  = $rtv['serv_ctr'];
             
+            $ord_by   = $rtv['oder_by'];
+            $srv_ctr  = $rtv['serv_ctr'];
             $rkms     = $rtv['remarks'];
-            $transNo  = $rtv['trans_no'];
+            $bill_no  = $rtv['bill_no'];
 
             $result1  =  mysqli_query($db,$sql);
            
@@ -30,6 +29,7 @@
         if($_SERVER['REQUEST_METHOD']=="POST"){
 
             $transDt      = $_POST['trans_dt'];
+            $transNo      = $_POST['trans_no'];
 
             $billNo         = checkInput($_POST['bill_no']);
             $arvdt          = $_POST['trans_dt'];
@@ -45,15 +45,16 @@
 
             for($i = 0; $i < sizeof($comp); $i++){
 
-                 $sql           = "update td_parts_stock 
+                 $sql           = "update td_parts_trans
                                    set oder_by      = '$ordby',
-                                       comp_qty     =  $compqty[$i],
+                                       comp_qty     =  -$compqty[$i],
                                        serv_ctr     =  $serv,
                                        remarks      =  '$rkms',
+                                       bill_no      =  '$billNo',
                                        modified_by  =  '$crtby',
                                        modified_dt  =  '$crtdt'
                                 where  trans_dt     =  '$transDt'
-                                and    bill_no      =  '$billNo'
+                                and    trans_no     =  $transNo
                                 and    trans_type   =  'D'
                                 and    comp_sl_no   =  $comp[$i]";
 
@@ -151,6 +152,19 @@
                                         </div>
                                     </div>
 
+                                    <div class="form-group row">
+                                         
+                                        <div class="col-sm-8">
+                                            <input type="hidden"
+                                                   name="trans_no"
+                                                   class="form-control required"
+                                                   id="trans_no"
+                                                   value=<?php echo $transNo; ?>
+                                                   readonly
+                                            />
+                                        </div>
+                                    </div>
+
 
                                     <div class="form-group row">
                                         <label for="bill_no" class="col-sm-2 col-form-label">Memo No.:</label>
@@ -161,7 +175,6 @@
                                                    name = "bill_no"
                                                    id   = "bill_no"
                                                    value = <?php echo $bill_no; ?>
-                                                   readonly
                                             />
                                         </div>
                                     </div> 
@@ -212,8 +225,9 @@
 
                                     <div class="form-group row">
 
-                                    <?php require("partsIntabEdit.php");
-                                          ?>
+                                    <?php require("../stock/partsIntabEdit.php");?>
+
+                                    </div>
 
                                     <div class="form-group row">
 

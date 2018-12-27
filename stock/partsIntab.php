@@ -20,7 +20,7 @@
 			<th style="text-align: center;">
 				Component Name
 			</th>
-			<th>
+			<th style="text-align:center;">
 				Quantity
 			</th>
 		</tr>
@@ -37,6 +37,7 @@
 			</td>
 			<td><input type="number" min="1" 
 					   name="c_qty[]" id="c_qty" 
+					   style="text-align:center;"
 					   class="form-control"			
 					   required>
 			</td>
@@ -51,7 +52,7 @@ $(document).ready(function(){
 
 	$('#addRow').click(function(){
 
-		$('#addAnother').append('<tr><td><select class="form-control required blkSelected" name="comp_name[]"><option value="">Select Parts</option><?php $select = "select sl_no,parts_desc from md_parts"; $parts  = mysqli_query($db,$select);while($data = mysqli_fetch_assoc($parts)){echo ("<option value=".$data['sl_no'].">".$data['parts_desc']."</option>");}?></select></td><td><input type="number" min="1"name="c_qty[]" id="c_qty"class="form-control"required></td><td><button class="removeRow removebtn" type="button" ><i class="fa fa-times" aria-hidden="true"></i></button></td></tr>');
+		$('#addAnother').append('<tr><td><select class="form-control required blkSelected" name="comp_name[]"><option value="">Select Parts</option><?php $select = "select sl_no,parts_desc from md_parts"; $parts  = mysqli_query($db,$select);while($data = mysqli_fetch_assoc($parts)){echo ("<option value=".$data['sl_no'].">".$data['parts_desc']."</option>");}?></select></td><td><input type="number" min="1"name="c_qty[]" id="c_qty"style="text-align:center;"class="form-control"required></td><td><button class="removeRow removebtn" type="button" ><i class="fa fa-times" aria-hidden="true"></i></button></td></tr>');
 		     $('.blkSelected').change();
 
 	});

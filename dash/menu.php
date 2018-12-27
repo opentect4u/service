@@ -37,8 +37,8 @@
   <div class="dropdown-container">
     <ul>
       <li><a href="../stock/partsIn.php">Parts In</a></li>
-      <li><a href="../stock/partsTrf.php">Stock Transfer</a></li>
-      <li><a href="../stock/partsDamage.php">Damage Stock</a></li>
+      <li><a href="../transfer/partsTrf.php">Stock Transfer</a></li>
+      <li><a href="../damage/partsDamage.php">Damage Stock</a></li>
     </ul>  
   </div>
   <hr class="new">

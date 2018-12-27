@@ -11,7 +11,7 @@
 			<th style="text-align: center;">
 				Component Name
 			</th>
-			<th>
+			<th style="text-align:center;">
 				Quantity
 			</th>
 		</tr>
@@ -46,8 +46,9 @@
 
 						<td><input type="number" min="1" 
 								   name="c_qty[]" id="c_qty" 
-								   class="form-control"		
-								   value = <?php echo $data1[6]; ?>	
+								   class="form-control"
+								   style="text-align:center;"		
+								   value = <?php echo abs($data1[7]); ?>
 								   required>
 						</td>
 

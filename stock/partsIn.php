@@ -11,7 +11,7 @@
             $_SESSION['flag']=false;
         }
 
-        $sql    = "select distinct trans_dt,bill_no,arrival_dt,serv_ctr
+        $sql    = "select distinct trans_dt,trans_no,bill_no,arrival_dt,serv_ctr
                    from   td_parts_trans 
                    where trans_dt = current_date 
                    and trans_type = 'I' ";
@@ -77,6 +77,7 @@
                                                 $bill = $data['bill_no']; 
                                                 $ardt = date('d/m/Y',strtotime($data['arrival_dt']));
                                                 $srvc = $data['serv_ctr'];  
+                                                $transNo     = $data['trans_no']; 
 
                                                  $scname     = "select center_name from md_service_centre 
                                                                where sl_no =$srvc"; 
@@ -85,15 +86,14 @@
 
                                                  $name       = mysqli_fetch_assoc($scresult);
 
-                                                 $srvName    = $name['center_name']; 
-
+                                                 $srvName    = $name['center_name'];
                                 ?>
                                 <tr>
                                     <td><?php echo $date; ?></td>
                                     <td><?php echo $bill; ?></td>
                                     <td><?php echo $ardt; ?></td>
                                     <td><?php echo $srvName; ?></td>
-                                    <td><a href="editPartsIn.php?bill_no=<?php echo$bill; ?>">
+                                    <td><a href="editPartsIn.php?trans_dt=<?php echo$data['trans_dt'];?>&trans_no=<?php echo$transNo; ?>">
                                         <i class="fa fa-edit fa-2x" style="color: #57b846"></i>
                                         <a>
                                     </td>

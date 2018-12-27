@@ -23,22 +23,30 @@
             $crtby          = $_SESSION['userId'];
             $crtdt          = date('Y-m-d h:i:s');
 
-            for($i = 0; $i < sizeof($comp); $i++){
-
-                 $select       = "select ifnull(max(trans_no),0) + 1 trans_no
-                                  from td_parts_stock
+            $select       = "select ifnull(max(trans_no),0) + 1 trans_no
+                                  from td_parts_trans
                                   where trans_dt = '$transDt'";
 
-                 $no          = mysqli_query($db,$select);
+            $no           = mysqli_query($db,$select);
 
-                 $trans_no     = mysqli_fetch_assoc($no);
+            $trans_no     = mysqli_fetch_assoc($no);
 
-                 $transNo      = $trans_no['trans_no']; 
+            $transNo      = $trans_no['trans_no']; 
 
-                 $sql          = "insert into td_parts_stock(trans_dt,trans_no,trans_type,bill_no,arrival_dt,
-                                  comp_sl_no,comp_qty,serv_ctr,srv_to,balance,trf_mode,remarks,created_by,created_dt)
-                                  values('$transDt',$transNo,'T','$billNo','$arvdt',$comp[$i],$compqty[$i],
-                                          $serv,$srvto,0,'$trfmd','$rkms','$crtby','$crtdt')";
+
+
+            for($i = 0; $i < sizeof($comp); $i++){
+
+                $select  = "select sl_no,parts_desc from md_parts where sl_no = $comp[$i]";
+                $result1 = mysqli_query($db,$select);
+                $data    = mysqli_fetch_assoc($result1);
+                $pname   = $data['parts_desc'];
+
+                 $sql          = "insert into td_parts_trans(trans_dt,trans_no,trans_type,bill_no,arrival_dt,
+                                  comp_sl_no,parts_desc,comp_qty,serv_ctr,srv_to,trf_mode,
+                                  remarks,created_by,created_dt)
+                                  values('$transDt',$transNo,'T','$billNo','$arvdt',$comp[$i],'$pname',-$compqty[$i],
+                                          $serv,$srvto,'$trfmd','$rkms','$crtby','$crtdt')";
 
                  $result       = mysqli_query($db,$sql);
 
@@ -213,9 +221,10 @@
 
                                     <div class="form-group row">
 
-                                    <?php require("partsIntab.php");
-                                          ?>
+                                    <?php require("../stock/partsIntab.php");?>
 
+                                  </div>
+                                  
                                     <div class="form-group row">
 
                                         <div class="col-sm-10">

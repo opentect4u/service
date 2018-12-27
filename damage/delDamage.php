@@ -4,7 +4,7 @@
         require("../login/session.php");
         
 
-        $sql    = "DELETE FROM td_parts_stock where bill_no = '".$_GET['bill_no']."'";
+        $sql    = "DELETE FROM td_parts_trans where bill_no = '".$_GET['bill_no']."'";
 
         $result = mysqli_query($db,$sql);
 

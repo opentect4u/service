@@ -32,44 +32,25 @@
 
             for($i = 0; $i < sizeof($comp); $i++){
 
+                $select = "select sl_no,parts_desc from md_parts where sl_no = $comp[$i]";
+                $result = mysqli_query($db,$select);
+                $data   = mysqli_fetch_assoc($result);
+                $pname  = $data['parts_desc'];
+
                  $sql       = "insert into td_parts_trans(trans_dt,trans_no,trans_type,bill_no,arrival_dt,
-                                                          comp_sl_no,comp_qty,serv_ctr,remarks,created_by,created_dt)
-                              values('$transDt',$transNo,'I','$billNo','$arvdt',$comp[$i],$compqty[$i],
+                                                          comp_sl_no,parts_desc,comp_qty,serv_ctr,
+                                                          remarks,created_by,created_dt)
+                              values('$transDt',$transNo,'I','$billNo','$arvdt',$comp[$i],'$pname',$compqty[$i],
                                           $serv,'$rkms','$crtby','$crtdt')";
 
-                 $result       = mysqli_query($db,$sql);
+                 $result1    = mysqli_query($db,$sql);
 
-                 $Select = "select * from td_parts_stock where srv_ctr = $serv and parts_no = $comp[$i]";
-                 $res    =  mysqli_query($db,$select);
-
-                 if(mysqli_num_rows() = 0){
-
-                    $balance   = "insert into td_parts_stock(trans_dt,trans_no,srv_ctr,
-                                                             parts_no,parts_desc,qty,balance)
-                              values('$transDt',$transNo,$serv,$billNo','$arvdt',$comp[$i],$compqty[$i],
-                                          $serv,'$rkms','$crtby','$crtdt')";
-
-                 }
-
-
-
-
-                if($result){
+                if($result1){
                     $_SESSION['flag'] = true;
                     header("location:partsIn.php");
                 }
 
             }
-
-            $qty  = sizeof($comp);
-
-
-            
-
-                 $result       = mysqli_query($db,$sql);
-
-
-
 
         }
 
@@ -83,9 +64,6 @@
         $select = "select sl_no,center_name from md_service_centre";
                    
         $serviceCenter = mysqli_query($db,$select);
-
-
-
 ?>		
 
 <head>
