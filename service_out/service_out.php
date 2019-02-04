@@ -11,18 +11,19 @@
             $_SESSION['flag']=false;
         }
 
-        $sql    = "select distinct trans_dt,trans_no,bill_no,arrival_dt,serv_ctr,trans_type
-                   from   td_parts_trans 
-                   where  approval_status = 'U'
-                   and trans_type In ('I','T','D') ";
+        $sql    = "select * from td_mc_trans 
+                   where trans_type = 'S'
+                   and   approval_status = 'U'
+                   order by trans_dt,trans_cd,sl_no";
 
         $result = mysqli_query($db,$sql);
 
+        
 ?>
 
 <html>
 <head>
-    <title>Manage Component In</title>
+    <title>Manage Service Out</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -45,22 +46,15 @@
 <div style="min-height: 500px;">
 <div class="content-wrapper">
     <div class="container-fluid">
-        <h2 style="margin-left:60px;text-align:center">Manage Component In</h2>
+        <h2 style="margin-left:60px;text-align:center">Manage Service Out</h2>
         <hr class="new">
         <div class="card mb-3">
             <div class="card-header" style="margin-left:60px;">
-                <a class="button" href="../stock/addPartsIn.php"><i class="fa fa-plus"></i>
-                    <span>Component In</span>
-                </a>
-                &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
-                <a class="button" href="../transfer/addTrf.php"><i class="fa fa-plus"></i>
-                    <span>Transfer Out</span>
-                </a>
-                &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
-                <a class="button" href="../damage/addDamage.php"><i class="fa fa-plus"></i>
-                    <span>Damage Out</span>
-                </a>
+                <!--<a class="button" href="../booking/addService.php"><i class="fa fa-plus"></i>
+                    <span>New</span>
+                </a>-->
             </div>
+
             <hr class="new">
                 <div class="card-body">
                     <div class="w3-responsive" style="margin-left:60px;">
@@ -68,11 +62,12 @@
                             <thead>
                                 <tr class="w3-light-grey">
                                     <th>Date</th>
-                                    <th>Type</th>
-                                    <th>No.</th>
-                                    <th>Service Center</th>
+                                    <th>Ticket No.</th>
+                                    <th>Serial No.</th>
+                                    <th>Device Type</th>
+                                    <th>Customer</th>
                                     <th>Edit</th>
-                                    <th>Delete</th>
+                                    <!--<th>Delete</th>-->
                                 </tr>
                             </thead>
                             <tbody>
@@ -81,49 +76,54 @@
                                         if(mysqli_num_rows($result) > 0){
                                             while($data = mysqli_fetch_assoc($result)){
 
-                                                $date   = date('d/m/Y',strtotime($data['trans_dt']));
+                                                $date       = date('d/m/Y',strtotime($data['trans_dt']));
+                                                $transNo    = $data['trans_cd'];
+                                                $no         = $data['sl_no']; 
 
-                                                $bill   = $data['bill_no']; 
 
-                                                $transNo= $data['trans_no'];
+
+                                                $cust = $data['cust_cd'];
+
+                                                 $cname = "select cust_cd,cust_name from md_customers
+                                                           where cust_cd = $cust";
+
+                                                 $cresult = mysqli_query($db,$cname);
+
+                                                 $Name    = mysqli_fetch_assoc($cresult);
+
+                                                 $cName   = $Name['cust_name'];
+
+                                                $mcId        = $data['mc_type_id'];  
+
+                                                 $mcname     = "select mc_type from md_mc_type 
+                                                                where  mc_id = $mcId"; 
+
+                                                 $mcresult   = mysqli_query($db,$mcname);
+
+                                                 $name       = mysqli_fetch_assoc($mcresult);
+
+                                                 $mcName    = $name['mc_type'];
+
                                                 
-                                                $type   = $data['trans_type'];
-
-                                                if($type=='I'){
-                                                   $typeDesc = "Parts In";
-                                                   $path     = "editPartsIn.php";     
-                                                }elseif($type=='T'){
-                                                   $typeDesc = "Transfer"; 
-                                                   $path     = "../transfer/editTrf.php";
-                                                }else{
-                                                    $typeDesc = "Damage Out";
-                                                    $path     = "../damage/editDamage.php";
-                                                }
-                                                
-                                                $srvc   = $data['serv_ctr'];  
-                                                $scname = "select center_name from md_service_centre 
-                                                               where sl_no =$srvc"; 
-                                                $scresult   = mysqli_query($db,$scname);
-                                                $name       = mysqli_fetch_assoc($scresult);
-                                                $srvName    = $name['center_name'];
-
-
 
                                 ?>
                                 <tr>
                                     <td><?php echo $date; ?></td>
-                                    <td><?php echo $typeDesc; ?></td>
-                                    <td><?php echo $bill; ?></td>
-                                    <td><?php echo $srvName; ?></td>
-                                    <td><a href="<?php echo $path; ?>?trans_dt=<?php echo$data['trans_dt'];?>&trans_no=<?php echo$transNo; ?>">
+                                    <td><?php echo $transNo; ?></td>
+                                    <td ><?php echo $no; ?></td>
+                                    <td><?php echo $mcName; ?></td>
+                                    <td><?php echo $cName; ?></td>
+        <td><a href="editService_out.php?trans_dt=<?php echo$data['trans_dt']; ?>&trans_cd=<?php echo $transNo;?>&sl_no=<?php echo $no;?>">
                                         <i class="fa fa-edit fa-2x" style="color: #57b846"></i>
                                         <a>
                                     </td>
-                                    <td>
-                                        <a href="javascript: void(0)" class="del" id="<?php echo $bill; ?>">
+                                  <!--  <td>
+                                        <a href="javascript: void(0)" class="del" 
+                                           id="<?php echo $data['trans_dt']; ?>" 
+                                           id1 ="<?php echo $no; ?>" >
                                             <i class="fa fa-eraser fa-2x"style="color: #57b846"></i>
                                         </a>    
-                                    </td>  
+                                    </td>  -->
                                 </tr>
                                 <?php
                                             }
@@ -134,11 +134,12 @@
                             <tfoot>
                                 <tr>
                                     <th>Date</th>
-                                    <th>Type</th>
-                                    <th>Bill No.</th>
-                                    <th>Service Center</th>
+                                    <th>Ticket No.</th>
+                                    <th>Serial No.</th>
+                                    <th>Device Type</th>
+                                    <th>Customer</th>
                                     <th>Edit</th>
-                                    <th>Delete</th>
+                                    <!--<th>Delete</th>-->
                                 </tr>
                             </tfoot>
                         </table>
@@ -161,9 +162,10 @@
 
             if(window.confirm('Are you sure you want to delete this record?')){
 
-                var delCd = $(this).attr('id');
+                var transDt = $(this).attr('id');
+                var transCd = $(this).attr('id1');
 
-                window.location = "http://"+"<?php echo  $_SERVER['HTTP_HOST']; ?>"+"/service/stock/delParts.php?bill_no="+delCd;
+                window.location = "http://"+"<?php echo  $_SERVER['HTTP_HOST']; ?>"+"/service/booking/delServicein.php?trans_dt="+transDt+"&trans_cd="+transCd;
 
             }
 

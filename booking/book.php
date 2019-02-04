@@ -11,7 +11,7 @@
             $_SESSION['flag']=false;
         }
 
-        $sql    = "select trans_dt,trans_cd,cust_cd,mc_type_id,mc_qty
+        $sql    = "select Distinct trans_dt,trans_cd,cust_cd,mc_type_id
                    from   td_mc_trans where trans_type = 'I'";
 
         $result = mysqli_query($db,$sql);
@@ -59,10 +59,10 @@
                             <thead>
                                 <tr class="w3-light-grey">
                                     <th>Date</th>
-                                    <th>No.</th>
+                                    <th>Ticket No.</th>
                                     <th>Customer</th>
                                     <th>M/C Type</th>
-                                    <th>Quantity</th>
+                                    <!--<th>Quantity</th>-->
                                     <th>Edit</th>
                                     <th>Delete</th>
                                 </tr>
@@ -98,7 +98,7 @@
 
                                                  $mcName    = $name['mc_type'];
 
-                                                $mcQty        = $data['mc_qty'];  
+                                               // $mcQty        = $data['mc_qty'];  
 
 
                                 ?>
@@ -107,7 +107,7 @@
                                     <td style="text-align:center"><?php echo $no; ?></td>
                                     <td><?php echo $cName; ?></td>
                                     <td><?php echo $mcName; ?></td>
-                                    <td style="text-align:center"><?php echo $mcQty; ?></td>
+                                    <!--<td style="text-align:center"><?php echo $mcQty; ?></td>-->
                                     <td><a href="editServiceIn.php?trans_dt=<?php echo$data['trans_dt']; ?>&trans_cd=<?php echo $no;?>">
                                         <i class="fa fa-edit fa-2x" style="color: #57b846"></i>
                                         <a>
@@ -129,10 +129,10 @@
                             <tfoot>
                                 <tr>
                                     <th>Date</th>
-                                    <th>No.</th>
+                                    <th>Ticket No.</th>
                                     <th>Customer</th>
                                     <th>M/C Type</th>
-                                    <th>Quantity</th>
+                                    <!--<th>Quantity</th>-->
                                     <th>Edit</th>
                                     <th>Delete</th>
                                 </tr>

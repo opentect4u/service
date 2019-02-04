@@ -36,9 +36,9 @@
   </button>
   <div class="dropdown-container">
     <ul>
-      <li><a href="../stock/partsIn.php">Parts In</a></li>
-      <li><a href="../transfer/partsTrf.php">Stock Transfer</a></li>
-      <li><a href="../damage/partsDamage.php">Damage Stock</a></li>
+      <li><a href="../stock/partsIn.php">Component Stock</a></li>
+     <!-- <li><a href="../transfer/partsTrf.php">Transfer Parts</a></li>
+      <li><a href="../damage/partsDamage.php">Damage Parts</a></li>-->
     </ul>  
   </div>
   <hr class="new">
@@ -49,7 +49,7 @@
     <ul>
       <li><a href="../booking/book.php">Device In</a></li>
       <li><a href="../booking/service.php">Device Service</a></li>
-      <li><a href="#">Device Out</a></li>
+      <li><a href="../service_out/service_out.php">Device Out</a></li>
     </ul>  
   </div>
   <hr class="new">
@@ -63,19 +63,19 @@
       <li><a href="#">Engineers' Service Detail</a></li>
     </ul>  
   </div>
-  <hr class="new">
+  <!--<hr class="new">
   <button class="dropdown-btn">Approve 
     <i class="fa fa-caret-down"></i>
   </button>
   <div class="dropdown-container">
     <ul>
-      <li><a href="#">Stock In</a></li>
+      <li><a href="../approve/approve.php">Parts In/Out</a></li>
       <li><a href="#">Stock Transfer</a></li>
       <li><a href="#">Stock Damage</a></li>
       <li><a href="#">Service In</a></li>
       <li><a href="#">Service Out</a></li>
     </ul>  
-  </div>
+  </div>-->
   <hr class="new">
   <a href="#">User Maintenance</a>
   <hr class="new">

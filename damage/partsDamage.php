@@ -12,7 +12,7 @@
         }
 
         $sql    = "select distinct trans_dt,trans_no,bill_no,serv_ctr
-                   from   td_parts_trans where trans_dt = current_date and trans_type = 'D'";
+                   from   td_parts_trans where approval_status = 'U' and trans_type = 'D'";
 
         $result = mysqli_query($db,$sql);
 

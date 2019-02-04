@@ -27,6 +27,7 @@
 		<?php
 			$i = 0;
 
+
 			while($data1 = mysqli_fetch_array($mcresult,MYSQLI_NUM)){ $i++;  
 
 					$select = "select sl_no,problem_desc from md_problem";
@@ -41,7 +42,7 @@
 			<td><input type="text" 
 					   name="sl_no[]" 
 					   class="form-control" 
-					   value = <?php echo $data1[3];?>
+					   value = <?php echo $data1[5];?>
 					   readonly>
 			</td>
 
@@ -50,7 +51,7 @@
 					<?php 
 						   while($data = mysqli_fetch_assoc($prob)){ ?>
 						   	 <option value="<?php echo $data['sl_no'];?>"
-  									<?php echo($data['sl_no']==$data1[4])?'selected':'';?>>
+  									<?php echo($data['sl_no']==$data1[6])?'selected':'';?>>
 							   		<?php echo $data['problem_desc']?>
 						   	 </option>
 					<?php	   	 

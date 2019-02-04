@@ -11,14 +11,10 @@
             $_SESSION['flag']=false;
         }
 
-        $sql    = "select a.trans_dt trans_dt,a.trans_cd trans_cd,a.mc_sl_no mc_sl_no,
-                          b.mc_type_id mc_type_id,b.cust_cd cust_cd 
-                   from td_mc_service a, td_mc_trans b 
-                   where a.in_dt = b.trans_dt 
-                   and   a.in_cd = b.trans_cd
-                   and   a.trans_dt = CURRENT_DATE";
-
-
+        $sql    = "select * from td_mc_trans 
+                   where trans_type = 'I'
+                   and   approval_status = 'U'
+                   order by trans_dt,trans_cd,sl_no";
 
         $result = mysqli_query($db,$sql);
 
@@ -53,9 +49,9 @@
         <hr class="new">
         <div class="card mb-3">
             <div class="card-header" style="margin-left:60px;">
-                <a class="button" href="../booking/addService.php"><i class="fa fa-plus"></i>
+                <!--<a class="button" href="../booking/addService.php"><i class="fa fa-plus"></i>
                     <span>New</span>
-                </a>
+                </a>-->
             </div>
 
             <hr class="new">
@@ -65,11 +61,12 @@
                             <thead>
                                 <tr class="w3-light-grey">
                                     <th>Date</th>
+                                    <th>Ticket No.</th>
                                     <th>Serial No.</th>
                                     <th>Device Type</th>
                                     <th>Customer</th>
                                     <th>Edit</th>
-                                    <th>Delete</th>
+                                    <!--<th>Delete</th>-->
                                 </tr>
                             </thead>
                             <tbody>
@@ -78,8 +75,9 @@
                                         if(mysqli_num_rows($result) > 0){
                                             while($data = mysqli_fetch_assoc($result)){
 
-                                                $date = date('d/m/Y',strtotime($data['trans_dt']));
-                                                $no   = $data['mc_sl_no']; 
+                                                $date       = date('d/m/Y',strtotime($data['trans_dt']));
+                                                $transNo    = $data['trans_cd'];
+                                                $no         = $data['sl_no']; 
 
 
 
@@ -110,20 +108,21 @@
                                 ?>
                                 <tr>
                                     <td><?php echo $date; ?></td>
-                                    <td style="text-align:center"><?php echo $no; ?></td>
+                                    <td><?php echo $transNo; ?></td>
+                                    <td ><?php echo $no; ?></td>
                                     <td><?php echo $mcName; ?></td>
                                     <td><?php echo $cName; ?></td>
-                                    <td><a href="editService.php?trans_dt=<?php echo$data['trans_dt']; ?>&trans_cd=<?php echo $no;?>">
+        <td><a href="editService.php?trans_dt=<?php echo$data['trans_dt']; ?>&trans_cd=<?php echo $transNo;?>&sl_no=<?php echo $no;?>">
                                         <i class="fa fa-edit fa-2x" style="color: #57b846"></i>
                                         <a>
                                     </td>
-                                    <td>
+                                  <!--  <td>
                                         <a href="javascript: void(0)" class="del" 
                                            id="<?php echo $data['trans_dt']; ?>" 
                                            id1 ="<?php echo $no; ?>" >
                                             <i class="fa fa-eraser fa-2x"style="color: #57b846"></i>
                                         </a>    
-                                    </td>  
+                                    </td>  -->
                                 </tr>
                                 <?php
                                             }
@@ -134,11 +133,12 @@
                             <tfoot>
                                 <tr>
                                     <th>Date</th>
+                                    <th>Ticket No.</th>
                                     <th>Serial No.</th>
                                     <th>Device Type</th>
                                     <th>Customer</th>
                                     <th>Edit</th>
-                                    <th>Delete</th>
+                                    <!--<th>Delete</th>-->
                                 </tr>
                             </tfoot>
                         </table>

@@ -10,7 +10,7 @@
             $transDt      = $_POST['trans_dt'];
             $cust         = $_POST['cust_cd'];
             $mcType       = $_POST['mc_type'];
-            $mcQty        = $_POST['mc_qty'];
+            //$mcQty        = $_POST['mc_qty'];
             $serv         = $_POST['srv_ctr'];
             $subBy        = $_POST['cust_person'];
             $phone        = $_POST['cust_per_ph'];
@@ -32,9 +32,9 @@
             $crtby          = $_SESSION['userId'];
             $crtdt          = date('Y-m-d h:i:s');
 
-            $select         = "select ifnull(max(trans_cd),0) + 1 trans_no
+            $select         = "select ifnull(max(substr(trans_cd,5)),0) + 1 trans_no
                                from td_mc_trans
-                               where trans_dt = '$transDt'";
+                               where year(trans_dt) = year(CURRENT_DATE);";
 
             $no             = mysqli_query($db,$select);
 
@@ -42,22 +42,21 @@
 
             $transNo        = $trans_no['trans_no'];
 
+            $year           = date('Y');
 
-            $sql            = "insert into td_mc_trans(trans_dt,trans_cd,cust_cd,trans_type,mc_type_id,mc_qty,
-                               srv_ctr,cust_person,cust_per_ph,engg_invol,remarks,created_by,created_dt)
-                               values('$transDt',$transNo,$cust,'I',$mcType,$mcQty,$serv,'$subBy',
-                                      '$phone','$rcvBy','$rkms','$crtby','$crtdt')";
-
-            $result         = mysqli_query($db,$sql);
+            $transNo        = $year.$transNo;
 
             for($i = 0; $i < sizeof($slNo); $i++){
 
-              $insert       = "insert into td_mc_status(trans_dt,trans_cd,cust_cd,sl_no,mc_prob,warr_status,status)
-                               values('$transDt',$transNo,$cust,'$slNo[$i]','$mcProb[$i]','$mcStatus[$i]','I')";
+              $sql          = "insert into td_mc_trans(trans_dt,trans_cd,cust_cd,trans_type,mc_type_id,
+                                                       sl_no,mc_prob,warr_status,mc_qty,srv_ctr,cust_person,
+                                                       cust_per_ph,engg_invol,remarks,created_by,created_dt)
+                               values('$transDt',$transNo,$cust,'I',$mcType,'$slNo[$i]','$mcProb[$i]','$mcStatus[$i]',0,
+                                      $serv,'$subBy','$phone','$rcvBy','$rkms','$crtby','$crtdt')";
 
-              $result1       = mysqli_query($db,$insert);
+              $result       = mysqli_query($db,$sql);
 
-                if($result1){
+                if($result){
                     $_SESSION['flag'] = true;
                     header("location:book.php");
                 }
@@ -192,7 +191,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group row">
+                                    <!--<div class="form-group row">
                                         <label for="mc_qty" class="col-sm-2 col-form-label">Quantity:</label>
 
                                         <div class="col-sm-8">
@@ -203,7 +202,7 @@
                                                    required
                                             />
                                         </div>
-                                    </div>
+                                    </div>-->
 
                                     <div class="form-group row">
                                         <label for="srv_ctr" class="col-sm-2 col-form-label">Service Center:</label>

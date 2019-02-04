@@ -15,7 +15,7 @@
                        where trans_dt = '$trans_dt' 
                        and   trans_cd =  $trans_cd
                        and   sl_no    =  '$sl_no'
-                       and   trans_type = 'I'";
+                       and   trans_type = 'S'";
 
 
             $result = mysqli_query($db,$sql);
@@ -26,13 +26,18 @@
             $mc_type = $data['mc_type_id'];
             $mc_prob = $data['mc_prob'];
             $srv_ctr = $data['srv_ctr'];
+            $tech    = $data['engg_invol'];
+            $status  = $data['warr_status'];
+            
 
+/////////////
             $customer    = "select * from md_customers
                             where cust_cd = $cust_cd";
 
             $result1     = mysqli_query($db,$customer);
 
             $cust        = mysqli_fetch_assoc($result1);
+/////////////
 
             $machine    = "select * from md_mc_type
                            where mc_id = $mc_type";
@@ -40,14 +45,23 @@
             $result     = mysqli_query($db,$machine);
 
             $mc        = mysqli_fetch_assoc($result);
-
+/////////////
 
             $problem    = "select * from md_problem
                            where sl_no = $mc_prob";
 
             $result     = mysqli_query($db,$problem);
 
-            $prob        = mysqli_fetch_assoc($result);
+            $prob       = mysqli_fetch_assoc($result);
+/////////////
+
+
+            $engg       = "select * from md_tech 
+                           where emp_code = $tech";
+
+            $result     = mysqli_query($db,$engg);
+
+            $data       = mysqli_fetch_assoc($result);
 
         }
 
@@ -210,16 +224,10 @@
                 return $data;
         }
 
-
-        $sql    = "select * from md_tech";
-        $tech   = mysqli_query($db,$sql);
-
-      
-
 ?>		
 
 <head>
-    <title>New Device Service</title>
+    <title>Service Out</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -252,7 +260,7 @@
     <div class="content-wrapper">
 
         <div class="container-fluid">
-            <h2 style="margin-left:60px;text-align:center">Device Service</h2>
+            <h2 style="margin-left:60px;text-align:center">Service Out</h2>
             <hr class="new">
 
             <div class="card mb-3">
@@ -355,7 +363,7 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="in_dt" class="col-sm-2 col-form-label">Received On:</label>
+                                        <label for="in_dt" class="col-sm-2 col-form-label">Service On:</label>
 
                                         <div class="col-sm-8">
                                             <input type="date"
@@ -390,12 +398,12 @@
                                                    class= "form-control"
                                                    name = "status"
                                                    id   = "status"
-                                                   value ="<?php if($data['warr_status']=='O'){
-                                                                    $status = "Out of Warranty";
+                                                   value ="<?php if($status=='O'){
+                                                                    $sts = "Out of Warranty";
                                                                  }else{
-                                                                    $status = "In Warranty";    
+                                                                    $sts = "In Warranty";    
                                                                  }
-                                                                 echo $status; 
+                                                                 echo $sts; 
                                                             ?>"
                                                    readonly
                                             />
@@ -406,18 +414,38 @@
                                         <label for="cust_person" class="col-sm-2 col-form-label">Technician:</label>
 
                                         <div class="col-sm-8">
-                                            <Select class="form-control required"
-                                                    name ="service_by"
-                                                    id="service_by">
-                                                <option value="">Select Technician</option>
-                                                <?php
+                                            <input type="text"
+                                                   class= "form-control"
+                                                   name = "service_by"
+                                                   id   = "service_by"
+                                                   value ="<?php echo $data['tech_name']; ?>"
+                                                   readonly
+                                            />
+                                        </div>
+                                    </div>
 
-                                                    while($data = mysqli_fetch_assoc($tech)){
-                                                        echo ("<option value=".$data['emp_code'].">".
-                                                               $data['tech_name']."</option>");
-                                                    }
-                                                ?>    
-                                            </Select>
+                                    <div class="form-group row">
+                                        <label for="cust_person" class="col-sm-2 col-form-label">Delivered To:</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="text"
+                                                   class= "form-control"
+                                                   name = "delv_to"
+                                                   id   = "delv_to"
+                                                   required
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="cust_person" class="col-sm-2 col-form-label">Phone No.:</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="text"
+                                                   class= "form-control"
+                                                   name = "delv_ph"
+                                                   id   = "delv_ph"
+                                            />
                                         </div>
                                     </div>
 
@@ -431,7 +459,7 @@
 
                                     <div class="form-group row">
 
-                                    <?php require("serviceTab.php");?>
+                                    <?php require("serviceTab_out.php");?>
 
                                     <div class="form-group row">
 

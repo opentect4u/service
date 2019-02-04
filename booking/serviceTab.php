@@ -35,7 +35,7 @@
 				</select>
 			</td>
 
-			<td><input type="text" name="comp_qty[]" class="form-control" required></td>
+			<td><input type="text" name="comp_qty[]" class="form-control"></td>
 		</tr>	
 	</table>
 </div>

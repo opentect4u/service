@@ -19,15 +19,16 @@
             $custCd  = $data['cust_cd'];
             $mcType  = $data['mc_type_id'];
             $srvCtr  = $data['srv_ctr'];
-            $qty     = $data['mc_qty'];
+            $qty     = 0;
             $submt   = $data['cust_person'];
             $subph   = $data['cust_per_ph'];
             $rcvby   = $data['engg_invol'];
             $rkms    = $data['remarks'];
+            $slNo    = $data['sl_no'];
+            $mcProb  = $data['mc_prob'];
+            $status  = $data['warr_status'];
 
-            $mcSql    = "Select * from td_mc_status where trans_dt='$transDt' and trans_cd=$transCd";
-
-            $mcresult = mysqli_query($db,$mcSql);
+            $mcresult = mysqli_query($db,$sql);
         }
 
         if($_SERVER['REQUEST_METHOD']=="POST"){
@@ -36,7 +37,7 @@
             $cust         = $_POST['cust_cd'];
 
             $mcType       = $_POST['mc_type'];
-            $mcQty        = $_POST['mc_qty'];
+            $mcQty        = 0;
             $serv         = $_POST['srv_ctr'];
             $subBy        = $_POST['cust_person'];
             $phone        = $_POST['cust_per_ph'];
@@ -54,33 +55,25 @@
             $crtby          = $_SESSION['userId'];
             $crtdt          = date('Y-m-d h:i:s');
 
-           
-            $sql            = "update td_mc_trans
+            for($i = 0; $i < sizeof($slNo); $i++){
+
+              $update       = "update td_mc_trans
                                set cust_cd      =  $cust,
                                    mc_type_id   =  $mcType,
-                                   mc_qty       =  $mcQty,
                                    srv_ctr      =  $serv,
                                    cust_person  =  '$subBy',
                                    cust_per_ph  =  '$phone',
                                    engg_invol   =  '$rcvBy',
                                    remarks      =  '$rkms',
                                    modified_by  =  '$crtby',
-                                   modified_dt  =  '$crtdt'
-                            where  trans_dt     =  '$transDt'      
-                            and    trans_cd     =  $transNo";
-                             
-            $result         = mysqli_query($db,$sql);
-
-            for($i = 0; $i < sizeof($slNo); $i++){
-
-              $update       = "update td_mc_status
-                               set mc_prob     = '$mcProb[$i]',
-                                   warr_status = '$mcStatus[$i]'
+                                   modified_dt  =  '$crtdt',
+                                   mc_prob      =  '$mcProb[$i]',
+                                   warr_status  =  '$mcStatus[$i]'
                                where trans_dt     =  '$transDt'
                                and    trans_cd     =  $transNo
-                               and    sl_no        =  $slNo[$i]"; 
+                               and    sl_no        =  '$slNo[$i]'"; 
 
-              echo $update;
+              //echo $update;
                                 
               $result1       = mysqli_query($db,$update);
 
@@ -182,7 +175,7 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="trans_dt" class="col-sm-2 col-form-label">Transaction No.:</label>
+                                        <label for="trans_dt" class="col-sm-2 col-form-label">Ticket No.:</label>
 
                                         <div class="col-sm-8">
                                             <input type="text"
@@ -239,7 +232,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group row">
+                                    <!--<div class="form-group row">
                                         <label for="mc_qty" class="col-sm-2 col-form-label">Quantity:</label>
 
                                         <div class="col-sm-8">
@@ -251,7 +244,7 @@
                                                    required
                                             />
                                         </div>
-                                    </div>
+                                    </div>-->
 
                                     <div class="form-group row">
                                         <label for="srv_ctr" class="col-sm-2 col-form-label">Service Center:</label>
