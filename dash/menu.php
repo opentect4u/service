@@ -58,7 +58,8 @@
   </button>
   <div class="dropdown-container">
     <ul>
-      <li><a href="#">Parts Stock Details</a></li>
+      <li><a href="../reports/as_on_dt.php">Component Stock</a></li>
+      <li><a href="#">Component Ledger</a></li>
       <li><a href="#">Due Service Details</a></li>
       <li><a href="#">Engineers' Service Detail</a></li>
     </ul>  
@@ -78,8 +79,8 @@
   </div>-->
   <hr class="new">
   <a href="#">User Maintenance</a>
-  <hr class="new">
-  <a href="#">Contact</a>
+  <!--<hr class="new">
+  <a href="#">Contact</a>-->
   <hr class="new">
   <a href="../dash/logout.php">Logout</a>
 </div>

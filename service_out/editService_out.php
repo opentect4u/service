@@ -66,6 +66,10 @@
         }
 
         if($_SERVER['REQUEST_METHOD']=="POST"){
+
+            echo "hi";
+
+
             $transDt      = $_POST['trans_dt'];
             $transCd      = $_POST['trans_cd'];
             $slNo         = $_POST['sl_no'];
@@ -76,7 +80,7 @@
                        where trans_dt = '$rcvDt' 
                        and   trans_cd =  $transCd
                        and   sl_no    =  '$slNo'
-                       and   trans_type = 'I'
+                       and   trans_type = 'S'
                        and   approval_status = 'U'";
 
             $result = mysqli_query($db,$sql);
@@ -84,15 +88,15 @@
             $data   = mysqli_fetch_assoc($result);
 
             $custCd       = $data['cust_cd'];
-            $trans        = 'S';
+            $trans        = 'O';
             $mcType       = $data['mc_type_id'];
             
             $prob         = $data['mc_prob'];
             $warr         = $data['warr_status'];
             //$srv          = $data['srv_ctr'];
-            $cust         = $data['cust_person'];
-            $ph           = $data['cust_per_ph'];
-            $tech         = $_POST['service_by'];
+            $cust         = $_POST['delv_to'];
+            $ph           = $_POST['delv_ph'];
+            $tech         = $data['engg_invol'];
             $rkms         = $_POST['remarks'];
              
             $crtby        = $_SESSION['userId'];
@@ -114,7 +118,9 @@
                                                      remarks,
                                                      approval_status,
                                                      created_by,
-                                                     created_dt)
+                                                     created_dt,
+                                                     approved_by,
+                                                     approved_dt)
                                              values('$transDt',
                                                      $transCd,
                                                      $custCd,
@@ -129,7 +135,9 @@
                                                     '$ph',
                                                     '$tech',
                                                     '$rkms',
-                                                    'U',
+                                                    'A',
+                                                    '$crtby',
+                                                    '$crtdt',
                                                     '$crtby',
                                                     '$crtdt')";
 
@@ -144,75 +152,14 @@
                      where  trans_dt        = '$rcvDt'
                      and    trans_cd        = $transCd
                      and    sl_no           = '$slNo'
-                     and    trans_type      = 'I'
+                     and    trans_type      = 'S'
                      and    approval_status = 'U'";
 
             $result1       = mysqli_query($db,$updt);
 
-
-            $parts         = implode('*/*',$_POST["comp_sl_no"]);
-            $parts         = explode('*/*',$parts);
-
-            $qty           = implode('*/*',$_POST["comp_qty"]);
-            $qty           = explode('*/*',$qty);
-
-
-            $trans_no     = "select ifnull(max(trans_no),0) + 1 trans_no
-                               from td_parts_trans
-                               where trans_dt = '$transDt'";
-
-            $No         = mysqli_query($db,$trans_no);
-
-            $row        = mysqli_fetch_assoc($No);
-
-            $transNo    = $row['trans_no'];
-
-
-            for($i = 0; $i < sizeof($parts); $i++){
-
-                $partSelect = "select sl_no,parts_desc from md_parts where sl_no  = $parts[$i]";
-                   
-                $partsData  = mysqli_query($db,$partSelect);
-
-                $data       = mysqli_fetch_assoc($partsData);
-
-                $partsDesc  = $data['parts_desc'];
-
-                $out        = "insert into td_parts_trans(trans_dt,
-                                                          trans_no,
-                                                          trans_type,
-                                                          bill_no,
-                                                          arrival_dt,
-                                                          comp_sl_no,
-                                                          parts_desc,
-                                                          comp_qty,
-                                                          serv_ctr,
-                                                          remarks,
-                                                          sl_no,
-                                                          created_by,
-                                                          created_dt)
-                                                   values('$transDt',
-                                                           $transNo,
-                                                           'O',
-                                                           '$transCd',
-                                                           '$transDt',
-                                                           $parts[$i],
-                                                           '$partsDesc',
-                                                           $qty[$i],
-                                                            $srv,
-                                                           '$rkms',
-                                                           '$slNo', 
-                                                           '$crtby',
-                                                           '$crtdt')";
-              
-                $result2       = mysqli_query($db,$out);
-
-            }
-
-
             if($result){
                     $_SESSION['flag'] = true;
-                    header("location:service.php");
+                    header("location:service_out.php");
                 }
             
         }
@@ -464,7 +411,7 @@
                                     <div class="form-group row">
 
                                         <div class="col-sm-10">
-                                            <input type="button" 
+                                            <input type="submit" 
                                                    class="subbtn"
                                                    style="margin-left: 25px;"
                                                    id = "subbtn"

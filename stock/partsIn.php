@@ -14,7 +14,10 @@
         $sql    = "select distinct trans_dt,trans_no,bill_no,arrival_dt,serv_ctr,trans_type
                    from   td_parts_trans 
                    where  approval_status = 'U'
-                   and trans_type In ('I','T','D') ";
+                   and    trans_dt >= DATE_ADD(CURDATE(), INTERVAL -60 DAY)
+                   and    trans_dt <= curdate()
+                   and trans_type In ('I','T','D') 
+                   order by trans_dt";
 
         $result = mysqli_query($db,$sql);
 
