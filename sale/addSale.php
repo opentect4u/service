@@ -17,7 +17,6 @@
             $comp           = explode('*/*',$comp);
             $compqty        = $_POST['c_qty'];
             $serv           = $_POST['srv_ctr'];
-            $ordby          = $_POST['order_by'];
             $rkms           = $_POST['remarks'];
             $crtby          = $_SESSION['userId'];
             $crtdt          = date('Y-m-d h:i:s');
@@ -32,6 +31,8 @@
 
             $transNo      = $trans_no['trans_no']; 
 
+
+
             for($i = 0; $i < sizeof($comp); $i++){
 
                 $select  = "select sl_no,parts_desc from md_parts where sl_no = $comp[$i]";
@@ -40,12 +41,13 @@
                 $pname   = $data['parts_desc'];
 
                  $sql          = "insert into td_parts_trans(trans_dt,trans_no,trans_type,bill_no,arrival_dt,
-                                  comp_sl_no,parts_desc,comp_qty,serv_ctr,oder_by,remarks,created_by,created_dt)
-                                  values('$transDt',$transNo,'D','$billNo','$arvdt',$comp[$i],'$pname',-$compqty[$i],
-                                          $serv,'$ordby','$rkms','$crtby','$crtdt')";
+                                  comp_sl_no,parts_desc,comp_qty,serv_ctr,
+                                  remarks,created_by,created_dt)
+                                  values('$transDt',$transNo,'L','$billNo','$arvdt',$comp[$i],'$pname',-$compqty[$i],
+                                          $serv,'$rkms','$crtby','$crtdt')";
 
                  $result       = mysqli_query($db,$sql);
-                 
+
                 if($result){
                     $_SESSION['flag'] = true;
                     header("location:../stock/partsIn.php");
@@ -64,14 +66,15 @@
 
         $select = "select sl_no,center_name from md_service_centre";
                    
-        $serviceCenter = mysqli_query($db,$select);
+        $serviceCenter  = mysqli_query($db,$select);
+        $serviceCenter1 = mysqli_query($db,$select);
 
 
 
 ?>		
 
 <head>
-    <title>Damage Components</title>
+    <title>Component Sale</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -104,7 +107,7 @@
     <div class="content-wrapper">
 
         <div class="container-fluid">
-            <h2 style="margin-left:60px;text-align:center">Damage Components</h2>
+            <h2 style="margin-left:60px;text-align:center">Component Sale</h2>
             <hr class="new">
 
             <div class="card mb-3">
@@ -121,7 +124,7 @@
                                       action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" >
 
                                     <div class="form-header">
-                                        <h4>Damage Details</h4>
+                                        <h4>Sale Details</h4>
                                     </div>
 
                                     <div class="form-group row">
@@ -140,7 +143,7 @@
 
 
                                     <div class="form-group row">
-                                        <label for="bill_no" class="col-sm-2 col-form-label">Memo No.:</label>
+                                        <label for="bill_no" class="col-sm-2 col-form-label">Bill No.:</label>
 
                                         <div class="col-sm-8">
                                             <input type="text"
@@ -151,20 +154,6 @@
                                             />
                                         </div>
                                     </div> 
-
-
-                                    <div class="form-group row">   
-                                         <label for="order_by" class="col-sm-2 col-form-label">Odered By:</label>
-
-                                         <div class="col-sm-8">
-                                            <input type="text"
-                                                   class= "form-control"
-                                                   name = "order_by"
-                                                   id   = "order_by"
-                                            />
-                                        </div>
-                                    </div> 
-
 
                                     <div class="form-group row">
                                         <label for="serv_ctr" class="col-sm-2 col-form-label">Service Center:</label>
@@ -198,7 +187,7 @@
                                     <?php require("../stock/partsIntab.php");?>
 
                                   </div>
-
+                                  
                                     <div class="form-group row">
 
                                         <div class="col-sm-10">

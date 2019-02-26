@@ -184,7 +184,7 @@
                                                            '$transDt',
                                                            $parts[$i],
                                                            '$partsDesc',
-                                                           $qty[$i],
+                                                           -$qty[$i],
                                                             $srv,
                                                            '$rkms',
                                                            '$slNo', 

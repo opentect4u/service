@@ -62,7 +62,7 @@
                  
                 if($result){
                     $_SESSION['flag'] = true;
-                    header("location:partsDamage.php");
+                    header("location:../stock/partsIn.php");
                 }
 
             }

@@ -52,7 +52,7 @@
 
                 if($result){
                     $_SESSION['flag'] = true;
-                    header("location:partsTrf.php");
+                    header("location:../stock/partsIn.php");
                 }
 
             }

@@ -10,7 +10,8 @@
             $transDt  = $_GET['trans_dt'];
             $transCd  = $_GET['trans_cd'];
 
-            $sql     = "Select * from td_mc_trans where trans_dt = '$transDt' and trans_cd = $transCd";
+            $sql     = "Select * from td_mc_trans where trans_dt = '$transDt' and trans_cd = $transCd 
+                        and trans_type = 'I' and approval_status ='U'";
             
             $result  = mysqli_query($db,$sql);
 

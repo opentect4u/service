@@ -1,59 +1,10 @@
 <?php
-		ini_set("display_errors",1);
-		error_reporting(E_ALL);
+        ini_set("display_errors",1);
+        error_reporting(E_ALL);
 
-		require("../login/connect.php");
-		require("../login/session.php");
-		require("../dash/menu.php");
-
-        if($_SERVER['REQUEST_METHOD']=="POST"){
-
-            $transDt      = $_POST['trans_dt'];
-
-            $billNo         = checkInput($_POST['bill_no']);
-            $arvdt          = $_POST['trans_dt'];
-
-            $comp           = implode('*/*',$_POST["comp_name"]);
-            $comp           = explode('*/*',$comp);
-            $compqty        = $_POST['c_qty'];
-            $serv           = $_POST['srv_ctr'];
-            $ordby          = $_POST['order_by'];
-            $rkms           = $_POST['remarks'];
-            $crtby          = $_SESSION['userId'];
-            $crtdt          = date('Y-m-d h:i:s');
-
-            $select       = "select ifnull(max(trans_no),0) + 1 trans_no
-                                  from td_parts_trans
-                                  where trans_dt = '$transDt'";
-
-            $no           = mysqli_query($db,$select);
-
-            $trans_no     = mysqli_fetch_assoc($no);
-
-            $transNo      = $trans_no['trans_no']; 
-
-            for($i = 0; $i < sizeof($comp); $i++){
-
-                $select  = "select sl_no,parts_desc from md_parts where sl_no = $comp[$i]";
-                $result1 = mysqli_query($db,$select);
-                $data    = mysqli_fetch_assoc($result1);
-                $pname   = $data['parts_desc'];
-
-                 $sql          = "insert into td_parts_trans(trans_dt,trans_no,trans_type,bill_no,arrival_dt,
-                                  comp_sl_no,parts_desc,comp_qty,serv_ctr,oder_by,remarks,created_by,created_dt)
-                                  values('$transDt',$transNo,'D','$billNo','$arvdt',$comp[$i],'$pname',-$compqty[$i],
-                                          $serv,'$ordby','$rkms','$crtby','$crtdt')";
-
-                 $result       = mysqli_query($db,$sql);
-                 
-                if($result){
-                    $_SESSION['flag'] = true;
-                    header("location:../stock/partsIn.php");
-                }
-
-            }
-
-        }
+        require("../login/connect.php");
+        require("../login/session.php");
+        require("../dash/menu.php");
 
         function checkInput($data) {
                 $data = trim($data);
@@ -66,12 +17,13 @@
                    
         $serviceCenter = mysqli_query($db,$select);
 
+        $select1 = "select sl_no,parts_desc from md_parts";
 
-
+        $parts   = mysqli_query($db,$select1);
 ?>		
 
 <head>
-    <title>Damage Components</title>
+    <title>Component Ledger</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -104,7 +56,7 @@
     <div class="content-wrapper">
 
         <div class="container-fluid">
-            <h2 style="margin-left:60px;text-align:center">Damage Components</h2>
+            <h2 style="margin-left:60px;text-align:center">Component Ledger</h2>
             <hr class="new">
 
             <div class="card mb-3">
@@ -118,58 +70,63 @@
                             <div class="col-md-6 container form-wraper">
 
                                 <form method="POST" id="form"
-                                      action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" >
+                                      action="parts_ledger.php" >
 
                                     <div class="form-header">
-                                        <h4>Damage Details</h4>
+                                        <h4>Supply Date/Service Center/Component</h4>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="trans_dt" class="col-sm-2 col-form-label">Date:</label>
+                                        <label for="from_dt" class="col-sm-2 col-form-label">From Date:</label>
 
-                                        <div class="col-sm-8">
+                                        <div class="col-sm-6">
                                             <input type="date"
-                                                   name="trans_dt"
+                                                   name="from_dt"
                                                    class="form-control required"
-                                                   id="trans_dt"
+                                                   id="from_dt"
                                                    value=<?php echo date('Y-m-d'); ?>
-                                                   readonly
-                                            />
-                                        </div>
-                                    </div>
-
-
-                                    <div class="form-group row">
-                                        <label for="bill_no" class="col-sm-2 col-form-label">Memo No.:</label>
-
-                                        <div class="col-sm-8">
-                                            <input type="text"
-                                                   class= "form-control"
-                                                   name = "bill_no"
-                                                   id   = "bill_no"
                                                    required
                                             />
                                         </div>
-                                    </div> 
+                                    </div>
 
+                                    <div class="form-group row">
+                                        <label for="to_dt" class="col-sm-2 col-form-label">To Date:</label>
 
-                                    <div class="form-group row">   
-                                         <label for="order_by" class="col-sm-2 col-form-label">Odered By:</label>
-
-                                         <div class="col-sm-8">
-                                            <input type="text"
-                                                   class= "form-control"
-                                                   name = "order_by"
-                                                   id   = "order_by"
+                                        <div class="col-sm-6">
+                                            <input type="date"
+                                                   name="to_dt"
+                                                   class="form-control required"
+                                                   id="to_dt"
+                                                   value=<?php echo date('Y-m-d'); ?>
+                                                   required
                                             />
                                         </div>
-                                    </div> 
+                                    </div>
 
+                                    <div class="form-group row">
+                                        <label for="parts_desc" class="col-sm-2 col-form-label">Parts Name:</label>
+
+                                        <div class="col-sm-6">
+                                            <Select class="form-control required"
+                                                    name ="parts_desc"
+                                                    id="parts_desc">
+                                                <option value="">Select Parts</option>
+                                                <?php
+
+                                                    while($data = mysqli_fetch_assoc($parts)){
+                                                        echo ("<option value=".$data['sl_no'].">".
+                                                               $data['parts_desc']."</option>");
+                                                    }
+                                                ?>    
+                                            </Select>
+                                        </div>
+                                    </div>
 
                                     <div class="form-group row">
                                         <label for="serv_ctr" class="col-sm-2 col-form-label">Service Center:</label>
 
-                                        <div class="col-sm-8">
+                                        <div class="col-sm-6">
                                             <Select class="form-control required"
                                                     name ="srv_ctr"
                                                     id="srv_ctr">
@@ -185,28 +142,16 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group row">   
-                                         <label for="remarks" class="col-sm-2 col-form-label">Remarks:</label>
-
-                                         <div class="col-sm-8">
-                                            <textarea type="text" class= "form-control" name = "remarks" id = "remarks" required></textarea>
-                                        </div>
-                                    </div> 
-
                                     <div class="form-group row">
-
-                                    <?php require("../stock/partsIntab.php");?>
-
-                                  </div>
 
                                     <div class="form-group row">
 
                                         <div class="col-sm-10">
-                                            <input type="button" 
+                                            <input type="submit" 
                                                    class="subbtn"
                                                    style="margin-left: 25px;"
                                                    id = "subbtn"
-                                                   value="Save" />
+                                                   value="Submit" />
                                             </div>
                                         </div>
                                 </form>
@@ -218,33 +163,3 @@
         </div>
     </div>
 </div>
-<!--<script>
-
-    $("#form").validate();
-
-    $(document).ready(function(){
-
-        $('#emp_catg').change(function(){
-
-            if($(this).val() == 1){
-
-                $('.grade_pay').show();
-
-            }
-            else{
-
-                $('.band_pey').text('Pay:');
-
-                $('.grade_pey').hide();
-
-            }
-
-        });
-
-    });
-
-</script>-->
-
-<?php
-        require("../dash/footer.php");
-?> 

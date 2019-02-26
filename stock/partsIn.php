@@ -16,7 +16,7 @@
                    where  approval_status = 'U'
                    and    trans_dt >= DATE_ADD(CURDATE(), INTERVAL -60 DAY)
                    and    trans_dt <= curdate()
-                   and trans_type In ('I','T','D') 
+                   and trans_type In ('I','T','D','L') 
                    order by trans_dt";
 
         $result = mysqli_query($db,$sql);
@@ -57,11 +57,15 @@
                 </a>
                 &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
                 <a class="button" href="../transfer/addTrf.php"><i class="fa fa-plus"></i>
-                    <span>Transfer Out</span>
+                    <span>Transfer</span>
                 </a>
                 &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
                 <a class="button" href="../damage/addDamage.php"><i class="fa fa-plus"></i>
-                    <span>Damage Out</span>
+                    <span>Damage</span>
+                </a>
+                &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+                <a class="button" href="../sale/addSale.php"><i class="fa fa-plus"></i>
+                    <span>Sale</span>
                 </a>
             </div>
             <hr class="new">
@@ -98,6 +102,9 @@
                                                 }elseif($type=='T'){
                                                    $typeDesc = "Transfer"; 
                                                    $path     = "../transfer/editTrf.php";
+                                                }elseif($type=='L'){
+                                                   $typeDesc = "Sale";
+                                                   $path     = "../sale/editSale.php";   
                                                 }else{
                                                     $typeDesc = "Damage Out";
                                                     $path     = "../damage/editDamage.php";

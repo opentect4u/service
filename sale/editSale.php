@@ -6,46 +6,56 @@
 		require("../login/session.php");
 		require("../dash/menu.php");
 
+        if($_SERVER['REQUEST_METHOD']=="GET"){
+            $trans_dt = $_GET['trans_dt'];
+            $transNo  = $_GET['trans_no'];
+
+            $sql = "select * from td_parts_trans where trans_dt = '$trans_dt' and trans_no = $transNo";
+
+            $result = mysqli_query($db,$sql);
+
+            $rtv    = mysqli_fetch_assoc($result);
+
+            $srv_ctr  = $rtv['serv_ctr'];
+            $rkms     = $rtv['remarks'];
+            $bill_no  = $rtv['bill_no'];
+
+            $result1  =  mysqli_query($db,$sql);
+           
+        }
+
         if($_SERVER['REQUEST_METHOD']=="POST"){
 
             $transDt      = $_POST['trans_dt'];
+            $transNo      = $_POST['trans_no'];
 
             $billNo         = checkInput($_POST['bill_no']);
-            $arvdt          = $_POST['trans_dt'];
+           
 
             $comp           = implode('*/*',$_POST["comp_name"]);
             $comp           = explode('*/*',$comp);
             $compqty        = $_POST['c_qty'];
             $serv           = $_POST['srv_ctr'];
-            $ordby          = $_POST['order_by'];
             $rkms           = $_POST['remarks'];
             $crtby          = $_SESSION['userId'];
             $crtdt          = date('Y-m-d h:i:s');
 
-            $select       = "select ifnull(max(trans_no),0) + 1 trans_no
-                                  from td_parts_trans
-                                  where trans_dt = '$transDt'";
-
-            $no           = mysqli_query($db,$select);
-
-            $trans_no     = mysqli_fetch_assoc($no);
-
-            $transNo      = $trans_no['trans_no']; 
-
             for($i = 0; $i < sizeof($comp); $i++){
 
-                $select  = "select sl_no,parts_desc from md_parts where sl_no = $comp[$i]";
-                $result1 = mysqli_query($db,$select);
-                $data    = mysqli_fetch_assoc($result1);
-                $pname   = $data['parts_desc'];
-
-                 $sql          = "insert into td_parts_trans(trans_dt,trans_no,trans_type,bill_no,arrival_dt,
-                                  comp_sl_no,parts_desc,comp_qty,serv_ctr,oder_by,remarks,created_by,created_dt)
-                                  values('$transDt',$transNo,'D','$billNo','$arvdt',$comp[$i],'$pname',-$compqty[$i],
-                                          $serv,'$ordby','$rkms','$crtby','$crtdt')";
+                $sql         = "update td_parts_trans 
+                                   set comp_qty     =  -$compqty[$i],
+                                       serv_ctr     =  $serv,
+                                       remarks      =  '$rkms',
+                                       modified_by  =  '$crtby',
+                                       modified_dt  =  '$crtdt',
+                                       bill_no      =  '$billNo'
+                                where  trans_dt     =  '$transDt'
+                                and    trans_no     =   $transNo
+                                and    trans_type   =  'L'
+                                and    comp_sl_no   =  $comp[$i]";             
 
                  $result       = mysqli_query($db,$sql);
-                 
+
                 if($result){
                     $_SESSION['flag'] = true;
                     header("location:../stock/partsIn.php");
@@ -64,14 +74,18 @@
 
         $select = "select sl_no,center_name from md_service_centre";
                    
-        $serviceCenter = mysqli_query($db,$select);
+        $serviceCenter  = mysqli_query($db,$select);
+
+
+        $select1 = "select sl_no,center_name from md_service_centre";
+        $srvTo   = mysqli_query($db,$select1);
 
 
 
 ?>		
 
 <head>
-    <title>Damage Components</title>
+    <title>Edit Component Sale</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -104,7 +118,7 @@
     <div class="content-wrapper">
 
         <div class="container-fluid">
-            <h2 style="margin-left:60px;text-align:center">Damage Components</h2>
+            <h2 style="margin-left:60px;text-align:center">Edit Component Sale</h2>
             <hr class="new">
 
             <div class="card mb-3">
@@ -121,7 +135,7 @@
                                       action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" >
 
                                     <div class="form-header">
-                                        <h4>Damage Details</h4>
+                                        <h4>Sale Details</h4>
                                     </div>
 
                                     <div class="form-group row">
@@ -132,7 +146,7 @@
                                                    name="trans_dt"
                                                    class="form-control required"
                                                    id="trans_dt"
-                                                   value=<?php echo date('Y-m-d'); ?>
+                                                   value=<?php echo $trans_dt; ?>
                                                    readonly
                                             />
                                         </div>
@@ -140,31 +154,29 @@
 
 
                                     <div class="form-group row">
-                                        <label for="bill_no" class="col-sm-2 col-form-label">Memo No.:</label>
+                                        <label for="bill_no" class="col-sm-2 col-form-label">Bill No.:</label>
 
                                         <div class="col-sm-8">
                                             <input type="text"
                                                    class= "form-control"
                                                    name = "bill_no"
                                                    id   = "bill_no"
-                                                   required
+                                                   value = <?php echo $bill_no; ?>
                                             />
                                         </div>
                                     </div> 
 
-
-                                    <div class="form-group row">   
-                                         <label for="order_by" class="col-sm-2 col-form-label">Odered By:</label>
-
-                                         <div class="col-sm-8">
-                                            <input type="text"
+                                    <div class="form-group row">
+                                        
+                                        <div class="col-sm-8">
+                                            <input type="hidden"
                                                    class= "form-control"
-                                                   name = "order_by"
-                                                   id   = "order_by"
+                                                   name = "trans_no"
+                                                   id   = "trans_no"
+                                                   value = <?php echo $transNo; ?>
                                             />
                                         </div>
                                     </div> 
-
 
                                     <div class="form-group row">
                                         <label for="serv_ctr" class="col-sm-2 col-form-label">Service Center:</label>
@@ -173,12 +185,13 @@
                                             <Select class="form-control required"
                                                     name ="srv_ctr"
                                                     id="srv_ctr">
-                                                <option value="">Select Service Center</option>
                                                 <?php
+                                                    while($data = mysqli_fetch_assoc($serviceCenter)){ ?>
 
-                                                    while($data = mysqli_fetch_assoc($serviceCenter)){
-                                                        echo ("<option value=".$data['sl_no'].">".
-                                                               $data['center_name']."</option>");
+                                                        <option value='<?php echo $data['sl_no'];?>'
+                                                                       <?php echo ($srv_ctr==$data['sl_no'])?'selected':'';  ?>><?php echo $data['center_name']; ?>
+                                                        </option> 
+                                                <?php               
                                                     }
                                                 ?>    
                                             </Select>
@@ -189,20 +202,19 @@
                                          <label for="remarks" class="col-sm-2 col-form-label">Remarks:</label>
 
                                          <div class="col-sm-8">
-                                            <textarea type="text" class= "form-control" name = "remarks" id = "remarks" required></textarea>
+                                            <textarea type="text" class= "form-control" name = "remarks" id = "remarks" required><?php echo $rkms; ?></textarea>
                                         </div>
                                     </div> 
 
                                     <div class="form-group row">
 
-                                    <?php require("../stock/partsIntab.php");?>
-
+                                    <?php require("../stock/partsIntabEdit.php");?>
                                   </div>
 
                                     <div class="form-group row">
 
                                         <div class="col-sm-10">
-                                            <input type="button" 
+                                            <input type="submit" 
                                                    class="subbtn"
                                                    style="margin-left: 25px;"
                                                    id = "subbtn"
@@ -218,32 +230,7 @@
         </div>
     </div>
 </div>
-<!--<script>
 
-    $("#form").validate();
-
-    $(document).ready(function(){
-
-        $('#emp_catg').change(function(){
-
-            if($(this).val() == 1){
-
-                $('.grade_pay').show();
-
-            }
-            else{
-
-                $('.band_pey').text('Pay:');
-
-                $('.grade_pey').hide();
-
-            }
-
-        });
-
-    });
-
-</script>-->
 
 <?php
         require("../dash/footer.php");
