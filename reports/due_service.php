@@ -4,62 +4,70 @@
 
         require("../login/connect.php");
         require("../login/session.php");
-        require("../dash/menu.php");
+       // require("../dash/menu.php");
 
 
-        $row['date']            = [];
-        $row['transType']       = [];
-        $row['billNo']          = [];
-        $row['qty']             = [];  
-        $row['remarks']         = [];  
-        $row['nos']             = [];  
-        $tot                    = 0;
-        $row['parts']           = [];
+        $data['cust']     = [];
+        $data['mcname']   = [];
+        $data['qty']      = [];  
 
         if($_SERVER['REQUEST_METHOD']=="POST"){  
 
-            $from_dt         = $_POST['from_dt'];
-            $to_dt           = $_POST['to_dt'];
-            $parts_desc      = $_POST['parts_desc'];
-            $srv             = $_POST['srv_ctr'];
-
+            $trans_dt         = $_POST['trans_dt'];
+            $srv              = $_POST['srv_ctr'];
+    
             $select = "select sl_no,center_name from md_service_centre
                        where sl_no  = $srv";
                    
             $result = mysqli_query($db,$select);
+
             $row1   = mysqli_fetch_assoc($result);
+
             $srvCtr = $row1['center_name'];
 
-            $sql              = "select sl_no,parts_desc from md_parts
-                                 where sl_no = $parts_desc";
-            $query            = mysqli_query($db,$sql);
-            $slno             = mysqli_fetch_assoc($query);
-            $parts            = $slno['parts_desc'];
-
-            $select =  "select * from td_parts_trans
-                        where trans_dt between '$from_dt' and '$to_dt'
-                        and   comp_sl_no = $parts_desc
-                        and   serv_ctr   = $srv
-                        order by trans_dt,trans_no";
-
+   
+            $sql    = "select cust_cd,mc_type_id,count(mc_type_id)mc_nos from td_mc_trans 
+                       where  trans_type   in ('I','S')
+                       and trans_dt    <= '$trans_dt'
+                       and srv_ctr      = $srv
+                       and approval_status = 'U'
+                       group by cust_cd,mc_type_id
+                       order by cust_cd,mc_type_id";
+           
+            $result =  mysqli_query($db,$sql);
             
-            $result = mysqli_query($db,$select);
-            $nos    = mysqli_num_rows($result);
-            while($data   = mysqli_fetch_assoc($result)){
-                array_push($row['date']             ,$data['trans_dt']);
-                array_push($row['transType']        ,$data['trans_type']);
-                array_push($row['billNo']           ,$data['bill_no']);
-                array_push($row['qty']              ,$data['comp_qty']);
-                array_push($row['remarks']          ,$data['remarks']);
-                array_push($row['nos']              ,$nos);
-            }
+            while($row   =  mysqli_fetch_assoc($result)){
 
-        }
+                
+
+
+                for($j=0;$j<sizeof($row['cust_cd']);$j++){
+
+                    $custCd   = $row['cust_cd'][$j];
+                $mcType   = $row['mc_type_id'][$j];
+
+                 
+                    $custSql = "select cust_name from md_customers where cust_cd = $custCd";
+
+                    $result  = mysqli_query($db,$custSql);
+                    $cust_data   = mysqli_fetch_assoc($result);
+
+                    $sql    = "select mc_id,mc_type from md_mc_type where mc_id = $mcType";
+                    $result = mysqli_query($db,$sql);
+                    $mc     = mysqli_fetch_assoc($result);
+                    }
+
+                array_push($data['cust']    ,$cust_data['cust_name']);
+                array_push($data['mcname']  ,$row['mc_type_id']);
+                array_push($data['qty']     ,$row['mc_nos']);
+               } 
+            }
+    }    
 ?>
 
 <html>
 <head>
-    <title>Component Ledger</title>
+    <title>Stock Position</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -128,63 +136,44 @@
 <div style="min-height: 500px;">
 <div class="content-wrapper">
     <div class="container-fluid">
-        <h2 style="margin-left:60px;text-align:center"><?php echo 'Stock Ledger Between : '.date('d/m/Y',strtotime($from_dt)).' To '.date('d/m/Y',strtotime($to_dt)); ?></h2>
+        <!--<h2 style="margin-left:60px;text-align:center"><?php echo $item_desc.' Stock Position As On : '.date('d/m/Y',strtotime($trans_dt)); ?></h2>-->
         <hr class="new">
         <div class="card mb-3">
             <div class="card-header" style="margin-left:60px;">
+
                  <i class="fa fa-home btn btn-primary" >
                     <span><?php echo "Service Center : ".$srvCtr; ?></span>
                 </i>
+                
+                
             </div>
-
             <hr class="new">
                 <div class="card-body">
                     <div class="w3-responsive" style="margin-left:60px;" id="divToPrint">
                         <table id="dta" class="w3-table-all" width="50%">
-                            <caption><h3><u><?php echo 'Stock Ledger Between '.date('d/m/Y',strtotime($from_dt)).' To '.date('d/m/Y',strtotime($to_dt)).' for '.$srvCtr;
+                            <!--<caption><h3><u><?php echo $item_desc.' Stock Position As On : '.date('d/m/Y',strtotime($trans_dt)).
+                                                ' for '.$srvCtr;
                                      ?></u></h3>
-                             <br>
-                             <h4><?php echo 'Component : '.$parts;?></h4>
-                            </caption>
+                            </caption>-->
                             <thead>
                                 <tr class="w3-light-grey">
-                                    <th>Date</th>
+                                    <th>Sl.No.</th>
+                                    <th>Customer</th>
                                     <th>Type</th>
-                                    <th>Bill No.</th>
-                                    <th>Remarks</th>
                                     <th>Quantity</th>
-                                    <th>Balance</th>
                                 </tr>
                             </thead>
                             <tbody>
                                  <?php
-
-                                    for($i=0;$i<sizeof($row['nos']);$i++){?>
+                                    for($i=0;$i<sizeof($data['cust']);$i++){?>
                                         <tr>
-                                            <td><?php echo date('d/m/Y',strtotime($row['date'][$i])); ?></td>
-                                            <td><?php if($row['transType'][$i]=="I"){
-                                                         echo "In";
-                                                      }elseif($row['transType'][$i]=="T"){
-                                                         echo "Transfer Out";
-                                                      }elseif($row['transType'][$i]=="O"){
-                                                         echo "Service Out";
-                                                      }elseif($row['transType'][$i]=="L"){
-                                                         echo "Sale Out";
-                                                      }else{
-                                                         echo "Damage Out";   
-                                                      } 
-                                                ?>
-                                            </td>
-                                            <td><?php echo $row['billNo'][$i];   ?></td>
-                                            <td><?php echo $row['remarks'][$i];  ?></td>
-                                            <td><?php echo abs($row['qty'][$i]); ?></td>
-                                            <td><?php $tot= $tot + $row['qty'][$i];
-                                                        echo $tot;
-                                                ?>
-                                            </td>
+                                            <td><?php echo $i+1;?></td>
+                                            <td><?php echo $data['cust'][$i]; ?></td>
+                                            <td><?php echo $data['mcname'][$i]; ?></td>
+                                            <td><?php echo $data['qty'][$i]; ?></td>
                                         </tr>    
                                  <?php
-                                     }         
+                                    }         
                                  ?>      
                             </tbody>    
                         </table>
@@ -200,3 +189,9 @@
 <?php
         require("../dash/footer.php");
 ?>
+
+<!--<script>
+    $(document).ready(function() {
+        $('#dta').DataTable();
+    } );
+</script>-->

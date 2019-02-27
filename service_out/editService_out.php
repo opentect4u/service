@@ -67,14 +67,13 @@
 
         if($_SERVER['REQUEST_METHOD']=="POST"){
 
-            echo "hi";
-
-
             $transDt      = $_POST['trans_dt'];
             $transCd      = $_POST['trans_cd'];
             $slNo         = $_POST['sl_no'];
             $rcvDt        = $_POST['in_dt'];
             $srv          = $_POST['srv_ctr'];
+            $bill_no      = $_POST['bill_no'];
+            $amt          = $_POST['amount'];
             
             $sql    = "select * from td_mc_trans 
                        where trans_dt = '$rcvDt' 
@@ -115,6 +114,8 @@
                                                      cust_person,
                                                      cust_per_ph,
                                                      engg_invol,
+                                                     bill_no,
+                                                     amount,
                                                      remarks,
                                                      approval_status,
                                                      created_by,
@@ -134,6 +135,8 @@
                                                     '$cust',
                                                     '$ph',
                                                     '$tech',
+                                                    '$bill_no',
+                                                     $amt,
                                                     '$rkms',
                                                     'A',
                                                     '$crtby',
@@ -392,6 +395,30 @@
                                                    class= "form-control"
                                                    name = "delv_ph"
                                                    id   = "delv_ph"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="bill_no" class="col-sm-2 col-form-label">Bill No.:</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="text"
+                                                   class= "form-control"
+                                                   name = "bill_no"
+                                                   id   = "bill_no"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="amount" class="col-sm-2 col-form-label">Amount:</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="text"
+                                                   class= "form-control"
+                                                   name = "amount"
+                                                   id   = "amount"
                                             />
                                         </div>
                                     </div>

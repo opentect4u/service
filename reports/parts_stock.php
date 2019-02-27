@@ -12,10 +12,13 @@
         $data['mcname']   = [];
         $data['qty']      = [];  
 
+        $data['mc_id']    = [];
+
         if($_SERVER['REQUEST_METHOD']=="POST"){  
 
             $trans_dt         = $_POST['trans_dt'];
             $srv              = $_POST['srv_ctr'];
+            $item             = $_POST['item'];
 
             $select = "select sl_no,center_name from md_service_centre
                        where sl_no  = $srv";
@@ -26,37 +29,70 @@
 
             $srvCtr = $row1['center_name'];
 
-            $sql              = "select sl_no,parts_desc from md_parts";
-            $query            = mysqli_query($db,$sql);
-            while($slno       = mysqli_fetch_assoc($query)){
-                $sl_no = $slno['sl_no'];
-                array_push($data['sl_no'], $sl_no);
-            }
+            if($item=='C'){
+                $item_desc = "Component";
+                $sql              = "select sl_no,parts_desc from md_parts";
+                $query            = mysqli_query($db,$sql);
+                while($slno       = mysqli_fetch_assoc($query)){
+                    $sl_no = $slno['sl_no'];
+                    array_push($data['sl_no'], $sl_no);
+                }
 
-            $parts_type = $data['sl_no'];
+                $parts_type = $data['sl_no'];
 
-            for($i=0;$i<sizeof($parts_type);$i++){
-                $sum    = "select ifnull(sum(comp_qty),0)nos from td_parts_trans 
-                           where comp_sl_no = $parts_type[$i] 
-                           and trans_dt <= '$trans_dt'
-                           and serv_ctr = $srv";
-                $result =  mysqli_query($db,$sum);
-                $row    =  mysqli_fetch_assoc($result);
+                for($i=0;$i<sizeof($parts_type);$i++){
+                    $sum    = "select ifnull(sum(comp_qty),0)nos from td_parts_trans 
+                               where comp_sl_no = $parts_type[$i] 
+                               and trans_dt <= '$trans_dt'
+                               and serv_ctr = $srv";
+                    $result =  mysqli_query($db,$sum);
+                    $row    =  mysqli_fetch_assoc($result);
 
-                $sql    = "select sl_no,parts_desc from md_parts where sl_no = $parts_type[$i]";
-                $result = mysqli_query($db,$sql);
-                $desc   = mysqli_fetch_assoc($result);
+                    $sql    = "select sl_no,parts_desc from md_parts where sl_no = $parts_type[$i]";
+                    $result = mysqli_query($db,$sql);
+                    $desc   = mysqli_fetch_assoc($result);
 
-                array_push($data['slno']    ,$parts_type[$i]);
-                array_push($data['mcname']  ,$desc['parts_desc']);
-                array_push($data['qty']     ,$row['nos']);
-            }
+                    array_push($data['slno']    ,$parts_type[$i]);
+                    array_push($data['mcname']  ,$desc['parts_desc']);
+                    array_push($data['qty']     ,$row['nos']);
+                }
+            }else{
+                $item_desc = "Device";
+                $sql              = "select mc_id,mc_type from md_mc_type";
+                $query            = mysqli_query($db,$sql);
+                while($mcid       = mysqli_fetch_assoc($query)){
+                    $mc_id = $mcid['mc_id'];
+                    array_push($data['mc_id'], $mc_id);
+                }
+
+                $mc_type = $data['mc_id'];
+
+                for($i=0;$i<sizeof($mc_type);$i++){
+                    $in    =  "select count(mc_type_id)in_nos from td_mc_trans 
+                               where mc_type_id = $mc_type[$i] 
+                               and trans_type   in ('I','S')
+                               and trans_dt    <= '$trans_dt'
+                               and srv_ctr      = $srv
+                               and approval_status = 'U'";
+
+                    $result =  mysqli_query($db,$in);
+                    $row    =  mysqli_fetch_assoc($result);
+
+                    $sql    = "select mc_id,mc_type from md_mc_type where mc_id = $mc_type[$i]";
+                    $result = mysqli_query($db,$sql);
+                    $desc   = mysqli_fetch_assoc($result);
+
+                    array_push($data['slno']    ,$mc_type[$i]);
+                    array_push($data['mcname']  ,$desc['mc_type']);
+                    array_push($data['qty']     ,$row['in_nos']);
+            }   
         }
+    }    
 ?>
 
 <html>
 <head>
-    <title>Component Stock Position</title>
+    <title>Stock Position</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -125,7 +161,7 @@
 <div style="min-height: 500px;">
 <div class="content-wrapper">
     <div class="container-fluid">
-        <h2 style="margin-left:60px;text-align:center"><?php echo 'Component Stock Position As On : '.date('d/m/Y',strtotime($trans_dt)); ?></h2>
+        <h2 style="margin-left:60px;text-align:center"><?php echo $item_desc.' Stock Position As On : '.date('d/m/Y',strtotime($trans_dt)); ?></h2>
         <hr class="new">
         <div class="card mb-3">
             <div class="card-header" style="margin-left:60px;">
@@ -140,7 +176,7 @@
                 <div class="card-body">
                     <div class="w3-responsive" style="margin-left:60px;" id="divToPrint">
                         <table id="dta" class="w3-table-all" width="50%">
-                            <caption><h3><u><?php echo 'Component Stock Position As On : '.date('d/m/Y',strtotime($trans_dt)).
+                            <caption><h3><u><?php echo $item_desc.' Stock Position As On : '.date('d/m/Y',strtotime($trans_dt)).
                                                 ' for '.$srvCtr;
                                      ?></u></h3>
                             </caption>

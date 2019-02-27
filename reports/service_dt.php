@@ -19,7 +19,7 @@
 ?>		
 
 <head>
-    <title>Component Stock Position</title>
+    <title>Due Service</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -52,7 +52,7 @@
     <div class="content-wrapper">
 
         <div class="container-fluid">
-            <h2 style="margin-left:60px;text-align:center">Component Stock Position</h2>
+            <h2 style="margin-left:60px;text-align:center">Due Service Details</h2>
             <hr class="new">
 
             <div class="card mb-3">
@@ -66,7 +66,7 @@
                             <div class="col-md-6 container form-wraper">
 
                                 <form method="POST" id="form"
-                                      action="parts_stock.php" >
+                                      action="due_service.php" >
 
                                     <div class="form-header">
                                         <h4>Supply Date & Service Center</h4>
@@ -83,20 +83,6 @@
                                                    value=<?php echo date('Y-m-d'); ?>
                                                    required
                                             />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="item" class="col-sm-2 col-form-label">Item:</label>
-
-                                        <div class="col-sm-6">
-                                            <Select class="form-control required"
-                                                    name ="item"
-                                                    id="item">
-                                                <option value="">Select Item</option>
-                                                <option value="C">Component</option>
-                                                <option value="D">Device</option>
-                                            </Select>
                                         </div>
                                     </div>
 

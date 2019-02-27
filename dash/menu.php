@@ -58,9 +58,9 @@
   </button>
   <div class="dropdown-container">
     <ul>
-      <li><a href="../reports/as_on_dt.php">Component Stock</a></li>
+      <li><a href="../reports/as_on_dt.php">Stock</a></li>
       <li><a href="../reports/parts_dt.php">Component Ledger</a></li>
-      <li><a href="#">Due Service Details</a></li>
+      <li><a href="../reports/service_dt.php">Due Service Details</a></li>
       <li><a href="#">Engineers' Service Detail</a></li>
     </ul>  
   </div>
