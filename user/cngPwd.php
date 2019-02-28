@@ -1,51 +1,39 @@
 <?php
-        ini_set("display_errors",1);
-        error_reporting(E_ALL);
+    ini_set("display_errors",1);
+    error_reporting(E_ALL);
 
-        require("../login/connect.php");
-        require("../login/session.php");
-        require("../dash/menu.php");
+    require("../login/connect.php");
+    require("../login/session.php");
+    require("../dash/menu.php");
 
-        if($_SERVER['REQUEST_METHOD']=="GET"){
-            $slno   = $_GET['emp_code'];
+        $logInId    = $_SESSION['userId'];
 
-            $sql    = "select emp_code,tech_name,tech_ph from md_tech
-                       where  emp_code=".$slno;
+        $sql        = "select * from md_users where user_id = '$logInId'";
+        $result     = mysqli_query($db,$sql);
+        $data       = mysqli_fetch_assoc($result);
 
-         
-            $result = mysqli_query($db,$sql);
+        $userName   = $data['user_name'];
+        $userType   = $data['user_type'];
 
-            if($result){
-                if(mysqli_num_rows($result) > 0){
-                    $data = mysqli_fetch_assoc($result);
-
-                    $slno = $data['emp_code'];
-                    $name = $data['tech_name'];
-                    $phno = $data['tech_ph'];
-                }
-            }
-        }
 
         if($_SERVER['REQUEST_METHOD']=="POST"){
-            $slno     = checkInput($_POST['emp_code']);
-            $name     = checkInput($_POST['tech_name']);
-            $phno     = checkInput($_POST['tech_ph']);
+            $userId     = checkInput($_POST['user_id']);
+            $pwd        = checkInput($_POST['password']);
+            $pwdHash    = password_hash($pwd,PASSWORD_DEFAULT);
+            $crtby      = $_SESSION['userId'];
+            $crtdt      = date('Y-m-d h:i:s');
 
-            $crtby    = $_SESSION['userId'];
-            $crtdt    = date('Y-m-d h:i:s');
+            $sql        = "update md_users
+                           set    password     ='$pwdHash',
+                                  modified_by  ='$crtby',
+                                  modified_dt  ='$crtdt'
+                           where  user_id      ='$userId'";
+                          
+            $result   = mysqli_query($db,$sql);
 
-            $sql      = "Update md_tech
-                         set tech_name ="."'".$name."'".
-                             ",tech_ph="."'".$phno."'".
-                             ",modified_by="."'".$crtby."'".
-                             ",modified_dt="."'".$crtdt."'".
-                          "where emp_code=".$slno;
-
-            $update   = mysqli_query($db,$sql);
-
-            if($update){
+            if($result){
                 $_SESSION['flag'] = true;
-                header("location:tech.php");
+                header("location:../dash/dashboard.php");
             }
         }
 
@@ -55,10 +43,10 @@
                 $data = htmlspecialchars($data);
                 return $data;
         }
-?>      
+?>    
 
 <head>
-    <title>Edit Technician</title>
+    <title>Edit User</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -91,7 +79,7 @@
     <div class="content-wrapper">
 
         <div class="container-fluid">
-            <h2 style="margin-left:60px;text-align:center">Edit Technician Details</h2>
+            <h2 style="margin-left:60px;text-align:center">Edit User</h2>
             <hr class="new">
 
             <div class="card mb-3">
@@ -108,47 +96,65 @@
                                       action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" >
 
                                     <div class="form-header">
-                                        <h4>Technician Details</h4>
+                                        <h4>User Details</h4>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="emp_code" class="col-sm-2 col-form-label">Employee No.:</label>
+                                        <label for="user_id" class="col-sm-2 col-form-label">User ID:</label>
 
                                         <div class="col-sm-8">
                                             <input type="text"
-                                                   name="emp_code"
+                                                   name="user_id"
                                                    class="form-control required"
-                                                   id="emp_code"
-                                                   value ="<?php echo $slno;?>"
+                                                   id="user_id"
+                                                   value="<?php echo $logInId; ?>"
                                                    readonly
                                             />
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="tech_name" class="col-sm-2 col-form-label">Name:</label>
+                                        <label for="password" class="col-sm-2 col-form-label">Password:</label>
 
                                         <div class="col-sm-8">
-                                            <input type="text"
-                                                   name="tech_name"
+                                            <input type="password"
+                                                   name="password"
                                                    class="form-control required"
-                                                   id="tech_name"
-                                                   value ="<?php echo $name;?>"
+                                                   id="password"
                                                    required
                                             />
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="emp_code" class="col-sm-2 col-form-label">Contact No.:</label>
+                                        <label for="user_name" class="col-sm-2 col-form-label">Name:</label>
 
                                         <div class="col-sm-8">
                                             <input type="text"
-                                                   name="tech_ph"
-                                                   class="form-control required"
-                                                   id="tech_ph"
-                                                   value ="<?php echo $phno;?>"
-                                                   required
+                                                   class= "form-control"
+                                                   name = "user_name"
+                                                   id   = "user_name"
+                                                   value = "<?php echo $userName; ?>"
+                                                   readonly
+                                            />
+                                        </div>
+                                    </div> 
+
+                                    <div class="form-group row">
+                                        <label for="user_type" class="col-sm-2 col-form-label">User Type:</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="text"
+                                                   class= "form-control"
+                                                   name = "user_type"
+                                                   id   = "user_type"
+                                                   value = "<?php if($userType=='A'){
+                                                                     echo "Admin";
+                                                                  }else{
+                                                                     echo "General"; 
+                                                                  } 
+                                                            ?>"
+                                                   readonly
                                             />
                                         </div>
                                     </div>
@@ -170,3 +176,7 @@
         </div>
     </div>
 </div>
+
+<?php
+        require("../dash/footer.php");
+?> 

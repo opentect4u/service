@@ -6,59 +6,20 @@
         require("../login/session.php");
         require("../dash/menu.php");
 
-        if($_SERVER['REQUEST_METHOD']=="GET"){
-            $slno   = $_GET['emp_code'];
-
-            $sql    = "select emp_code,tech_name,tech_ph from md_tech
-                       where  emp_code=".$slno;
-
-         
-            $result = mysqli_query($db,$sql);
-
-            if($result){
-                if(mysqli_num_rows($result) > 0){
-                    $data = mysqli_fetch_assoc($result);
-
-                    $slno = $data['emp_code'];
-                    $name = $data['tech_name'];
-                    $phno = $data['tech_ph'];
-                }
-            }
-        }
-
-        if($_SERVER['REQUEST_METHOD']=="POST"){
-            $slno     = checkInput($_POST['emp_code']);
-            $name     = checkInput($_POST['tech_name']);
-            $phno     = checkInput($_POST['tech_ph']);
-
-            $crtby    = $_SESSION['userId'];
-            $crtdt    = date('Y-m-d h:i:s');
-
-            $sql      = "Update md_tech
-                         set tech_name ="."'".$name."'".
-                             ",tech_ph="."'".$phno."'".
-                             ",modified_by="."'".$crtby."'".
-                             ",modified_dt="."'".$crtdt."'".
-                          "where emp_code=".$slno;
-
-            $update   = mysqli_query($db,$sql);
-
-            if($update){
-                $_SESSION['flag'] = true;
-                header("location:tech.php");
-            }
-        }
-
         function checkInput($data) {
                 $data = trim($data);
                 $data = stripslashes($data);
                 $data = htmlspecialchars($data);
                 return $data;
         }
-?>      
+
+        $select1 = "select emp_code,tech_name from md_tech";
+
+        $tech   = mysqli_query($db,$select1);
+?>		
 
 <head>
-    <title>Edit Technician</title>
+    <title>Technician's Service Detail</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -91,7 +52,7 @@
     <div class="content-wrapper">
 
         <div class="container-fluid">
-            <h2 style="margin-left:60px;text-align:center">Edit Technician Details</h2>
+            <h2 style="margin-left:60px;text-align:center">Technician's Service Detail</h2>
             <hr class="new">
 
             <div class="card mb-3">
@@ -105,60 +66,69 @@
                             <div class="col-md-6 container form-wraper">
 
                                 <form method="POST" id="form"
-                                      action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" >
+                                      action="engg_service.php" >
 
                                     <div class="form-header">
-                                        <h4>Technician Details</h4>
+                                        <h4>Supply Dates & Technician</h4>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="emp_code" class="col-sm-2 col-form-label">Employee No.:</label>
+                                        <label for="from_dt" class="col-sm-2 col-form-label">From Date:</label>
 
-                                        <div class="col-sm-8">
-                                            <input type="text"
-                                                   name="emp_code"
+                                        <div class="col-sm-6">
+                                            <input type="date"
+                                                   name="from_dt"
                                                    class="form-control required"
-                                                   id="emp_code"
-                                                   value ="<?php echo $slno;?>"
-                                                   readonly
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="tech_name" class="col-sm-2 col-form-label">Name:</label>
-
-                                        <div class="col-sm-8">
-                                            <input type="text"
-                                                   name="tech_name"
-                                                   class="form-control required"
-                                                   id="tech_name"
-                                                   value ="<?php echo $name;?>"
+                                                   id="from_dt"
+                                                   value=<?php echo date('Y-m-d'); ?>
                                                    required
                                             />
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="emp_code" class="col-sm-2 col-form-label">Contact No.:</label>
+                                        <label for="to_dt" class="col-sm-2 col-form-label">To Date:</label>
 
-                                        <div class="col-sm-8">
-                                            <input type="text"
-                                                   name="tech_ph"
+                                        <div class="col-sm-6">
+                                            <input type="date"
+                                                   name="to_dt"
                                                    class="form-control required"
-                                                   id="tech_ph"
-                                                   value ="<?php echo $phno;?>"
+                                                   id="to_dt"
+                                                   value=<?php echo date('Y-m-d'); ?>
                                                    required
                                             />
                                         </div>
                                     </div>
+
+                                    <div class="form-group row">
+                                        <label for="parts_desc" class="col-sm-2 col-form-label">Technician:</label>
+
+                                        <div class="col-sm-6">
+                                            <Select class="form-control required"
+                                                    name ="tech_name"
+                                                    id="tech_name">
+                                                <option value="">Select Technician</option>
+                                                <?php
+
+                                                    while($data = mysqli_fetch_assoc($tech)){
+                                                        echo ("<option value=".$data['emp_code'].">".
+                                                               $data['tech_name']."</option>");
+                                                    }
+                                                ?>    
+                                            </Select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
 
                                     <div class="form-group row">
 
                                         <div class="col-sm-10">
                                             <input type="submit" 
-                                                   class="subbtn" 
-                                                   value="Save" />
+                                                   class="subbtn"
+                                                   style="margin-left: 25px;"
+                                                   id = "subbtn"
+                                                   value="Submit" />
                                             </div>
                                         </div>
                                 </form>

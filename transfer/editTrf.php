@@ -285,8 +285,3 @@
         </div>
     </div>
 </div>
-
-
-<?php
-        require("../dash/footer.php");
-?> 

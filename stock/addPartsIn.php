@@ -210,33 +210,3 @@
         </div>
     </div>
 </div>
-<!--<script>
-
-    $("#form").validate();
-
-    $(document).ready(function(){
-
-        $('#emp_catg').change(function(){
-
-            if($(this).val() == 1){
-
-                $('.grade_pay').show();
-
-            }
-            else{
-
-                $('.band_pey').text('Pay:');
-
-                $('.grade_pey').hide();
-
-            }
-
-        });
-
-    });
-
-</script>-->
-
-<?php
-        require("../dash/footer.php");
-?> 

@@ -1,51 +1,28 @@
 <?php
-        ini_set("display_errors",1);
-        error_reporting(E_ALL);
+		ini_set("display_errors",1);
+		error_reporting(E_ALL);
 
-        require("../login/connect.php");
-        require("../login/session.php");
-        require("../dash/menu.php");
-
-        if($_SERVER['REQUEST_METHOD']=="GET"){
-            $slno   = $_GET['emp_code'];
-
-            $sql    = "select emp_code,tech_name,tech_ph from md_tech
-                       where  emp_code=".$slno;
-
-         
-            $result = mysqli_query($db,$sql);
-
-            if($result){
-                if(mysqli_num_rows($result) > 0){
-                    $data = mysqli_fetch_assoc($result);
-
-                    $slno = $data['emp_code'];
-                    $name = $data['tech_name'];
-                    $phno = $data['tech_ph'];
-                }
-            }
-        }
+		require("../login/connect.php");
+		require("../login/session.php");
+		require("../dash/menu.php");
 
         if($_SERVER['REQUEST_METHOD']=="POST"){
-            $slno     = checkInput($_POST['emp_code']);
-            $name     = checkInput($_POST['tech_name']);
-            $phno     = checkInput($_POST['tech_ph']);
+            $userId     = checkInput($_POST['user_id']);
+            $pwd        = checkInput($_POST['password']);
+            $pwdHash    = password_hash($pwd,PASSWORD_DEFAULT);
+            $userName   = checkInput($_POST['user_name']);
+            $userType   = checkInput($_POST['user_type']);
+            $crtby      = $_SESSION['userId'];
+            $crtdt      = date('Y-m-d h:i:s');
 
-            $crtby    = $_SESSION['userId'];
-            $crtdt    = date('Y-m-d h:i:s');
+            $sql        = "insert into md_users(user_id,password,user_type,user_name,user_status,created_by,created_dt)
+                           values('$userId','$pwdHash','$userType','$userName','A','$crtby','$crtdt')";
+                           
+            $result   = mysqli_query($db,$sql);
 
-            $sql      = "Update md_tech
-                         set tech_name ="."'".$name."'".
-                             ",tech_ph="."'".$phno."'".
-                             ",modified_by="."'".$crtby."'".
-                             ",modified_dt="."'".$crtdt."'".
-                          "where emp_code=".$slno;
-
-            $update   = mysqli_query($db,$sql);
-
-            if($update){
+            if($result){
                 $_SESSION['flag'] = true;
-                header("location:tech.php");
+                header("location:user.php");
             }
         }
 
@@ -55,10 +32,10 @@
                 $data = htmlspecialchars($data);
                 return $data;
         }
-?>      
+?>		
 
 <head>
-    <title>Edit Technician</title>
+    <title>Add New User</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -91,7 +68,7 @@
     <div class="content-wrapper">
 
         <div class="container-fluid">
-            <h2 style="margin-left:60px;text-align:center">Edit Technician Details</h2>
+            <h2 style="margin-left:60px;text-align:center">Add New User</h2>
             <hr class="new">
 
             <div class="card mb-3">
@@ -108,48 +85,57 @@
                                       action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" >
 
                                     <div class="form-header">
-                                        <h4>Technician Details</h4>
+                                        <h4>User Details</h4>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="emp_code" class="col-sm-2 col-form-label">Employee No.:</label>
+                                        <label for="user_id" class="col-sm-2 col-form-label">User ID:</label>
 
                                         <div class="col-sm-8">
                                             <input type="text"
-                                                   name="emp_code"
+                                                   name="user_id"
                                                    class="form-control required"
-                                                   id="emp_code"
-                                                   value ="<?php echo $slno;?>"
-                                                   readonly
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="tech_name" class="col-sm-2 col-form-label">Name:</label>
-
-                                        <div class="col-sm-8">
-                                            <input type="text"
-                                                   name="tech_name"
-                                                   class="form-control required"
-                                                   id="tech_name"
-                                                   value ="<?php echo $name;?>"
+                                                   id="user_id"
                                                    required
                                             />
                                         </div>
                                     </div>
 
+                                    <div class="form-group row">   
+                                         <label for="password" class="col-sm-2 col-form-label">Password:</label>
+
+                                         <div class="col-sm-8">
+                                            <input type="password"
+                                                   class= "form-control"
+                                                   name = "password"
+                                                   id   = "password"
+                                            />
+                                        </div>
+                                    </div> 
+
                                     <div class="form-group row">
-                                        <label for="emp_code" class="col-sm-2 col-form-label">Contact No.:</label>
+                                        <label for="user_name" class="col-sm-2 col-form-label">Name:</label>
 
                                         <div class="col-sm-8">
                                             <input type="text"
-                                                   name="tech_ph"
-                                                   class="form-control required"
-                                                   id="tech_ph"
-                                                   value ="<?php echo $phno;?>"
-                                                   required
+                                                   class= "form-control"
+                                                   name = "user_name"
+                                                   id   = "user_name"
                                             />
+                                        </div>
+                                    </div> 
+
+                                    <div class="form-group row">
+                                        <label for="user_type" class="col-sm-2 col-form-label">User Type:</label>
+
+                                        <div class="col-sm-8">
+                                            <Select class="form-control required"
+                                                    name ="user_type"
+                                                    id="user_type">
+                                                <option value="">Select User Type</option>
+                                                <option value="A">Admin</option>
+                                                <option value="G">General</option>
+                                            </Select>
                                         </div>
                                     </div>
 
@@ -170,3 +156,7 @@
         </div>
     </div>
 </div>
+
+<?php
+        require("../dash/footer.php");
+?> 

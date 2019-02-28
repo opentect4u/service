@@ -6,57 +6,70 @@
         require("../login/session.php");
         require("../dash/menu.php");
 
-
+        $data['date']     = [];
+        $data['tkt']      = [];
         $data['cust']     = [];
         $data['mcname']   = [];
-        $data['qty']      = [];  
+        $data['sl']       = [];
+        $data['prob']     = [];
+        $data['srv']      = []; 
 
         if($_SERVER['REQUEST_METHOD']=="POST"){  
 
-            $trans_dt         = $_POST['trans_dt'];
-            $srv              = $_POST['srv_ctr'];
-    
-            $select = "select sl_no,center_name from md_service_centre
-                       where sl_no  = $srv";
+            $slNo         = $_POST['sl_no'];
+          
+            $select = "select emp_code,tech_name from md_tech
+                       where  emp_code  = '$emp_cd'";
                    
             $result = mysqli_query($db,$select);
 
             $row1   = mysqli_fetch_assoc($result);
 
-            $srvCtr = $row1['center_name'];
+            $empCd  = $row1['tech_name'];
 
    
-            $sql    = "select a.cust_cd,
-                       a.mc_type_id,
-                       b.cust_name cust_name,
-                       c.mc_type mc_type,
-                       count(a.mc_type_id)mc_nos 
-                from   td_mc_trans a,
-                       md_customers b,
-                       md_mc_type c
-                where  a.cust_cd = b.cust_cd
-                and    a.mc_type_id = c.mc_id
-                and    a.trans_type   in ('I','S')
-                and    a.trans_dt    <= '$trans_dt'
-                and    a.srv_ctr      = $srv
-                and    a.approval_status = 'U'
-                group by a.cust_cd,a.mc_type_id
-                order by a.cust_cd,a.mc_type_id";
+            $sql    = "select a.trans_dt trans_dt,
+                              a.trans_cd trans_cd,
+                              a.cust_cd,
+                              a.mc_type_id,
+                              a.sl_no sl_no,
+                              a.mc_prob,
+                              a.srv_ctr,
+                              b.cust_name cust_name,
+                              c.mc_type mc_type,
+                              d.problem_desc prob_desc,
+                              e.center_name srv_name
+                        from   td_mc_trans a,
+                               md_customers b,
+                               md_mc_type c,
+                               md_problem d,
+                               md_service_centre e
+                        where  a.cust_cd = b.cust_cd
+                        and    a.mc_type_id = c.mc_id
+                        and    a.mc_prob    = d.sl_no
+                        and    a.srv_ctr    = e.sl_no
+                        and    a.engg_invol = '$emp_cd'
+                        and    a.trans_type = 'S'
+                        and    a.trans_dt between '$from_dt' and '$to_dt'";
            
             $result =  mysqli_query($db,$sql);
 
             while($row   =  mysqli_fetch_assoc($result)){
                 
+                array_push($data['date']    ,$row['trans_dt']);
+                array_push($data['tkt']     ,$row['trans_cd']);
                 array_push($data['cust']    ,$row['cust_name']);
                 array_push($data['mcname']  ,$row['mc_type']);
-                array_push($data['qty']     ,$row['mc_nos']);
+                array_push($data['sl']      ,$row['sl_no']);
+                array_push($data['prob']    ,$row['prob_desc']);
+                array_push($data['srv']     ,$row['srv_name']);
                } 
         }    
 ?>
 
 <html>
 <head>
-    <title>Stock Position</title>
+    <title>Service Details</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -125,13 +138,13 @@
 <div style="min-height: 500px;">
 <div class="content-wrapper">
     <div class="container-fluid">
-        <h2 style="margin-left:60px;text-align:center"><?php echo 'Service Due Report As On : '.date('d/m/Y',strtotime($trans_dt)); ?></h2>
+        <h2 style="margin-left:60px;text-align:center"><?php echo 'Service Details Between : '.date('d/m/Y',strtotime($from_dt)).' To '.date('d/m/Y',strtotime($to_dt)); ?></h2>
         <hr class="new">
         <div class="card mb-3">
             <div class="card-header" style="margin-left:60px;">
 
-                 <i class="fa fa-home btn btn-primary" >
-                    <span><?php echo "Service Center : ".$srvCtr; ?></span>
+                 <i class="fa fa-asterisk btn btn-primary" >
+                    <span><?php echo "Technician : ".$empCd; ?></span>
                 </i>
                 
                 
@@ -140,26 +153,32 @@
                 <div class="card-body">
                     <div class="w3-responsive" style="margin-left:60px;" id="divToPrint">
                         <table id="dta" class="w3-table-all" width="50%">
-                            <caption><h3><u><?php echo 'Service Due Report As On : '.date('d/m/Y',strtotime($trans_dt)).
-                                                ' for '.$srvCtr;
+                            <caption><h3><u><?php echo 'Service Details Between : '.date('d/m/Y',strtotime($from_dt)).
+                                                ' To '.date('d/m/Y',strtotime($to_dt)).' for '.$empCd;
                                      ?></u></h3>
                             </caption>
                             <thead>
                                 <tr class="w3-light-grey">
-                                    <th>Sl.No.</th>
+                                    <th>Date</th>
+                                    <th>Ticket No.</th>
                                     <th>Customer</th>
                                     <th>Type</th>
-                                    <th>Quantity</th>
+                                    <th>Sl.No.</th>
+                                    <th>Fault</th>
+                                    <th>Service Center</th>
                                 </tr>
                             </thead>
                             <tbody>
                                  <?php
-                                    for($i=0;$i<sizeof($data['cust']);$i++){?>
+                                    for($i=0;$i<sizeof($data['sl']);$i++){?>
                                         <tr>
-                                            <td><?php echo $i+1;?></td>
+                                            <td><?php echo $data['date'][$i]; ?></td>
+                                            <td><?php echo $data['tkt'][$i]; ?></td>
                                             <td><?php echo $data['cust'][$i]; ?></td>
                                             <td><?php echo $data['mcname'][$i]; ?></td>
-                                            <td><?php echo $data['qty'][$i]; ?></td>
+                                            <td><?php echo $data['sl'][$i]; ?></td>
+                                            <td><?php echo $data['prob'][$i]; ?></td>
+                                            <td><?php echo $data['srv'][$i]; ?></td>
                                         </tr>    
                                  <?php
                                     }         

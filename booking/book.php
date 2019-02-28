@@ -145,9 +145,6 @@
 </div>
 </div>
 </body>
-<?php
-        require("../dash/footer.php");
-?> 
 
 <script>
     $(document).ready(function() {

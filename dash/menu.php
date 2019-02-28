@@ -37,8 +37,6 @@
   <div class="dropdown-container">
     <ul>
       <li><a href="../stock/partsIn.php">Component Stock</a></li>
-     <!-- <li><a href="../transfer/partsTrf.php">Transfer Parts</a></li>
-      <li><a href="../damage/partsDamage.php">Damage Parts</a></li>-->
     </ul>  
   </div>
   <hr class="new">
@@ -61,26 +59,22 @@
       <li><a href="../reports/as_on_dt.php">Stock</a></li>
       <li><a href="../reports/parts_dt.php">Component Ledger</a></li>
       <li><a href="../reports/service_dt.php">Due Service Details</a></li>
-      <li><a href="#">Engineers' Service Detail</a></li>
+      <li><a href="../reports/engg_dt.php">Technician's Service Detail</a></li>
     </ul>  
   </div>
-  <!--<hr class="new">
-  <button class="dropdown-btn">Approve 
+
+  <hr class="new">
+  <button class="dropdown-btn">User Maintenance 
     <i class="fa fa-caret-down"></i>
   </button>
   <div class="dropdown-container">
     <ul>
-      <li><a href="../approve/approve.php">Parts In/Out</a></li>
-      <li><a href="#">Stock Transfer</a></li>
-      <li><a href="#">Stock Damage</a></li>
-      <li><a href="#">Service In</a></li>
-      <li><a href="#">Service Out</a></li>
+      
+        <li><a href="../user/user.php">Add User</a></li>
+      
+      <li><a href="../user/cngPwd.php">Change Password</a></li>
     </ul>  
-  </div>-->
-  <hr class="new">
-  <a href="#">User Maintenance</a>
-  <!--<hr class="new">
-  <a href="#">Contact</a>-->
+  </div>
   <hr class="new">
   <a href="../dash/logout.php">Logout</a>
 </div>

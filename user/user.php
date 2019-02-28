@@ -11,8 +11,7 @@
             $_SESSION['flag']=false;
         }
 
-        $sql    = "select sl_no,parts_desc,created_by,created_dt
-                   from   md_parts";
+        $sql    = "select *from md_users where user_status ='A' ";
 
         $result = mysqli_query($db,$sql);
 
@@ -20,7 +19,7 @@
 
 <html>
 <head>
-    <title>Manage New Service Parts</title>
+    <title>Manage Users</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -43,11 +42,11 @@
 <div style="min-height: 500px;">
 <div class="content-wrapper">
     <div class="container-fluid">
-        <h2 style="margin-left:60px;text-align:center">Manage New Service Parts</h2>
+        <h2 style="margin-left:60px;text-align:center">Manage Users</h2>
         <hr class="new">
         <div class="card mb-3">
             <div class="card-header" style="margin-left:60px;">
-                <a class="button" href="../add/addParts.php"><i class="fa fa-plus"></i>
+                <a class="button" href="../user/addUser.php"><i class="fa fa-plus"></i>
                     <span>New</span>
                 </a>
             </div>
@@ -58,7 +57,9 @@
                             <thead>
                                 <tr class="w3-light-grey">
                                     <th>Sl.No.</th>
-                                    <th>Description</th>
+                                    <th>Name</th>
+                                    <th>User Name</th>
+                                    <th>User Type</th>
                                     <th>Edit</th>
                                 </tr>
                             </thead>
@@ -68,20 +69,30 @@
                                         if(mysqli_num_rows($result) > 0){
                                             while($data = mysqli_fetch_assoc($result)){
 
-                                                $slno = $data['sl_no'];
-                                                $name = $data['parts_desc']; 
+                                                $i=1;
+                                                $name = $data['user_name']; 
+                                                $id   = $data['user_id'];
+                                                $type = $data['user_type']; 
+
+                                                if($type=='A'){
+                                                    $uType = 'Admin';        
+                                                }else{
+                                                    $uType = 'General';
+                                                }  
                                 ?>
                                 <tr>
-                                    <td><?php echo $slno; ?></td>
+                                    <td><?php echo $i; ?></td>
                                     <td><?php echo $name; ?></td>
-                                    <td><a href="editParts.php?sl_no=<?php echo$slno; ?>">
+                                    <td><?php echo $id; ?></td>
+                                    <td><?php echo $uType; ?></td>
+                                    <td><a href="editUser.php?user_id=<?php echo$id; ?>">
                                         <i class="fa fa-edit fa-2x" style="color: #57b846"></i>
                                         <a>
                                     </td>
                                       
                                 </tr>
                                 <?php
-                                            }
+                                    $i++;  }
                                         }
                                     }    
                                 ?> 
@@ -89,7 +100,9 @@
                             <tfoot>
                                 <tr>
                                     <th>Sl.No.</th>
-                                    <th>Description</th>
+                                    <th>Name</th>
+                                    <th>User Name</th>
+                                    <th>User Type</th>
                                     <th>Edit</th>
                                 </tr>
                             </tfoot>
@@ -101,6 +114,9 @@
 </div>
 </div>
 </body>
+<?php
+        require("../dash/footer.php");
+?> 
 
 <script>
     $(document).ready(function() {

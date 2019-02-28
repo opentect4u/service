@@ -10,7 +10,7 @@
 		$userId	= $_POST['username'];
 		$pawd	= $_POST['pass'];
 
-		$sql 	= "select * from md_users where user_id = '$userId'";
+		$sql 	= "select * from md_users where user_id = '$userId' and user_status='A'";
 
 		$result = mysqli_query($db,$sql);
 

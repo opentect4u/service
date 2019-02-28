@@ -13,7 +13,7 @@
 	<title>Synergic Service</title>
 </head> 
 <body>
-	<div style="min-height:500px">
+	<div style="min-height:700px">
 		<p>kjhfhjwklf</p>
 	</div>
 </body>	

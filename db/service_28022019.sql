@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 27, 2018 at 05:14 PM
--- Server version: 5.7.24-0ubuntu0.18.04.1
--- PHP Version: 7.2.10-0ubuntu0.18.04.1
+-- Generation Time: Feb 28, 2019 at 04:52 PM
+-- Server version: 5.7.25-0ubuntu0.18.04.2
+-- PHP Version: 7.2.15-0ubuntu0.18.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -46,7 +46,9 @@ INSERT INTO `md_customers` (`cust_cd`, `cust_name`, `cust_addr`, `cust_ph_no`, `
 (1, 'Tanmoy Mondal', '82.L.N Road ,Po.Rabindra Nager,Kolkata-700065\r\n24 PGS(N)', '9831887194', 'meettan@gmail.com', 'sss', '2018-11-26 03:06:46', 'sss', '2018-11-26 05:05:20'),
 (2, 'Bankra CCS Ltd.', 'Bankra,West Bengal,\r\nHowrah', '9433342456', 'bankraccs@rediff.com', 'sss', '2018-11-26 03:20:37', 'sss', '2018-11-26 05:07:54'),
 (3, 'Kolkata Corporation', 'SN Banerjee Street(Corporation Street)\r\nKolkat', '(033)25664312/9831774582', 'kolkatacorp@ccd.com', 'sss', '2018-11-26 03:22:34', 'sss', '2018-11-26 05:03:22'),
-(4, 'Asansol MiniBus Union', 'Asonsol,Burdwan(West) West Bengal', '(03228)24789564', 'asnmini@union.in', 'sss', '2018-11-26 05:07:07', NULL, NULL);
+(4, 'Asansol MiniBus Union', 'Asonsol,Burdwan(West) West Bengal', '(03228)24789564', 'asnmini@union.in', 'sss', '2018-11-26 05:07:07', NULL, NULL),
+(5, 'Raiganj Central Co-operative Bank', 'Raiganj,Uttar Dinajpur\r\nWest Bengal-733134', '03523244107', 'rccbltd@gmail.com', 'sss', '2019-01-31 12:37:33', 'sss', '2019-01-31 12:38:44'),
+(6, 'JACKI', '85KLOO', '1238547458', 'rccbltd@gmail.com', 'sss', '2019-02-28 02:32:09', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -75,7 +77,9 @@ INSERT INTO `md_mc_type` (`mc_id`, `mc_type`, `created_by`, `created_dt`, `modif
 (5, 'ETIM Machine DDS', 'sss', '2018-11-26 05:53:58', NULL, NULL),
 (6, 'ETIM Parking Petrol Pump &amp; Others', 'sss', '2018-11-26 05:54:26', NULL, NULL),
 (7, 'Bluetooth Printer 3inch', 'sss', '2018-11-26 05:54:43', 'sss', '2018-11-26 06:06:25'),
-(8, 'qwertyyuyuj', 'sss', '2018-11-29 12:58:59', 'sss', '2018-11-29 12:59:08');
+(8, 'Paper Roll', 'sss', '2018-11-29 12:58:59', 'sss', '2019-01-31 12:39:45'),
+(9, 'Computer H/W', 'sss', '2019-01-31 12:40:46', NULL, NULL),
+(10, 'fefef', 'sss', '2019-02-28 02:32:32', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -132,10 +136,14 @@ INSERT INTO `md_parts` (`sl_no`, `parts_desc`, `created_by`, `created_dt`, `modi
 (33, 'BBP FLIP COVER 3 Inch', NULL, NULL, NULL, NULL),
 (34, 'BBP GLASS', NULL, NULL, NULL, NULL),
 (35, 'BBP CHARGER', NULL, NULL, NULL, NULL),
-(36, 'ON/OFF IC', NULL, NULL, NULL, NULL),
+(36, 'ON/OFF Integrated Chip', NULL, NULL, 'sss', '2019-01-31 12:41:24'),
 (37, 'SERVICING', NULL, NULL, NULL, NULL),
 (38, 'RETURN', NULL, NULL, NULL, NULL),
-(39, 'GSM MODULE', NULL, NULL, NULL, NULL);
+(39, 'GSM MODULE', NULL, NULL, NULL, NULL),
+(40, 'Test Parts', 'sss', '2019-01-31 12:42:00', NULL, NULL),
+(41, 'Test Parts', 'sss', '2019-02-28 02:47:46', NULL, NULL),
+(42, 'Test Parts', 'sss', '2019-02-28 02:47:52', NULL, NULL),
+(43, '1qas', 'sss', '2019-02-28 02:52:27', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -157,9 +165,12 @@ CREATE TABLE `md_problem` (
 --
 
 INSERT INTO `md_problem` (`sl_no`, `problem_desc`, `created_by`, `created_dt`, `modified_by`, `modified_dt`) VALUES
-(1, 'abcdfgtyyuuuuu', 'sss', '2018-11-29 12:53:12', NULL, NULL),
-(2, 'tyityieytiyitiowe4tyoi', 'sss', '2018-11-29 12:53:22', 'sss', '2018-11-29 12:53:30'),
-(3, 'Swithed off automatic', 'sss', '2018-11-29 01:07:10', 'sss', '2018-11-29 01:07:24');
+(1, 'Damaged Keyboard', 'sss', '2018-11-29 12:53:12', 'sss', '2019-01-31 12:42:52'),
+(2, 'Printer Not Working', 'sss', '2018-11-29 12:53:22', 'sss', '2019-01-31 12:43:48'),
+(3, 'Swithed off automatic', 'sss', '2018-11-29 01:07:10', 'sss', '2018-11-29 01:07:24'),
+(4, 'LED Problem', 'sss', '2019-01-31 12:43:22', NULL, NULL),
+(5, 'yyy', 'sss', '2019-02-28 02:37:11', NULL, NULL),
+(6, 'yyy', 'sss', '2019-02-28 02:38:51', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -186,7 +197,9 @@ CREATE TABLE `md_service_centre` (
 
 INSERT INTO `md_service_centre` (`sl_no`, `center_name`, `address`, `cnct_no`, `email`, `in_charge`, `created_by`, `created_dt`, `modified_by`, `modified_dt`) VALUES
 (1, 'Kolkata', 'nnnnknk;', '9831887194', 'pin05@rediffmail.com', 'Amit Datta', 'sss', '2018-11-29 12:12:39', 'sss', '2018-11-29 01:06:48'),
-(2, 'Siliguri', 'wohowhfhwfpiwf\r\nwfklwflll', '2589989', 'lclcl@jfijfp.com', 'Rakesh Singh', 'sss', '2018-11-29 01:01:27', NULL, NULL);
+(2, 'Siliguri', 'wohowhfhwfpiwf\r\nwfklwflll', '2589989', 'lclcl@jfijfp.com', 'Rakesh Singh', 'sss', '2018-11-29 01:01:27', NULL, NULL),
+(3, 'Malda', 'Malda Town ,Beside Amit Gas\r\nWest Bengal', '9874118490', 'maldaservice@gmail.com', 'Arfi Billa Molla', 'sss', '2019-01-31 12:44:28', 'sss', '2019-01-31 12:45:42'),
+(4, 'Mumbai', '', '01238547458', '', '', 'sss', '2019-02-26 01:13:58', 'sss', '2019-02-26 01:14:31');
 
 -- --------------------------------------------------------
 
@@ -209,6 +222,7 @@ CREATE TABLE `md_tech` (
 --
 
 INSERT INTO `md_tech` (`emp_code`, `tech_name`, `tech_ph`, `created_by`, `created_dt`, `modified_by`, `modified_dt`) VALUES
+('117', 'Biswajit Chakraborty', '9687449608', 'sss', '2019-01-31', NULL, NULL),
 ('21', 'Amit Kumar Dutta', '9831887194', 'sss', '2018-12-21', 'sss', '2018-12-21'),
 ('58', 'Sanjay Prasad', '741589635', 'sss', '2018-12-21', NULL, NULL);
 
@@ -235,7 +249,8 @@ CREATE TABLE `md_users` (
 --
 
 INSERT INTO `md_users` (`user_id`, `password`, `user_type`, `user_name`, `user_status`, `created_by`, `created_dt`, `modified_by`, `modified_dt`) VALUES
-('sss', '$2y$10$I5RflPqwjOrxRneEL0V/ROxvDIgXy9eUkjSiTAnPbBj3LnFSRuwJy', 'A', 'Synergic', 'A', 'Tan', '2018-11-19 00:00:00', NULL, NULL);
+('amit', '$2y$10$UgF81Dq96oXY1NXYwOTdrO.3/AAbEfDyV8kW/0USWL9rh6VUu/N4O', 'G', 'Amit Kumar Singh', 'A', 'sss', '2019-02-28 03:00:56', 'amit', '2019-02-28 04:20:34'),
+('sss', '$2y$10$60KbbFvsMr8Z8gatA.oFqehmwVaa2g7GES0wkmZxRDc95hHaSqNy6', 'A', 'Synergic', 'A', 'Tan', '2018-11-19 00:00:00', 'sss', '2019-02-28 04:18:41');
 
 -- --------------------------------------------------------
 
@@ -349,7 +364,52 @@ INSERT INTO `td_audit_trail` (`sl_no`, `login_dt`, `user_id`, `user_name`, `term
 (90, '2018-12-27 12:52:13', 'sss', '', '::1', NULL),
 (91, '2018-12-27 03:11:20', 'sss', '', '::1', NULL),
 (92, '2018-12-27 03:48:07', 'sss', '', '::1', NULL),
-(93, '2018-12-27 04:46:55', 'sss', '', '::1', NULL);
+(93, '2018-12-27 04:46:55', 'sss', '', '::1', NULL),
+(94, '2018-12-27 06:51:14', 'sss', '', '::1', NULL),
+(95, '2018-12-28 03:11:09', 'sss', '', '::1', NULL),
+(96, '2019-01-09 06:36:21', 'sss', '', '::1', NULL),
+(97, '2019-01-15 03:56:48', 'sss', '', '::1', NULL),
+(98, '2019-01-16 05:57:18', 'sss', '', '::1', NULL),
+(99, '2019-01-31 12:25:07', 'sss', '', '::1', NULL),
+(100, '2019-01-31 12:26:31', 'sss', '', '::1', NULL),
+(101, '2019-01-31 12:29:00', 'sss', '', '::1', NULL),
+(102, '2019-01-31 12:32:12', 'sss', '', '::1', NULL),
+(103, '2019-01-31 03:43:10', 'sss', '', '::1', NULL),
+(104, '2019-02-01 11:20:12', 'sss', '', '::1', NULL),
+(105, '2019-02-01 11:35:05', 'sss', '', '::1', NULL),
+(106, '2019-02-01 12:57:29', 'sss', '', '::1', NULL),
+(107, '2019-02-01 02:29:34', 'sss', '', '::1', NULL),
+(108, '2019-02-04 12:05:32', 'sss', '', '::1', NULL),
+(109, '2019-02-04 12:55:26', 'sss', '', '::1', NULL),
+(110, '2019-02-04 02:22:01', 'sss', '', '::1', NULL),
+(111, '2019-02-04 04:26:56', 'sss', '', '::1', NULL),
+(112, '2019-02-05 11:25:55', 'sss', '', '::1', NULL),
+(113, '2019-02-05 11:49:28', 'sss', '', '::1', NULL),
+(114, '2019-02-05 02:33:01', 'sss', '', '::1', NULL),
+(115, '2019-02-05 03:10:47', 'sss', '', '::1', NULL),
+(116, '2019-02-05 05:01:54', 'sss', '', '::1', NULL),
+(117, '2019-02-26 12:39:42', 'sss', '', '::1', NULL),
+(118, '2019-02-26 03:43:48', 'sss', '', '::1', NULL),
+(119, '2019-02-26 03:43:49', 'sss', '', '::1', NULL),
+(120, '2019-02-26 05:27:26', 'sss', '', '::1', NULL),
+(121, '2019-02-27 12:42:12', 'sss', '', '::1', NULL),
+(122, '2019-02-27 05:16:03', 'sss', '', '::1', NULL),
+(123, '2019-02-28 11:13:09', 'sss', '', '::1', NULL),
+(124, '2019-02-28 02:10:23', 'sss', '', '::1', NULL),
+(125, '2019-02-28 02:15:49', 'sss', '', '::1', NULL),
+(126, '2019-02-28 02:17:29', 'sss', '', '::1', NULL),
+(127, '2019-02-28 02:31:37', 'sss', '', '::1', NULL),
+(128, '2019-02-28 02:45:59', 'sss', '', '::1', NULL),
+(129, '2019-02-28 03:00:08', 'sss', '', '::1', NULL),
+(130, '2019-02-28 03:50:16', 'amit', '', '::1', NULL),
+(131, '2019-02-28 03:50:41', 'sss', '', '::1', NULL),
+(132, '2019-02-28 03:51:38', 'sss', '', '::1', NULL),
+(133, '2019-02-28 04:19:31', 'sss', '', '::1', NULL),
+(134, '2019-02-28 04:20:05', 'amit', '', '::1', NULL),
+(135, '2019-02-28 04:20:24', 'amit', '', '::1', NULL),
+(136, '2019-02-28 04:20:39', 'amit', '', '::1', NULL),
+(137, '2019-02-28 04:49:28', 'sss', '', '::1', NULL),
+(138, '2019-02-28 04:50:28', 'sss', '', '::1', NULL);
 
 -- --------------------------------------------------------
 
@@ -385,6 +445,8 @@ CREATE TABLE `td_mc_trans` (
   `cust_person` varchar(100) NOT NULL,
   `cust_per_ph` varchar(50) NOT NULL,
   `engg_invol` varchar(100) NOT NULL,
+  `bill_no` varchar(50) DEFAULT NULL,
+  `amount` decimal(10,2) NOT NULL DEFAULT '0.00',
   `remarks` varchar(100) NOT NULL,
   `approval_status` char(1) NOT NULL DEFAULT 'U',
   `created_by` varchar(50) DEFAULT NULL,
@@ -399,8 +461,20 @@ CREATE TABLE `td_mc_trans` (
 -- Dumping data for table `td_mc_trans`
 --
 
-INSERT INTO `td_mc_trans` (`trans_dt`, `trans_cd`, `cust_cd`, `trans_type`, `mc_type_id`, `sl_no`, `mc_prob`, `warr_status`, `mc_qty`, `srv_ctr`, `cust_person`, `cust_per_ph`, `engg_invol`, `remarks`, `approval_status`, `created_by`, `created_dt`, `approved_by`, `approved_dt`, `modified_by`, `modified_dt`) VALUES
-('2018-12-19', 1, 2, 'I', 5, '', 0, '', 3, 1, 'Baren', '9741759834', 'Bappa', 'For Servicing', 'U', 'sss', '2018-12-19 01:26:46', NULL, NULL, 'sss', '2018-12-19 04:51:30');
+INSERT INTO `td_mc_trans` (`trans_dt`, `trans_cd`, `cust_cd`, `trans_type`, `mc_type_id`, `sl_no`, `mc_prob`, `warr_status`, `mc_qty`, `srv_ctr`, `cust_person`, `cust_per_ph`, `engg_invol`, `bill_no`, `amount`, `remarks`, `approval_status`, `created_by`, `created_dt`, `approved_by`, `approved_dt`, `modified_by`, `modified_dt`) VALUES
+('2019-02-26', 20191, 4, 'I', 3, '10002587', 2, 'I', 0, 1, 'Arun kr', '9841745208', 'Amit Datta', NULL, '0.00', '4 Nos mc received', 'A', 'sss', '2019-02-26 04:34:08', 'sss', '2019-02-26 05:58:42', NULL, NULL),
+('2019-02-26', 20191, 4, 'S', 3, '10002587', 2, 'I', 0, 1, 'Arun kr', '9841745208', '21', NULL, '0.00', 'Service Done', 'A', 'sss', '2019-02-26 05:58:42', 'sss', '2019-02-27 03:23:27', NULL, NULL),
+('2019-02-26', 20191, 4, 'I', 3, '10002588', 1, 'I', 0, 1, 'Arun kr', '9841745208', 'Amit Datta', NULL, '0.00', '4 Nos mc received', 'U', 'sss', '2019-02-26 04:34:08', NULL, NULL, NULL, NULL),
+('2019-02-26', 20191, 4, 'I', 3, '10002590', 1, 'I', 0, 1, 'Arun kr', '9841745208', 'Amit Datta', NULL, '0.00', '4 Nos mc received', 'U', 'sss', '2019-02-26 04:34:08', NULL, NULL, NULL, NULL),
+('2019-02-26', 20191, 4, 'I', 3, 'AS/1002587', 1, 'O', 0, 1, 'Arun kr', '9841745208', 'Amit Datta', NULL, '0.00', '4 Nos mc received', 'A', 'sss', '2019-02-26 04:34:08', 'sss', '2019-02-27 02:45:58', NULL, NULL),
+('2019-02-26', 20192, 5, 'I', 5, 'DDS-874/85', 3, 'I', 0, 1, 'Raju', '9841002578', 'Sanjoy Prasad', NULL, '0.00', '2 nos received', 'A', '', '2019-02-26 05:26:55', 'sss', '2019-02-28 01:01:58', NULL, NULL),
+('2019-02-26', 20192, 5, 'I', 5, 'DDS/128-0274', 4, 'O', 0, 1, 'Raju', '9841002578', 'Sanjoy Prasad', NULL, '0.00', '2 nos received', 'A', '', '2019-02-26 05:26:55', 'sss', '2019-02-28 02:34:29', NULL, NULL),
+('2019-02-27', 20191, 4, 'O', 3, '10002587', 2, 'I', 0, 1, 'Gosai Maharaj', '8240378957', '21', NULL, '0.00', 'Service Done', 'A', 'sss', '2019-02-27 03:23:27', 'sss', '2019-02-27 03:23:27', NULL, NULL),
+('2019-02-27', 20191, 4, 'O', 3, 'AS/1002587', 1, 'O', 0, 1, 'Pagla Dasu', '9831887194', '117', 'SSS/INV/001258', '250.00', 'lhdwoihdoihoi', 'A', 'sss', '2019-02-27 03:32:55', 'sss', '2019-02-27 03:32:55', NULL, NULL),
+('2019-02-27', 20191, 4, 'S', 3, 'AS/1002587', 1, 'O', 0, 1, 'Arun kr', '9841745208', '117', NULL, '0.00', 'keypad changed', 'A', 'sss', '2019-02-27 02:45:58', 'sss', '2019-02-27 03:32:55', NULL, NULL),
+('2019-02-28', 20192, 5, 'S', 5, 'DDS-874/85', 3, 'I', 0, 1, 'Raju', '9841002578', '117', NULL, '0.00', 'no parts changed', 'U', 'sss', '2019-02-28 01:01:58', NULL, NULL, NULL, NULL),
+('2019-02-28', 20192, 5, 'S', 5, 'DDS/128-0274', 4, 'O', 0, 1, 'Raju', '9841002578', '58', NULL, '0.00', 'ok', 'U', 'sss', '2019-02-28 02:34:29', NULL, NULL, NULL, NULL),
+('2019-02-28', 20193, 6, 'I', 7, 'SG001/100', 2, 'I', 0, 1, 'JACKI', '12345', 'QDQD', NULL, '0.00', 'rrqw3r', 'U', 'sss', '2019-02-28 02:33:19', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -421,7 +495,9 @@ CREATE TABLE `td_parts_trans` (
   `remarks` varchar(100) DEFAULT NULL,
   `oder_by` varchar(100) DEFAULT NULL,
   `trf_mode` char(1) DEFAULT NULL,
-  `srv_to` int(10) DEFAULT NULL,
+  `srv_to` int(10) NOT NULL DEFAULT '0',
+  `balance` int(10) NOT NULL DEFAULT '0',
+  `sl_no` varchar(50) DEFAULT NULL,
   `created_by` varchar(50) DEFAULT NULL,
   `created_dt` datetime DEFAULT NULL,
   `modified_by` varchar(50) DEFAULT NULL,
@@ -435,16 +511,25 @@ CREATE TABLE `td_parts_trans` (
 -- Dumping data for table `td_parts_trans`
 --
 
-INSERT INTO `td_parts_trans` (`trans_dt`, `trans_no`, `trans_type`, `bill_no`, `arrival_dt`, `comp_sl_no`, `parts_desc`, `comp_qty`, `serv_ctr`, `remarks`, `oder_by`, `trf_mode`, `srv_to`, `created_by`, `created_dt`, `modified_by`, `modified_dt`, `approval_status`, `approved_by`, `approved_dt`) VALUES
-('2018-12-27', 1, 'I', 'Mum/Ho/18-19/001', '2018-12-20', 5, 'GAER SET', 200, 1, 'Stock in from Mumbai HO VIA AIR 5 items', NULL, NULL, NULL, 'sss', '2018-12-27 12:24:46', 'sss', '2018-12-27 12:52:49', 'U', NULL, NULL),
-('2018-12-27', 1, 'I', 'Mum/Ho/18-19/001', '2018-12-20', 12, 'CHARGER-10.2V BBP', 48, 1, 'Stock in from Mumbai HO VIA AIR 5 items', NULL, NULL, NULL, 'sss', '2018-12-27 12:24:46', 'sss', '2018-12-27 12:52:49', 'U', NULL, NULL),
-('2018-12-27', 1, 'I', 'Mum/Ho/18-19/001', '2018-12-20', 20, 'PCB-BT', 225, 1, 'Stock in from Mumbai HO VIA AIR 5 items', NULL, NULL, NULL, 'sss', '2018-12-27 12:24:46', 'sss', '2018-12-27 12:52:49', 'U', NULL, NULL),
-('2018-12-27', 1, 'I', 'Mum/Ho/18-19/001', '2018-12-20', 21, 'DISPLAY-BHP', 103, 1, 'Stock in from Mumbai HO VIA AIR 5 items', NULL, NULL, NULL, 'sss', '2018-12-27 12:24:46', 'sss', '2018-12-27 12:52:49', 'U', NULL, NULL),
-('2018-12-27', 1, 'I', 'Mum/Ho/18-19/001', '2018-12-20', 28, 'BATTERY 7.4v BT', 84, 1, 'Stock in from Mumbai HO VIA AIR 5 items', NULL, NULL, NULL, 'sss', '2018-12-27 12:24:46', 'sss', '2018-12-27 12:52:49', 'U', NULL, NULL),
-('2018-12-27', 2, 'T', 'Trf/kol-sil/18-19/001', '2018-12-27', 5, 'GAER SET', -30, 1, 'Kolkata to Siliguri via bus service', NULL, 'T', 2, 'sss', '2018-12-27 01:07:31', 'sss', '2018-12-27 03:22:41', 'U', NULL, NULL),
-('2018-12-27', 2, 'T', 'Trf/kol-sil/18-19/001', '2018-12-27', 20, 'PCB-BT', -80, 1, 'Kolkata to Siliguri via bus service', NULL, 'T', 2, 'sss', '2018-12-27 01:07:31', 'sss', '2018-12-27 03:22:41', 'U', NULL, NULL),
-('2018-12-27', 3, 'D', 'DMG/kol/18-19/001', '2018-12-27', 3, 'BATTERY-7.4V BHP', -4, 1, 'cdewqkl;pp', 'Amit Singh', NULL, NULL, 'sss', '2018-12-27 05:00:27', 'sss', '2018-12-27 05:13:23', 'U', NULL, NULL),
-('2018-12-27', 3, 'D', 'DMG/kol/18-19/001', '2018-12-27', 20, 'PCB-BT', -5, 1, 'cdewqkl;pp', 'Amit Singh', NULL, NULL, 'sss', '2018-12-27 05:00:27', 'sss', '2018-12-27 05:13:23', 'U', NULL, NULL);
+INSERT INTO `td_parts_trans` (`trans_dt`, `trans_no`, `trans_type`, `bill_no`, `arrival_dt`, `comp_sl_no`, `parts_desc`, `comp_qty`, `serv_ctr`, `remarks`, `oder_by`, `trf_mode`, `srv_to`, `balance`, `sl_no`, `created_by`, `created_dt`, `modified_by`, `modified_dt`, `approval_status`, `approved_by`, `approved_dt`) VALUES
+('2019-02-26', 1, 'I', 'Mum/In/0012', '2019-02-25', 1, 'PRINTER-2 Inch', 100, 1, 'Parts In', NULL, NULL, 0, 0, NULL, 'sss', '2019-02-26 01:17:38', NULL, NULL, 'U', NULL, NULL),
+('2019-02-26', 1, 'I', 'Mum/In/0012', '2019-02-25', 3, 'BATTERY-7.4V BHP', 200, 1, 'Parts In', NULL, NULL, 0, 0, NULL, 'sss', '2019-02-26 01:17:38', NULL, NULL, 'U', NULL, NULL),
+('2019-02-26', 1, 'I', 'Mum/In/0012', '2019-02-25', 10, 'CHARGER-9.V BT', 50, 1, 'Parts In', NULL, NULL, 0, 0, NULL, 'sss', '2019-02-26 01:17:38', NULL, NULL, 'U', NULL, NULL),
+('2019-02-26', 1, 'I', 'Mum/In/0012', '2019-02-25', 15, 'KEYPAD BANKING', 250, 1, 'Parts In', NULL, NULL, 0, 0, NULL, 'sss', '2019-02-26 01:17:38', NULL, NULL, 'U', NULL, NULL),
+('2019-02-26', 1, 'I', 'Mum/In/0012', '2019-02-25', 36, 'ON/OFF Integrated Chip', 300, 1, 'Parts In', NULL, NULL, 0, 0, NULL, 'sss', '2019-02-26 01:17:38', NULL, NULL, 'U', NULL, NULL),
+('2019-02-26', 2, 'I', 'HO-KOL/00025', '2019-02-20', 7, 'PAPER FLAP-3 Inch', 15, 1, 'Parts in to Kolkata', NULL, NULL, 0, 0, NULL, 'sss', '2019-02-26 01:22:08', NULL, NULL, 'U', NULL, NULL),
+('2019-02-26', 2, 'I', 'HO-KOL/00025', '2019-02-20', 18, 'PCB-BHP', 200, 1, 'Parts in to Kolkata', NULL, NULL, 0, 0, NULL, 'sss', '2019-02-26 01:22:08', NULL, NULL, 'U', NULL, NULL),
+('2019-02-26', 2, 'I', 'HO-KOL/00025', '2019-02-20', 26, 'RESET SWITCH', 28, 1, 'Parts in to Kolkata', NULL, NULL, 0, 0, NULL, 'sss', '2019-02-26 01:22:08', NULL, NULL, 'U', NULL, NULL),
+('2019-02-26', 2, 'I', 'HO-KOL/00025', '2019-02-20', 30, 'BBP BATTERY', 521, 1, 'Parts in to Kolkata', NULL, NULL, 0, 0, NULL, 'sss', '2019-02-26 01:22:08', NULL, NULL, 'U', NULL, NULL),
+('2019-02-26', 3, 'T', 'TRF/KOL-SIL/2019-001', '2019-02-26', 10, 'CHARGER-9.V BT', -18, 1, 'Parts Transfer', NULL, 'C', 2, 0, NULL, 'sss', '2019-02-26 01:26:18', NULL, NULL, 'U', NULL, NULL),
+('2019-02-26', 3, 'T', 'TRF/KOL-SIL/2019-001', '2019-02-26', 15, 'KEYPAD BANKING', -40, 1, 'Parts Transfer', NULL, 'C', 2, 0, NULL, 'sss', '2019-02-26 01:26:18', NULL, NULL, 'U', NULL, NULL),
+('2019-02-26', 3, 'T', 'TRF/KOL-SIL/2019-001', '2019-02-26', 30, 'BBP BATTERY', -82, 1, 'Parts Transfer', NULL, 'C', 2, 0, NULL, 'sss', '2019-02-26 01:26:18', NULL, NULL, 'U', NULL, NULL),
+('2019-02-26', 4, 'O', '20191', '2019-02-26', 1, 'PRINTER-2 Inch', -1, 1, 'Service Done', NULL, NULL, 0, 0, '10002587', 'sss', '2019-02-26 05:58:42', NULL, NULL, 'U', NULL, NULL),
+('2019-02-26', 4, 'O', '20191', '2019-02-26', 10, 'CHARGER-9.V BT', -1, 1, 'Service Done', NULL, NULL, 0, 0, '10002587', 'sss', '2019-02-26 05:58:42', NULL, NULL, 'U', NULL, NULL),
+('2019-02-26', 5, 'D', 'DMG/14/1001', '2019-02-26', 10, 'CHARGER-9.V BT', -2, 1, 'Damaged', 'Amit Singh', NULL, 0, 0, NULL, 'sss', '2019-02-26 06:16:50', NULL, NULL, 'U', NULL, NULL),
+('2019-02-26', 5, 'D', 'DMG/14/1001', '2019-02-26', 26, 'RESET SWITCH', -1, 1, 'Damaged', 'Amit Singh', NULL, 0, 0, NULL, 'sss', '2019-02-26 06:16:50', NULL, NULL, 'U', NULL, NULL),
+('2019-02-27', 1, 'O', '20191', '2019-02-27', 15, 'KEYPAD BANKING', -1, 1, 'keypad changed', NULL, NULL, 0, 0, 'AS/1002587', 'sss', '2019-02-27 02:45:58', NULL, NULL, 'U', NULL, NULL),
+('2019-02-27', 1, 'O', '20191', '2019-02-27', 36, 'ON/OFF Integrated Chip', -1, 1, 'keypad changed', NULL, NULL, 0, 0, 'AS/1002587', 'sss', '2019-02-27 02:45:58', NULL, NULL, 'U', NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -508,7 +593,7 @@ ALTER TABLE `td_mc_stock`
 -- Indexes for table `td_mc_trans`
 --
 ALTER TABLE `td_mc_trans`
-  ADD PRIMARY KEY (`trans_dt`,`trans_cd`);
+  ADD PRIMARY KEY (`trans_dt`,`trans_cd`,`sl_no`,`trans_type`) USING BTREE;
 
 --
 -- Indexes for table `td_parts_trans`
@@ -524,32 +609,32 @@ ALTER TABLE `td_parts_trans`
 -- AUTO_INCREMENT for table `md_customers`
 --
 ALTER TABLE `md_customers`
-  MODIFY `cust_cd` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `cust_cd` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `md_mc_type`
 --
 ALTER TABLE `md_mc_type`
-  MODIFY `mc_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `mc_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `md_parts`
 --
 ALTER TABLE `md_parts`
-  MODIFY `sl_no` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `sl_no` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 --
 -- AUTO_INCREMENT for table `md_problem`
 --
 ALTER TABLE `md_problem`
-  MODIFY `sl_no` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `sl_no` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `md_service_centre`
 --
 ALTER TABLE `md_service_centre`
-  MODIFY `sl_no` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `sl_no` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `td_audit_trail`
 --
 ALTER TABLE `td_audit_trail`
-  MODIFY `sl_no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
+  MODIFY `sl_no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
