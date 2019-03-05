@@ -60,6 +60,7 @@
       <li><a href="../reports/parts_dt.php">Component Ledger</a></li>
       <li><a href="../reports/service_dt.php">Due Service Details</a></li>
       <li><a href="../reports/engg_dt.php">Technician's Service Detail</a></li>
+      <li><a href="../track/slNo.php">Track Device</a>
     </ul>  
   </div>
 

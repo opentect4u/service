@@ -1,5 +1,5 @@
 <?php
-		$select = "select sl_no,problem_desc from md_problem";
+		$select = "select sl_no,problem_desc from md_problem order by problem_desc";
                    
         $prob   = mysqli_query($db,$select);
 ?>

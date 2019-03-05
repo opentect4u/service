@@ -72,7 +72,7 @@
                 return $data;
         }
 
-        $select = "select cust_cd,cust_name from md_customers";
+        $select = "select cust_cd,cust_name from md_customers order by cust_name";
         $cust   = mysqli_query($db,$select);
 
         $select = "Select mc_id,mc_type from md_mc_type";

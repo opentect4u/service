@@ -12,7 +12,7 @@
         }
 
         $sql    = "select Distinct trans_dt,trans_cd,cust_cd,mc_type_id
-                   from   td_mc_trans where trans_type = 'I'";
+                   from   td_mc_trans where trans_type = 'I' and approval_status = 'U'";
 
         $result = mysqli_query($db,$sql);
 
