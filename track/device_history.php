@@ -18,7 +18,7 @@
 
             $resultIn = mysqli_query($db,$Insql);
 
-            if(mysqli_num_rows($resultIn)){
+            //if(mysqli_num_rows($resultIn)){
                 $dataIn  = mysqli_fetch_assoc($resultIn);
                 $dateIn  = $dataIn['trans_dt'];
                 $cust_cd = $dataIn['cust_cd'];
@@ -26,6 +26,7 @@
                 $mc_prob = $dataIn['mc_prob'];
                 $srv_ctr = $dataIn['srv_ctr'];
                 $status  = $dataIn['warr_status'];
+                $rkmsIn  = $dataIn['remarks'];
                 /*$sub_by  = $dataIn['cust_person'];
                 $sub_ph  = $dataIn['cust_per_ph'];
                 $rcv_by  = $dataIn['engg_invol'];*/
@@ -62,20 +63,55 @@
 
             $srvName    = mysqli_fetch_assoc($result);
 
-            }
+            //}
 
-    }
-        /////////////
-           /* $engg       = "select * from md_tech 
-                           where emp_code = $tech";
+
+            $Srvsql    = "select * from td_mc_trans 
+                          where trans_cd   = $trans_cd
+                          and   sl_no      = '$sl_no'
+                          and   trans_type = 'S'";
+
+            $resultSrv = mysqli_query($db,$Srvsql);
+
+            //if(mysqli_num_rows($resultSrv)){
+                $dataSrv    =   mysqli_fetch_assoc($resultSrv);
+                $dateSrv    =   $dataSrv['trans_dt'];
+                $engg       =   $dataSrv['engg_invol'];
+
+/////////////Engineer Name
+            $engg       = "select * from md_tech 
+                           where emp_code = $engg";
 
             $result     = mysqli_query($db,$engg);
 
-            $data       = mysqli_fetch_assoc($result);*/
+            $data       = mysqli_fetch_assoc($result);
+
+            //} 
+
+            $Outsql    = "select * from td_mc_trans 
+                          where trans_cd   = $trans_cd
+                          and   sl_no      = '$sl_no'
+                          and   trans_type = 'O'";
+
+
+            $resultOut = mysqli_query($db,$Outsql);
+
+            //if(mysqli_num_rows($resultOut)){
+                $dataOt  = mysqli_fetch_assoc($resultOut);
+                $dateOt  = $dataOt['trans_dt'];
+                $billNo  = $dataOt['bill_no'];
+                $amt     = $dataOt['amount'];
+                $rkmsOt  = $dataOt['remarks'];
+                $del_to  = $dataOt['cust_person'];
+                $del_ph  = $dataOt['cust_per_ph'];
+           // }    
+
+    }
+        
 ?>		
 
 <head>
-    <title>Service Out</title>
+    <title>Service History</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -247,46 +283,26 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="trans_dt" class="col-sm-2 col-form-label">Date:</label>
+                                        <label for="remarks_in" class="col-sm-2 col-form-label">Device In Remarks:</label>
 
                                         <div class="col-sm-8">
-                                            <input type="date"
-                                                   name="trans_dt"
-                                                   class="form-control required"
-                                                   id="trans_dt"
-                                                   value="<?php echo date('Y-m-d'); ?>"
-                                                   readonly
-                                            />
+                                            <textarea type="text" class= "form-control" name = "remarks_in" id   = "remarks" readonly><?php echo $rkmsIn;?></textarea>
                                         </div>
                                     </div>
-
-                                    
-
-                                    
-
-                                    
-
-                                    
-
-                                    
 
                                     <div class="form-group row">
-                                        <label for="in_dt" class="col-sm-2 col-form-label">Service On:</label>
+                                        <label for="srv_dt" class="col-sm-2 col-form-label">Service Date:</label>
 
                                         <div class="col-sm-8">
                                             <input type="date"
-                                                   class= "form-control"
-                                                   name = "in_dt"
-                                                   id   = "in_dt"
-                                                   value="<?php echo $trans_dt; ?>"
+                                                   name="srv_dt"
+                                                   class="form-control required"
+                                                   id="srv_dt"
+                                                   value="<?php echo $dateSrv?>"
                                                    readonly
                                             />
                                         </div>
                                     </div>
-
-                                    
-
-                                    
 
                                     <div class="form-group row">
                                         <label for="cust_person" class="col-sm-2 col-form-label">Technician:</label>
@@ -303,6 +319,20 @@
                                     </div>
 
                                     <div class="form-group row">
+                                        <label for="out_dt" class="col-sm-2 col-form-label">Delivery Date:</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="date"
+                                                   name="out_dt"
+                                                   class="form-control required"
+                                                   id="out_dt"
+                                                   value="<?php echo $dateOt?>"
+                                                   readonly
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
                                         <label for="cust_person" class="col-sm-2 col-form-label">Delivered To:</label>
 
                                         <div class="col-sm-8">
@@ -310,7 +340,8 @@
                                                    class= "form-control"
                                                    name = "delv_to"
                                                    id   = "delv_to"
-                                                   required
+                                                   value="<?php echo $del_to;?>"
+                                                   readonly
                                             />
                                         </div>
                                     </div>
@@ -323,6 +354,8 @@
                                                    class= "form-control"
                                                    name = "delv_ph"
                                                    id   = "delv_ph"
+                                                   value="<?php echo $del_ph;?>"
+                                                   readonly
                                             />
                                         </div>
                                     </div>
@@ -335,6 +368,8 @@
                                                    class= "form-control"
                                                    name = "bill_no"
                                                    id   = "bill_no"
+                                                   value="<?php echo $billNo;?>"
+                                                   readonly
                                             />
                                         </div>
                                     </div>
@@ -347,23 +382,25 @@
                                                    class= "form-control"
                                                    name = "amount"
                                                    id   = "amount"
+                                                   value="<?php echo $amt;?>"
+                                                   readonly
                                             />
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="remarks" class="col-sm-2 col-form-label">Remarks:</label>
+                                        <label for="remarks_out" class="col-sm-2 col-form-label">Out Remarks:</label>
 
                                         <div class="col-sm-8">
-                                            <textarea type="text" class= "form-control" name = "remarks" id   = "remarks" required></textarea>
+                                            <textarea type="text" class= "form-control" name = "remarks_out" id   = "remarks" readonly><?php echo $rkmsOt;?></textarea>
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
 
-                                    <?php require("serviceTab_out.php");?>
+                                    <?php require("parts_hist.php");?>
 
-                                    <div class="form-group row">
+                                    <!--<div class="form-group row">
 
                                         <div class="col-sm-10">
                                             <input type="submit" 
@@ -372,7 +409,7 @@
                                                    id = "subbtn"
                                                    value="Save" />
                                             </div>
-                                        </div>
+                                        </div>-->
                                 </form>
                             </div>
                         </div>

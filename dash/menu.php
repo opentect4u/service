@@ -48,6 +48,7 @@
       <li><a href="../booking/book.php">Device In</a></li>
       <li><a href="../booking/service.php">Device Service</a></li>
       <li><a href="../service_out/service_out.php">Device Out</a></li>
+      <li><a href="../track/slNo.php">Track Device</a></li>
     </ul>  
   </div>
   <hr class="new">
@@ -60,7 +61,7 @@
       <li><a href="../reports/parts_dt.php">Component Ledger</a></li>
       <li><a href="../reports/service_dt.php">Due Service Details</a></li>
       <li><a href="../reports/engg_dt.php">Technician's Service Detail</a></li>
-      <li><a href="../track/slNo.php">Track Device</a>
+      <li><a href="../reports/cust_dt.php">Customer Wise Device Submitted</a></li>
     </ul>  
   </div>
 

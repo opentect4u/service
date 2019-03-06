@@ -67,9 +67,8 @@
                                  <?php
                                     if($result){
                                         if(mysqli_num_rows($result) > 0){
+                                            $i=0;
                                             while($data = mysqli_fetch_assoc($result)){
-
-                                                $i=1;
                                                 $name = $data['user_name']; 
                                                 $id   = $data['user_id'];
                                                 $type = $data['user_type']; 
@@ -81,7 +80,7 @@
                                                 }  
                                 ?>
                                 <tr>
-                                    <td><?php echo $i; ?></td>
+                                    <td><?php echo $i+1; ?></td>
                                     <td><?php echo $name; ?></td>
                                     <td><?php echo $id; ?></td>
                                     <td><?php echo $uType; ?></td>
@@ -92,7 +91,8 @@
                                       
                                 </tr>
                                 <?php
-                                    $i++;  }
+                                    $i++;
+                                      }
                                         }
                                     }    
                                 ?> 

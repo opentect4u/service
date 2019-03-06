@@ -45,8 +45,7 @@
 					$_SESSION['flag'] = false;
 
 					mysqli_close($sql);	
-					header("Location:dash/dashboard.php");
-					
+					header("Location:dash/dashboard.php");		
 				}
 
 			}

@@ -8,7 +8,6 @@
 
         $data['date']     = [];
         $data['tkt']      = [];
-        $data['cust']     = [];
         $data['mcname']   = [];
         $data['sl']       = [];
         $data['prob']     = [];
@@ -18,40 +17,36 @@
 
             $from_dt         = $_POST['from_dt'];
             $to_dt           = $_POST['to_dt'];
-            $emp_cd          = $_POST['tech_name'];
+            $cust_cd         = $_POST['cust_cd'];
     
-            $select = "select emp_code,tech_name from md_tech
-                       where  emp_code  = '$emp_cd'";
+            $select = "select cust_cd,cust_name from md_customers
+                       where  cust_cd  = '$cust_cd'";
                    
             $result = mysqli_query($db,$select);
 
             $row1   = mysqli_fetch_assoc($result);
 
-            $empCd  = $row1['tech_name'];
+            $custCd  = $row1['cust_name'];
 
    
             $sql    = "select a.trans_dt trans_dt,
                               a.trans_cd trans_cd,
-                              a.cust_cd,
                               a.mc_type_id,
                               a.sl_no sl_no,
                               a.mc_prob,
                               a.srv_ctr,
-                              b.cust_name cust_name,
                               c.mc_type mc_type,
                               d.problem_desc prob_desc,
                               e.center_name srv_name
                         from   td_mc_trans a,
-                               md_customers b,
                                md_mc_type c,
                                md_problem d,
                                md_service_centre e
-                        where  a.cust_cd = b.cust_cd
-                        and    a.mc_type_id = c.mc_id
+                        where  a.mc_type_id = c.mc_id
                         and    a.mc_prob    = d.sl_no
                         and    a.srv_ctr    = e.sl_no
-                        and    a.engg_invol = '$emp_cd'
-                        and    a.trans_type = 'S'
+                        and    a.cust_cd    = '$cust_cd'
+                        and    a.trans_type = 'I'
                         and    a.trans_dt between '$from_dt' and '$to_dt'";
            
             $result =  mysqli_query($db,$sql);
@@ -60,7 +55,6 @@
                 
                 array_push($data['date']    ,$row['trans_dt']);
                 array_push($data['tkt']     ,$row['trans_cd']);
-                array_push($data['cust']    ,$row['cust_name']);
                 array_push($data['mcname']  ,$row['mc_type']);
                 array_push($data['sl']      ,$row['sl_no']);
                 array_push($data['prob']    ,$row['prob_desc']);
@@ -71,7 +65,7 @@
 
 <html>
 <head>
-    <title>Service Details</title>
+    <title>Device Details</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -140,13 +134,13 @@
 <div style="min-height: 500px;">
 <div class="content-wrapper">
     <div class="container-fluid">
-        <h2 style="margin-left:60px;text-align:center"><?php echo 'Service Details Between : '.date('d/m/Y',strtotime($from_dt)).' To '.date('d/m/Y',strtotime($to_dt)); ?></h2>
+        <h2 style="margin-left:60px;text-align:center"><?php echo 'Device Submitted Between : '.date('d/m/Y',strtotime($from_dt)).' To '.date('d/m/Y',strtotime($to_dt)); ?></h2>
         <hr class="new">
         <div class="card mb-3">
             <div class="card-header" style="margin-left:60px;">
 
                  <i class="fa fa-asterisk btn btn-primary" >
-                    <span><?php echo "Technician : ".$empCd; ?></span>
+                    <span><?php echo "Customer : ".$custCd; ?></span>
                 </i>
                 
                 
@@ -155,15 +149,16 @@
                 <div class="card-body">
                     <div class="w3-responsive" style="margin-left:60px;" id="divToPrint">
                         <table id="dta" class="w3-table-all" width="50%">
-                            <caption><h3><u><?php echo 'Service Details Between : '.date('d/m/Y',strtotime($from_dt)).
-                                                ' To '.date('d/m/Y',strtotime($to_dt)).' for '.$empCd;
+                            <caption><h3><u><?php echo 'Device Submitted Between : '.date('d/m/Y',strtotime($from_dt)).
+                                                ' To '.date('d/m/Y',strtotime($to_dt));
                                      ?></u></h3>
                             </caption>
+                            <caption><h5><u><?php echo 'Customer : '.$custCd;?></u></h5></caption>
                             <thead>
                                 <tr class="w3-light-grey">
+                                    <th></th>
                                     <th>Date</th>
                                     <th>Ticket No.</th>
-                                    <th>Customer</th>
                                     <th>Type</th>
                                     <th>Sl.No.</th>
                                     <th>Fault</th>
@@ -174,9 +169,9 @@
                                  <?php
                                     for($i=0;$i<sizeof($data['sl']);$i++){?>
                                         <tr>
+                                            <td><?php echo ($i+1);?></td>
                                             <td><?php echo date('d/m/Y',strtotime($data['date'][$i])); ?></td>
                                             <td><?php echo $data['tkt'][$i]; ?></td>
-                                            <td><?php echo $data['cust'][$i]; ?></td>
                                             <td><?php echo $data['mcname'][$i]; ?></td>
                                             <td><?php echo $data['sl'][$i]; ?></td>
                                             <td><?php echo $data['prob'][$i]; ?></td>
