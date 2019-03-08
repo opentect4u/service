@@ -81,7 +81,7 @@
 
                             <div class="col-md-6 container form-wraper">
 
-                                <form method="POST"  id="form" onsubmit="pwd_validate();pwd_cnf();"
+                                <form method="POST"  id="form" onsubmit="return pwd_validate();"
                                       action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>"
                                 />
 
@@ -170,22 +170,6 @@
     </div>
 </div>
 
-<script>
-    function pwd_cnf(){
-        var pwd     = document.getElementById("password");
-        var rePwd   = document.getElementById("re_password");
-
-        if(pwd.value !== rePwd.value){
-            alert("Password & Confirm Password doesn't match");
-            rePwd.value="";
-            rePwd.style.border="solid 3px red";
-            return false;
-        }else{
-            return true;
-        }
-    }
-</script>
-
 
 <script>
     function pwd_validate(){
@@ -197,8 +181,13 @@
             pwd.value="";
             pwd.style.border="solid 3px red";
             return false;
-        }else{
-            return true;
+        }
+
+        if(pwd.value !== rePwd.value){
+            alert("Password & Confirm Password doesn't match");
+            rePwd.value="";
+            rePwd.style.border="solid 3px red";
+            return false;
         }
     }
 </script>

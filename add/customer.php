@@ -59,9 +59,8 @@
                                 <tr class="w3-light-grey">
                                     <th>Sl.No.</th>
                                     <th>Name</th>
-                                    <th>Address</th>
                                     <th>Phone No.</th>
-                                    <th>Email</th>
+                                    <th>Address</th>
                                     <th>Edit</th>
                                 </tr>
                             </thead>
@@ -82,7 +81,6 @@
                                     <td><?php echo $name; ?></td>
                                     <td><?php echo $phno; ?></td>
                                     <td><?php echo $addr; ?></td>
-                                    <td><?php echo $email; ?></td>
                                     <td><a href="editCustomer.php?sl_no=<?php echo$slno; ?>">
                                         <i class="fa fa-edit fa-2x" style="color: #57b846"></i>
                                         <a>
@@ -99,9 +97,8 @@
                                 <tr>
                                     <th>Sl.No.</th>
                                     <th>Name</th>
-                                    <th>Address</th>
                                     <th>Phone No.</th>
-                                    <th>Email</th>
+                                    <th>Address</th>
                                     <th>Edit</th>
                                 </tr>
                             </tfoot>

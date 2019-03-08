@@ -132,7 +132,7 @@
 
                             <div class="col-md-6 container form-wraper">
 
-                                <form method="POST" id="form"
+                                <form method="POST" id="form" onsubmit="return validate_mobile();"
                                       action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" >
 
                                     <div class="form-header">
@@ -238,14 +238,15 @@
 
                                     <div class="form-group row">
                                         <label for="cust_per_ph" class="col-sm-2 col-form-label">Phone No.:</label>
-
+                    
                                         <div class="col-sm-8">
                                             <input type="text"
                                                    class= "form-control"
                                                    name = "cust_per_ph"
                                                    id   = "cust_per_ph"
-                                                   required
+                                                   onkeyup="return validate_mobile();" 
                                             />
+                                            <label id=lbl style="visibility:hidden;"></label>
                                         </div>
                                     </div>
 
@@ -293,3 +294,25 @@
         </div>
     </div>
 </div>
+
+<script>
+    function validate_mobile(){
+        var phNo = document.getElementById("cust_per_ph").value;
+
+        var str = /^[7-9]\d{9}$/
+
+        if(!str.test(phNo)){
+            document.getElementById("lbl").style.visibility="visible";
+            document.getElementById("lbl").innerHTML="Invalid mobile no.";
+            document.getElementById("lbl").style.color="green";
+            document.getElementById("cust_per_ph").style.border="solid 3px red";
+            return false;
+        }else{
+            document.getElementById("lbl").style.visibility="hidden";
+            document.getElementById("lbl").innerHTML="Invalid mobile no.";
+            document.getElementById("lbl").style.color="green";
+            document.getElementById("cust_per_ph").style.border="";
+            return true;
+        }
+    }
+</script>

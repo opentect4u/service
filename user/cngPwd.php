@@ -92,7 +92,7 @@
 
                             <div class="col-md-6 container form-wraper">
 
-                                <form method="POST" id="form"
+                                <form method="POST" id="form" onsubmit="return pwd_validate();"
                                       action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" >
 
                                     <div class="form-header">
@@ -121,6 +121,19 @@
                                                    name="password"
                                                    class="form-control required"
                                                    id="password"
+                                                   required
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="re_password" class="col-sm-2 col-form-label">Confirm Password:</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="password"
+                                                   name="re_password"
+                                                   class="form-control required"
+                                                   id="re_password"
                                                    required
                                             />
                                         </div>
@@ -176,6 +189,27 @@
         </div>
     </div>
 </div>
+
+<script>
+    function pwd_validate(){
+        var pwd     = document.getElementById("password");
+        var rePwd   = document.getElementById("re_password");
+
+        if(pwd.value.trim().length < 5){
+            alert("Password must be minimum 5 character");
+            pwd.value="";
+            pwd.style.border="solid 3px red";
+            return false;
+        }
+
+        if(pwd.value !== rePwd.value){
+            alert("Password & Confirm Password doesn't match");
+            rePwd.value="";
+            rePwd.style.border="solid 3px red";
+            return false;
+        }
+    }
+</script>
 
 <?php
         require("../dash/footer.php");
