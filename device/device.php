@@ -12,7 +12,7 @@
         }
 
         $sql    = "select distinct trans_dt,trans_no,bill_no,arrival_dt,serv_ctr,trans_type
-                   from   td_parts_trans 
+                   from   td_device_trans 
                    where  approval_status = 'U'
                    and    trans_dt = CURDATE()
                    and trans_type In ('I','T','D','L') 
@@ -24,7 +24,7 @@
 
 <html>
 <head>
-    <title>Manage Parts</title>
+    <title>Manage Devices</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -47,11 +47,11 @@
 <div style="min-height: 500px;">
 <div class="content-wrapper">
     <div class="container-fluid">
-        <h2 style="margin-left:60px;text-align:center">Manage Parts</h2>
+        <h2 style="margin-left:60px;text-align:center">Manage Devices</h2>
         <hr class="new">
         <div class="card mb-3">
             <div class="card-header" style="margin-left:60px;">
-                <a class="button" href="../stock/addPartsIn.php"><i class="fa fa-plus"></i>
+                <a class="button" href="../device/addDeviceIn.php"><i class="fa fa-plus"></i>
                     <span>Purchase</span>
                 </a>
                 &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
@@ -96,8 +96,8 @@
                                                 $type   = $data['trans_type'];
 
                                                 if($type=='I'){
-                                                   $typeDesc = "Parts In";
-                                                   $path     = "editPartsIn.php";     
+                                                   $typeDesc = "Purchase";
+                                                   $path     = "editDevIn.php";     
                                                 }elseif($type=='T'){
                                                    $typeDesc = "Transfer"; 
                                                    $path     = "../transfer/editTrf.php";
@@ -105,7 +105,7 @@
                                                    $typeDesc = "Sale";
                                                    $path     = "../sale/editSale.php";   
                                                 }else{
-                                                    $typeDesc = "Damage Out";
+                                                    $typeDesc = "Damage";
                                                     $path     = "../damage/editDamage.php";
                                                 }
                                                 
@@ -169,7 +169,7 @@
 
                 var delCd = $(this).attr('id');
 
-                window.location = "http://"+"<?php echo  $_SERVER['HTTP_HOST']; ?>"+"/service/stock/delParts.php?bill_no="+delCd;
+                window.location = "http://"+"<?php echo  $_SERVER['HTTP_HOST']; ?>"+"/service/device/delDev.php?bill_no="+delCd;
 
             }
 

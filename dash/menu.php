@@ -36,7 +36,8 @@
   </button>
   <div class="dropdown-container">
     <ul>
-      <li><a href="../stock/partsIn.php">Component Stock</a></li>
+      <li><a href="../stock/partsIn.php">Component</a></li>
+      <li><a href="../device/device.php">Device</a></li>
     </ul>  
   </div>
   <hr class="new">

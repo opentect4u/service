@@ -12,16 +12,18 @@
             $billNo         = checkInput($_POST['bill_no']);
             $arvdt          = $_POST['arrival_dt'];
             $make           = $_POST['make'];
-            $comp           = implode('*/*',$_POST["comp_name"]);
-            $comp           = explode('*/*',$comp);
-            $compqty        = $_POST['c_qty'];
+            $mc             = implode('*/*',$_POST["dev_name"]);
+            $mc             = explode('*/*',$mc);
+            $mcqty          = $_POST['c_qty'];
+            $slfm           = $_POST['c_slfrm'];
+            $slto           = $_POST['c_slto'];
             $serv           = $_POST['srv_ctr'];
             $crtby          = $_SESSION['userId'];
             $crtdt          = date('Y-m-d h:i:s');
             $rkms           = $_POST['remarks'];
 
             $select         = "select ifnull(max(trans_no),0) + 1 trans_no
-                               from td_parts_trans
+                               from td_device_trans
                                where trans_dt = '$transDt'";
 
             $no             = mysqli_query($db,$select);
@@ -30,24 +32,24 @@
 
             $transNo        = $trans_no['trans_no']; 
 
-            for($i = 0; $i < sizeof($comp); $i++){
+            for($i = 0; $i < sizeof($mc); $i++){
 
-                $select = "select sl_no,parts_desc from md_parts where sl_no = $comp[$i]";
+                $select = "select mc_id,mc_type from md_mc_type where mc_id = $mc[$i]";
                 $result = mysqli_query($db,$select);
                 $data   = mysqli_fetch_assoc($result);
-                $pname  = $data['parts_desc'];
+                $mname  = $data['mc_type'];
 
-                 $sql       = "insert into td_parts_trans(trans_dt,trans_no,trans_type,bill_no,arrival_dt,
-                                                          comp_sl_no,parts_desc,comp_qty,serv_ctr,
-                                                          remarks,created_by,created_dt,make)
-                              values('$transDt',$transNo,'I','$billNo','$arvdt',$comp[$i],'$pname',$compqty[$i],
-                                          $serv,'$rkms','$crtby','$crtdt','$make')";
+                 $sql       = "insert into td_device_trans(trans_dt,trans_no,trans_type,bill_no,arrival_dt,
+                                                          mc_type,mc_name,mc_qty,serv_ctr,
+                                                          remarks,created_by,created_dt,make,sl_no_from,sl_no_to)
+                              values('$transDt',$transNo,'I','$billNo','$arvdt',$mc[$i],'$mname',$mcqty[$i],
+                                          $serv,'$rkms','$crtby','$crtdt','$make','$slfm[$i]','$slto[$i]')";
 
                  $result1    = mysqli_query($db,$sql);
 
                 if($result1){
                     $_SESSION['flag'] = true;
-                    header("location:partsIn.php");
+                    header("location:device.php");
                 }
 
             }
@@ -67,7 +69,7 @@
 ?>		
 
 <head>
-    <title>New Components In</title>
+    <title>New Device In</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -100,7 +102,7 @@
     <div class="content-wrapper">
 
         <div class="container-fluid">
-            <h2 style="margin-left:60px;text-align:center">Stock In</h2>
+            <h2 style="margin-left:60px;text-align:center">Device Purchase</h2>
             <hr class="new">
 
             <div class="card mb-3">
@@ -117,7 +119,7 @@
                                       action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" >
 
                                     <div class="form-header">
-                                        <h4>In Details</h4>
+                                        <h4>Purchase Details</h4>
                                     </div>
 
                                     <div class="form-group row">
@@ -202,7 +204,7 @@
 
                                     <div class="form-group row">
 
-                                    <?php require("partsIntab.php");
+                                    <?php require("deviceIntab.php");
                                           ?>
                                     </div>
                                     <div class="form-group row">

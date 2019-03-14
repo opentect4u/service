@@ -24,7 +24,7 @@
 
 			while($data1 = mysqli_fetch_array($result,MYSQLI_NUM)){ $i++;  
 
-					$select = "select sl_no,parts_desc from md_parts where sl_no = $data1[5]";
+					$select = "select sl_no,parts_desc from md_parts where sl_no = $data1[6]";
                    
         			$result1   = mysqli_query($db,$select);
 
@@ -42,7 +42,7 @@
 					<?php
 						while($data = mysqli_fetch_assoc($result1)){ ?>
 							<option value="<?php echo $data['sl_no'];?>"
-								<?php echo($data['sl_no']==$data1[5])?'selected':'';?>>
+								<?php echo($data['sl_no']==$data1[6])?'selected':'';?>>
 								<?php echo $data['parts_desc']?>
 							</option>	
 					<?php	   	 
@@ -53,7 +53,7 @@
 				</select>
 			</td>
 
-			<td><input type="text" name="comp_qty[]" class="form-control" value="<?php echo abs($data1[7]);  ?>" readonly></td>
+			<td><input type="text" name="comp_qty[]" class="form-control" value="<?php echo abs($data1[8]);  ?>" readonly></td>
 		</tr>	
 
 

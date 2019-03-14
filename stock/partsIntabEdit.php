@@ -23,7 +23,7 @@
                   
                 while($data1 = mysqli_fetch_array($result1, MYSQLI_NUM)){ $i++;
                   			
-                  			$sql = "select sl_no, parts_desc from md_parts where sl_no = $data1[5]";
+                  			$sql = "select sl_no, parts_desc from md_parts where sl_no = $data1[6]";
 
         					$slno  = mysqli_query($db,$sql);
         					
@@ -48,7 +48,7 @@
 								   name="c_qty[]" id="c_qty" 
 								   class="form-control"
 								   style="text-align:center;"		
-								   value = <?php echo abs($data1[7]); ?>
+								   value = <?php echo abs($data1[8]); ?>
 								   required>
 						</td>
 

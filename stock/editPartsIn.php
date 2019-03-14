@@ -20,7 +20,7 @@
             $arv_dt   = $rtv['arrival_dt'];
             $srv_ctr  = $rtv['serv_ctr'];
             $rkms     = $rtv['remarks'];
-            
+            $mke      = $rtv['make'];
             $bill_no  = $rtv['bill_no'];
 
             $result1  =  mysqli_query($db,$sql);
@@ -33,7 +33,7 @@
 
             $billNo         = checkInput($_POST['bill_no']);
             $arvdt          = $_POST['arrival_dt'];
-
+            $make           = $_POST['make'];
             $comp           = implode('*/*',$_POST["comp_name"]);
             $comp           = explode('*/*',$comp);
             $compqty        = $_POST['c_qty'];
@@ -49,6 +49,7 @@
                                        comp_qty     =  $compqty[$i],
                                        bill_no      =  '$billNo',
                                        serv_ctr     =  $serv,
+                                       make         =  '$make',
                                        remarks      =  '$rkms',
                                        modified_by  =  '$crtby',
                                        modified_dt  =  '$crtdt'
@@ -190,6 +191,20 @@
                                             />
                                         </div>
                                     </div> 
+
+                                    <div class="form-group row">
+                                        <label for="make" class="col-sm-2 col-form-label">Make:</label>
+
+                                        <div class="col-sm-8">
+                                            <Select class="form-control required"
+                                                    name ="make"
+                                                    id="make">
+                                                <option value="">Select Make</option>
+                                                <option value="Power Craft"<?php echo('Power Craft'==$mke)?'selected':'';?>>Power Craft</option>
+                                                <option value="ABI"<?php echo('ABI'==$mke)?'selected':'';?>>ABI</option>
+                                            </Select>
+                                        </div>
+                                    </div>
 
                                     <div class="form-group row">
                                         <label for="serv_ctr" class="col-sm-2 col-form-label">Service Center:</label>

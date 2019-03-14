@@ -224,7 +224,8 @@
                             <div class="col-md-6 container form-wraper">
 
                                 <form method="POST" id="form"
-                                      action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" >
+                                      action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>"
+                                      onsubmit = "return validate_amt();" >
 
                                     <div class="form-header">
                                         <h4>Service Details</h4>
@@ -419,7 +420,10 @@
                                                    class= "form-control"
                                                    name = "amount"
                                                    id   = "amount"
+                                                   value= "0"
+                                                   onkeyup = "return validate_amt();"
                                             />
+                                            <label id=lbl style="visibility:hidden;"></label>
                                         </div>
                                     </div>
 
@@ -454,3 +458,24 @@
         </div>
     </div>
 </div>
+
+<script>
+    function validate_amt(){
+        var amt = document.getElementById("amount").value;
+
+        if(isNaN(amt)){
+            document.getElementById("lbl").style.visibility="visible";
+            document.getElementById("lbl").innerHTML="Invalid amount";
+            document.getElementById("lbl").style.color="green";
+            document.getElementById("amount").style.border="solid 3px red";
+            return false;
+        }else{
+            document.getElementById("lbl").style.visibility="hidden";
+            document.getElementById("lbl").innerHTML="";
+            document.getElementById("lbl").style.color="green";
+            document.getElementById("amount").style.border="";
+            return true;
+        }
+
+    }
+</script>

@@ -25,7 +25,9 @@
 					$uId			= $_SESSION['userId'];
 					$_SESSION['userType']	= $row['user_type'];
 					$time			= date('Y-m-d h:i:s');
-					$server			= $_SERVER['REMOTE_ADDR'];	
+					$server			= $_SERVER['REMOTE_ADDR'];
+
+					$_SESSION['last_time'] = time();	
 
 					$insert = "insert into td_audit_trail(login_dt,user_id,user_name,terminal_name)
 						   values('$time','$uId','$name','$server')";
