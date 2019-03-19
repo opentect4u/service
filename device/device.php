@@ -55,15 +55,15 @@
                     <span>Purchase</span>
                 </a>
                 &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
-                <a class="button" href="../transfer/addTrf.php"><i class="fa fa-plus"></i>
+                <a class="button" href="../transfer/addDeviceTrf.php"><i class="fa fa-plus"></i>
                     <span>Transfer</span>
                 </a>
                 &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
-                <a class="button" href="../damage/addDamage.php"><i class="fa fa-plus"></i>
+                <a class="button" href="../damage/addDeviceDamage.php"><i class="fa fa-plus"></i>
                     <span>Damage</span>
                 </a>
                 &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
-                <a class="button" href="../sale/addSale.php"><i class="fa fa-plus"></i>
+                <a class="button" href="../sale"><i class="fa fa-plus"></i>
                     <span>Sale</span>
                 </a>
             </div>
@@ -100,13 +100,13 @@
                                                    $path     = "editDevIn.php";     
                                                 }elseif($type=='T'){
                                                    $typeDesc = "Transfer"; 
-                                                   $path     = "../transfer/editTrf.php";
+                                                   $path     = "../transfer/editDevTrf.php";
                                                 }elseif($type=='L'){
                                                    $typeDesc = "Sale";
                                                    $path     = "../sale/editSale.php";   
                                                 }else{
                                                     $typeDesc = "Damage";
-                                                    $path     = "../damage/editDamage.php";
+                                                    $path     = "../damage/editDeviceDamage.php";
                                                 }
                                                 
                                                 $srvc   = $data['serv_ctr'];  
