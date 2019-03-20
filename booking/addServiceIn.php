@@ -159,7 +159,8 @@
                                         <div class="col-sm-8">
                                             <Select class="form-control required"
                                                     name ="cust_cd"
-                                                    id="cust_cd">
+                                                    id="cust_cd"
+                                                    onchange = "showPhone(this.value)">
                                                 <option value="">Select Customer</option>
                                                 <?php
 
@@ -314,5 +315,21 @@
             document.getElementById("cust_per_ph").style.border="";
             return true;
         }
+    }
+
+    function showPhone(id){
+        var custId  =   document.getElementById("cust_cd").value;
+        
+        var xhttp   = new XMLHttpRequest();
+        xhttp.onreadystatechange = function(){
+
+            if(this.readyState==4 && this.status == 200){
+
+                document.getElementById("cust_per_ph").value = this.responseText;
+            }
+        }
+
+        xhttp.open("GET","../response/returnPhone.php?cust_cd="+id,true);
+        xhttp.send();
     }
 </script>
