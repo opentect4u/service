@@ -1,25 +1,50 @@
 <?php
-		ini_set("display_errors",1);
-		error_reporting(E_ALL);
+        ini_set("display_errors",1);
+        error_reporting(E_ALL);
 
-		require("../login/connect.php");
-		require("../login/session.php");
-		require("../dash/menu.php");
+        require("../login/connect.php");
+        require("../login/session.php");
+        require("../dash/menu.php");
+
+        if($_SERVER['REQUEST_METHOD']=="GET"){
+            $slno   = $_GET['sl_no'];
+
+            $sql    = "select sl_no,mc_type,version_name from md_version
+                       where  sl_no=".$slno;
+
+         
+            $result = mysqli_query($db,$sql);
+
+            if($result){
+                if(mysqli_num_rows($result) > 0){
+                    $data = mysqli_fetch_assoc($result);
+
+                    $slno = $data['sl_no'];
+                    $type = $data['mc_type'];
+                    $name = $data['version_name'];
+                }
+            }
+        }
 
         if($_SERVER['REQUEST_METHOD']=="POST"){
-            $mcType   = checkInput($_POST['mc_type']);
-            $devType  = checkInput($_POST['dev_type']);
+            $slno     = checkInput($_POST['mc_id']);
+            $type     = checkInput($_POST['mc_type']);
+            $name     = checkInput($_POST['version_name']);
             $crtby    = $_SESSION['userId'];
             $crtdt    = date('Y-m-d h:i:s');
 
-            $sql      = "insert into md_mc_type(mc_type,dev_type,created_by,created_dt)
-                         values('$mcType','$devType','$crtby','$crtdt')";
+            $sql      = "Update md_version
+                         set mc_type ="."'".$type."'".
+                             ",version_name="."'".$name."'".
+                             ",modified_by="."'".$crtby."'".
+                             ",modified_dt="."'".$crtdt."'".
+                          "where sl_no=".$slno;
 
-            $result   = mysqli_query($db,$sql);
+            $update   = mysqli_query($db,$sql);
 
-            if($result){
+            if($update){
                 $_SESSION['flag'] = true;
-                header("location:machine.php");
+                header("location:version.php");
             }
         }
 
@@ -29,10 +54,10 @@
                 $data = htmlspecialchars($data);
                 return $data;
         }
-?>		
+?>      
 
 <head>
-    <title>Add New Device Type</title>
+    <title>Edit Device Types</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -65,7 +90,7 @@
     <div class="content-wrapper">
 
         <div class="container-fluid">
-            <h2 style="margin-left:60px;text-align:center">Add New Device Type</h2>
+            <h2 style="margin-left:60px;text-align:center">Edit Device Details</h2>
             <hr class="new">
 
             <div class="card mb-3">
@@ -82,36 +107,49 @@
                                       action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" >
 
                                     <div class="form-header">
-                                        <h4>Device Type Details</h4>
+                                        <h4>Device Type</h4>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="dev_type" class="col-sm-2 col-form-label">
-                                               Device Type:
-                                        </label>
+                                        <label for="mc_id" class="col-sm-2 col-form-label">Sl.No.:</label>
 
                                         <div class="col-sm-8">
-                                            <select class="form-control required"
-                                                    name ="dev_type" id="dev_type">
-                                                <option value="">Select Device Type</option>
-                                                <option value="B">ETIM Banking</option>
-                                                <option value="O">ETIM Others</option>
-                                                <option value="L">Billing Machine</option>
-                                                <option value="P">Printers</option>
-                                            </select>
+                                            <input type="text"
+                                                   name="mc_id"
+                                                   class="form-control required"
+                                                   id="mc_id"
+                                                   value ="<?php echo $slno;?>"
+                                                   readonly
+                                            />
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
                                         <label for="mc_type" class="col-sm-2 col-form-label">
-                                               Device Name:
+                                               Device Type:
                                         </label>
 
                                         <div class="col-sm-8">
+                                            <select class="form-control required"
+                                                    name ="mc_type" id="mc_type">
+                                                <option value="">Select Device Type</option>
+                                                <option value="B"<?php echo($type=="B")?'selected':'';?>>ETIM Banking</option>
+                                                <option value="O"<?php echo($type=="O")?'selected':'';?>>ETIM Others</option>
+                                                <option value="L"<?php echo($type=="L")?'selected':'';?>>Billing Machine</option>
+                                                <option value="P"<?php echo($type=="P")?'selected':'';?>>Printers</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="version_name" class="col-sm-2 col-form-label">Version Name:</label>
+
+                                        <div class="col-sm-8">
                                             <input type="text"
-                                                   name="mc_type"
+                                                   name="version_name"
                                                    class="form-control required"
-                                                   id="mc_type"
+                                                   id="version_name"
+                                                   value ="<?php echo $name;?>"
                                                    required
                                             />
                                         </div>

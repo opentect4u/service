@@ -23,9 +23,10 @@
   <div class="dropdown-container">
     <ul>
       <li><a href="../add/customer.php">Customer</a></li> 
-      <li><a href="../add/machine.php">Device</a></li>
+      <li><a href="../add/machine.php">Device Type</a></li>
       <li><a href="../add/parts.php">Parts</a></li>
       <li><a href="../add/service.php">Service Center</a></li>
+      <li><a href="../add/version.php">Device Version</a></li>
       <li><a href="../add/problem.php">Problems</a></li>
       <li><a href="../add/tech.php">Technician</a></li>
   </ul>

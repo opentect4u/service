@@ -9,7 +9,7 @@
         if($_SERVER['REQUEST_METHOD']=="GET"){
             $slno   = $_GET['mc_id'];
 
-            $sql    = "select mc_id,mc_type from md_mc_type 
+            $sql    = "select mc_id,mc_type,dev_type from md_mc_type 
                        where  mc_id=".$slno;
 
          
@@ -21,6 +21,7 @@
 
                     $slno = $data['mc_id'];
                     $name = $data['mc_type'];
+                    $type = $data['dev_type'];
                 }
             }
         }
@@ -28,11 +29,13 @@
         if($_SERVER['REQUEST_METHOD']=="POST"){
             $slno     = checkInput($_POST['mc_id']);
             $name     = checkInput($_POST['mc_type']);
+            $type     = checkInput($_POST['dev_type']);
             $crtby    = $_SESSION['userId'];
             $crtdt    = date('Y-m-d h:i:s');
 
             $sql      = "Update md_mc_type 
                          set mc_type ="."'".$name."'".
+                             ",dev_type="."'".$type."'".
                              ",modified_by="."'".$crtby."'".
                              ",modified_dt="."'".$crtdt."'".
                           "where mc_id=".$slno;
@@ -122,7 +125,24 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="mc_type" class="col-sm-2 col-form-label">Device Type:</label>
+                                        <label for="dev_type" class="col-sm-2 col-form-label">
+                                               Device Type:
+                                        </label>
+
+                                        <div class="col-sm-8">
+                                            <select class="form-control required"
+                                                    name ="dev_type" id="dev_type">
+                                                <option value="">Select Device Type</option>
+                                                <option value="B"<?php echo($type=="B")?'selected':'';?>>ETIM Banking</option>
+                                                <option value="O"<?php echo($type=="O")?'selected':'';?>>ETIM Others</option>
+                                                <option value="L"<?php echo($type=="L")?'selected':'';?>>Billing Machine</option>
+                                                <option value="P"<?php echo($type=="P")?'selected':'';?>>Printers</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="mc_type" class="col-sm-2 col-form-label">Device Name:</label>
 
                                         <div class="col-sm-8">
                                             <input type="text"
