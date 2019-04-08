@@ -133,10 +133,10 @@
                                             <select class="form-control required"
                                                     name ="dev_type" id="dev_type">
                                                 <option value="">Select Device Type</option>
-                                                <option value="B"<?php echo($type=="B")?'selected':'';?>>ETIM Banking</option>
-                                                <option value="O"<?php echo($type=="O")?'selected':'';?>>ETIM Others</option>
+                                                <option value="B"<?php echo($type=="B")?'selected':'';?>>ETIM Banking & Others</option>
                                                 <option value="L"<?php echo($type=="L")?'selected':'';?>>Billing Machine</option>
-                                                <option value="P"<?php echo($type=="P")?'selected':'';?>>Printers</option>
+                                                <option value="P"<?php echo($type=="P")?'selected':'';?>>Printer</option>
+                                                <option value="O"<?php echo($type=="O")?'selected':'';?>>Ohers</option>
                                             </select>
                                         </div>
                                     </div>

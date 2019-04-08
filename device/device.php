@@ -63,7 +63,7 @@
                     <span>Damage</span>
                 </a>
                 &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
-                <a class="button" href="../sale"><i class="fa fa-plus"></i>
+                <a class="button" href="../sale/addDeviceSale.php"><i class="fa fa-plus"></i>
                     <span>Sale</span>
                 </a>
             </div>

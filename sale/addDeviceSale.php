@@ -74,7 +74,7 @@
 ?>		
 
 <head>
-    <title>Component Sale</title>
+    <title>Device Sale</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -107,7 +107,7 @@
     <div class="content-wrapper">
 
         <div class="container-fluid">
-            <h2 style="margin-left:60px;text-align:center">Component Sale</h2>
+            <h2 style="margin-left:60px;text-align:center">Device Sale</h2>
             <hr class="new">
 
             <div class="card mb-3">
@@ -141,9 +141,21 @@
                                         </div>
                                     </div>
 
+                                    <div class="form-group row">
+                                        <label for="sale_dt" class="col-sm-2 col-form-label">Sale Date:</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="date"
+                                                   name="sale_dt"
+                                                   class="form-control required"
+                                                   id="trans_dt"
+                                            />
+                                        </div>
+                                    </div>
+
 
                                     <div class="form-group row">
-                                        <label for="bill_no" class="col-sm-2 col-form-label">Bill No.:</label>
+                                        <label for="bill_no" class="col-sm-2 col-form-label">Invoice No.:</label>
 
                                         <div class="col-sm-8">
                                             <input type="text"

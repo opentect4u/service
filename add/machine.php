@@ -77,9 +77,9 @@
                                                 }elseif($type=='P'){
                                                     $devType = "Printer";
                                                 }elseif($type=='B'){
-                                                    $devType = "ETIM-Banking";
+                                                    $devType = "ETIM-Banking & Others";
                                                 }else{
-                                                    $devType = "ETIM-Others";
+                                                    $devType = "Others";
                                                 }
 
                                                 $name       = $data['mc_type']; 

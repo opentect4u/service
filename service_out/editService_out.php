@@ -28,6 +28,7 @@
             $srv_ctr = $data['srv_ctr'];
             $tech    = $data['engg_invol'];
             $status  = $data['warr_status'];
+            $phone   = $data['cust_per_ph'];
             
 
 /////////////
@@ -396,6 +397,7 @@
                                                    class= "form-control"
                                                    name = "delv_ph"
                                                    id   = "delv_ph"
+                                                   value ="<?php echo $phone; ?>"
                                             />
                                         </div>
                                     </div>

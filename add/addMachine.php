@@ -94,10 +94,10 @@
                                             <select class="form-control required"
                                                     name ="dev_type" id="dev_type">
                                                 <option value="">Select Device Type</option>
-                                                <option value="B">ETIM Banking</option>
-                                                <option value="O">ETIM Others</option>
+                                                <option value="B">ETIM Banking & Others</option>
                                                 <option value="L">Billing Machine</option>
-                                                <option value="P">Printers</option>
+                                                <option value="P">Printer</option>
+                                                <option value="O">Others</option>
                                             </select>
                                         </div>
                                     </div>
