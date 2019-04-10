@@ -15,8 +15,8 @@
             $mc             = implode('*/*',$_POST["dev_name"]);
             $mc             = explode('*/*',$mc);
             $mcqty          = $_POST['c_qty'];
-            $slfm           = $_POST['c_slfrm'];
-            $slto           = $_POST['c_slto'];
+            /*$slfm           = $_POST['c_slfrm'];
+            $slto           = $_POST['c_slto'];*/
             $serv           = $_POST['srv_ctr'];
             $crtby          = $_SESSION['userId'];
             $crtdt          = date('Y-m-d h:i:s');
@@ -41,9 +41,9 @@
 
                  $sql       = "insert into td_device_trans(trans_dt,trans_no,trans_type,bill_no,arrival_dt,
                                                           mc_type,mc_name,mc_qty,serv_ctr,
-                                                          remarks,created_by,created_dt,make,sl_no_from,sl_no_to)
+                                                          remarks,created_by,created_dt,make)
                               values('$transDt',$transNo,'I','$billNo','$arvdt',$mc[$i],'$mname',$mcqty[$i],
-                                          $serv,'$rkms','$crtby','$crtdt','$make','$slfm[$i]','$slto[$i]')";
+                                          $serv,'$rkms','$crtby','$crtdt','$make')";
 
                  $result1    = mysqli_query($db,$sql);
 
@@ -144,6 +144,7 @@
                                                    class= "form-control"
                                                    name = "arrival_dt"
                                                    id   = "arrival_dt"
+                                                   required
                                             />
                                         </div>
                                     </div> 

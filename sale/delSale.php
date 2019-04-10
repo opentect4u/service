@@ -13,7 +13,7 @@
        $sql1= "DELETE FROM td_device_amc where trans_dt = '".$_GET['trans_dt']."'"."and trans_no= ".$_GET['trans_no'];
 
       
-       $result1 = mysqli_query($db,$sql);
+       $result1 = mysqli_query($db,$sql1);
 
 	   header('Location: deviceSale.php');
 

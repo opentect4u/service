@@ -6,110 +6,57 @@
         require("../login/session.php");
         require("../dash/menu.php");
 
-
-        $data['sl_no']    = [];
-        $data['slno']     = [];
-        $data['mcname']   = [];
-        $data['qty']      = [];  
-
-        $data['mc_id']    = [];
+        $data['name']     = [];
+        $data['ver']      = [];
+        $data['qty']      = [];
+        
 
         if($_SERVER['REQUEST_METHOD']=="POST"){  
 
-            $trans_dt         = $_POST['trans_dt'];
-            $srv              = $_POST['srv_ctr'];
-            $item             = $_POST['item'];
+            $from_dt         = $_POST['from_dt'];
+            $to_dt           = $_POST['to_dt'];
+            $srv_ctr         = $_POST['srv_ctr'];
+            
+            $sql    = "SELECT a.mc_type mc_type,
+                              a.mc_version mc_version,
+                              sum(abs(a.mc_qty))mc_qty,
+                              b.mc_type mc_desc, 
+                              c.version_name version_name
+                       from   td_device_trans a,md_mc_type b,md_version c 
+                       where  a.mc_type = b.mc_id
+                       and    a.mc_version = c.sl_no
+                       and    a.arrival_dt between '$from_dt' and '$to_dt'
+                       and    a.trans_type = 'S'
+                       and    a.serv_ctr   = $srv_ctr
+                       group by a.mc_type ,
+                                a.mc_version ,
+                                b.mc_type , 
+                                c.version_name";
+           
+            $result =  mysqli_query($db,$sql);
 
-            $select = "select sl_no,center_name from md_service_centre
-                       where sl_no  = $srv";
-                   
-            $result = mysqli_query($db,$select);
+            while($row   =  mysqli_fetch_assoc($result)){
+                
+                array_push($data['name']    ,$row['mc_desc']);
+                array_push($data['ver']     ,$row['version_name']);
+                array_push($data['qty']     ,$row['mc_qty']);
+               }
 
-            $row1   = mysqli_fetch_assoc($result);
+            $select  = "select sl_no,center_name from md_service_centre where sl_no = $srv_ctr";
 
-            $srvCtr = $row1['center_name'];
+            $result1 = mysqli_query($db,$select);
 
-            if($item=='C'){
-                $item_desc = "Component";
-                $sql              = "select sl_no,parts_desc from md_parts";
-                $query            = mysqli_query($db,$sql);
-                while($slno       = mysqli_fetch_assoc($query)){
-                    $sl_no = $slno['sl_no'];
-                    array_push($data['sl_no'], $sl_no);
-                }
+            $row1    = mysqli_fetch_assoc($result1); 
 
-                $parts_type = $data['sl_no'];
+            $srvCtr  = $row1['center_name'];
 
-                for($i=0;$i<sizeof($parts_type);$i++){
-                    $sum    = "select ifnull(sum(comp_qty),0)nos from td_parts_trans 
-                               where comp_sl_no = $parts_type[$i] 
-                               and trans_dt <= '$trans_dt'
-                               and serv_ctr = $srv";
-                    $result =  mysqli_query($db,$sum);
-                    $row    =  mysqli_fetch_assoc($result);
 
-                    $sql    = "select sl_no,parts_desc from md_parts where sl_no = $parts_type[$i]";
-                    $result = mysqli_query($db,$sql);
-                    $desc   = mysqli_fetch_assoc($result);
-
-                    array_push($data['slno']    ,$parts_type[$i]);
-                    array_push($data['mcname']  ,$desc['parts_desc']);
-                    array_push($data['qty']     ,$row['nos']);
-                }
-            }elseif($item=='D'){
-                $item_desc        = "Device(Service)";
-                $sql              = "select mc_id,mc_type from md_mc_type";
-                $query            = mysqli_query($db,$sql);
-                while($mcid       = mysqli_fetch_assoc($query)){
-                    $mc_id = $mcid['mc_id'];
-                    array_push($data['mc_id'], $mc_id);
-                }
-
-                $mc_type = $data['mc_id'];
-
-                for($i=0;$i<sizeof($mc_type);$i++){
-                    $in    =  "select count(mc_type_id)in_nos from td_mc_trans 
-                               where mc_type_id = $mc_type[$i] 
-                               and trans_type   in ('I','S')
-                               and trans_dt    <= '$trans_dt'
-                               and srv_ctr      = $srv
-                               and approval_status = 'U'";
-
-                    $result =  mysqli_query($db,$in);
-                    $row    =  mysqli_fetch_assoc($result);
-
-                    $sql    = "select mc_id,mc_type from md_mc_type where mc_id = $mc_type[$i]";
-                    $result = mysqli_query($db,$sql);
-                    $desc   = mysqli_fetch_assoc($result);
-
-                    array_push($data['slno']    ,$mc_type[$i]);
-                    array_push($data['mcname']  ,$desc['mc_type']);
-                    array_push($data['qty']     ,$row['in_nos']);
-            }   
-        }else{
-            $item_desc        = "New Device";
-
-            $in    =  "select mc_type,mc_name,sum(mc_qty)in_nos from td_device_trans
-                       where  arrival_dt <= '$trans_dt'
-                       group by mc_type,mc_name";
-
-            $i=1;           
-                       
-            $result =  mysqli_query($db,$in);
-            while($row    =  mysqli_fetch_assoc($result)){
-                array_push($data['slno']    ,$i);
-                array_push($data['mcname']  ,$row['mc_name']);
-                array_push($data['qty']     ,$row['in_nos']);
-
-                $i++;
-            }
-        }
-    }    
+        }    
 ?>
 
 <html>
 <head>
-    <title>Stock Position</title>
+    <title>Item Wise Sale</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -178,12 +125,12 @@
 <div style="min-height: 500px;">
 <div class="content-wrapper">
     <div class="container-fluid">
-        <h2 style="margin-left:60px;text-align:center"><?php echo $item_desc.' Stock Position As On : '.date('d/m/Y',strtotime($trans_dt)); ?></h2>
+        <h2 style="margin-left:60px;text-align:center"><?php echo 'Item Wise Sale Between : '.date('d/m/Y',strtotime($from_dt)).' To '.date('d/m/Y',strtotime($to_dt)); ?></h2>
         <hr class="new">
         <div class="card mb-3">
             <div class="card-header" style="margin-left:60px;">
 
-                 <i class="fa fa-home btn btn-primary" >
+                 <i class="fa fa-asterisk btn btn-primary" >
                     <span><?php echo "Service Center : ".$srvCtr; ?></span>
                 </i>
                 
@@ -193,27 +140,30 @@
                 <div class="card-body">
                     <div class="w3-responsive" style="margin-left:60px;" id="divToPrint">
                         <table id="dta" class="w3-table-all" width="50%">
-                            <caption><h3><u><?php echo $item_desc.' Stock Position As On : '.date('d/m/Y',strtotime($trans_dt)).
-                                                ' for '.$srvCtr;
+                            <caption><h3><u><?php echo 'Item Wise Sale Between : '.date('d/m/Y',strtotime($from_dt)).
+                                                ' To '.date('d/m/Y',strtotime($to_dt));
                                      ?></u></h3>
                             </caption>
+                            <caption><h5><u><?php echo 'Service Center : '.$srvCtr;?></u></h5></caption>
                             <thead>
                                 <tr class="w3-light-grey">
                                     <th>Sl.No.</th>
-                                    <th>Type</th>
+                                    <th>Device Type</th>
+                                    <th>Version</th>
                                     <th>Quantity</th>
                                 </tr>
                             </thead>
                             <tbody>
                                  <?php
-                                    for($i=0;$i<sizeof($data['slno']);$i++){?>
+                                    for($i=0;$i<sizeof($data['name']);$i++){?>
                                         <tr>
-                                            <td><?php echo $data['slno'][$i]; ?></td>
-                                            <td><?php echo $data['mcname'][$i]; ?></td>
+                                            <td><?php echo ($i+1);?></td>
+                                            <td><?php echo $data['name'][$i]; ?></td>
+                                            <td><?php echo $data['ver'][$i]; ?></td>
                                             <td><?php echo $data['qty'][$i]; ?></td>
                                         </tr>    
                                  <?php
-                                     }         
+                                    }         
                                  ?>      
                             </tbody>    
                         </table>

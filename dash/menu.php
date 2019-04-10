@@ -51,7 +51,7 @@
       <li><a href="../booking/book.php">Device In</a></li>
       <li><a href="../booking/service.php">Device Service</a></li>
       <li><a href="../service_out/service_out.php">Device Out</a></li>
-      <li><a href="../track/slNo.php">Track Device</a></li>
+      <li><a href="../track/slNo.php">Track Device History</a></li>
     </ul>  
   </div>
   <hr class="new">
@@ -65,6 +65,11 @@
       <li><a href="../reports/service_dt.php">Due Service Details</a></li>
       <li><a href="../reports/engg_dt.php">Technician's Service Detail</a></li>
       <li><a href="../reports/cust_dt.php">Customer Wise Device Submitted</a></li>
+      <li><hr></li>
+      <li><a href="../reports/item_dt.php">Item Wise Sale</a></li>
+      <li><a href="../reports/item_dt.php">Item Wise Sale</a></li>
+      <li><a href="../reports/cust_sale_dt.php">Customer Wise Sale</a></li>
+      <li><a href="../reports/invoice_dt.php">Date Wise Invoice</a></li>
     </ul>  
   </div>
 

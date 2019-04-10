@@ -37,8 +37,8 @@
             $make           = $_POST['make'];
             $mc             = implode('*/*',$_POST["dev_name"]);
             $mc             = explode('*/*',$mc);
-            $slfm           = $_POST['c_slfrm'];
-            $slto           = $_POST['c_slto'];
+          /*  $slfm           = $_POST['c_slfrm'];
+            $slto           = $_POST['c_slto'];*/
             $mcqty          = $_POST['c_qty'];
             $serv           = $_POST['srv_ctr'];
             $crtby          = $_SESSION['userId'];
@@ -54,8 +54,8 @@
                                        serv_ctr     =  $serv,
                                        make         =  '$make',
                                        remarks      =  '$rkms',
-                                       sl_no_from   =  $slfm[$i],
-                                       sl_no_to     =  $slto[$i],
+                                       sl_no_from   =  0,
+                                       sl_no_to     =  0,
                                        modified_by  =  '$crtby',
                                        modified_dt  =  '$crtdt'
                                 where  trans_dt     =  '$transDt'
@@ -63,7 +63,7 @@
                                 and    trans_type   =  'I'
                                 and    mc_type      =  $mc[$i]";
 
-                  echo $sql;
+                  //echo $sql;
 
                  $result       = mysqli_query($db,$sql);
 

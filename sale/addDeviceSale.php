@@ -56,8 +56,8 @@
 
                 while($slFrm <= $slTo){
 
-                    $rangeIn = "insert into td_device_amc(trans_dt,trans_no,trans_type,sl_no,amc_from,amc_to)
-                                               values('$transDt',$transNo,'S',$slFrm,'$saleDt','$amcDt')";
+                    $rangeIn = "insert into td_device_amc(trans_dt,trans_no,trans_type,mc_type,sl_no,amc_from,amc_to)
+                                               values('$transDt',$transNo,'S',$mcType,$slFrm,'$saleDt','$amcDt')";
 
                     $result1 = mysqli_query($db,$rangeIn);
 
@@ -67,8 +67,8 @@
 
             for($i = 0; $i < sizeof($devSl); $i++){
 
-                $sql = "insert into td_device_amc(trans_dt,trans_no,trans_type,sl_no,amc_from,amc_to)
-                                           values('$transDt',$transNo,'S',$devSl[$i],'$saleDt','$amcDt')";
+                $sql = "insert into td_device_amc(trans_dt,trans_no,trans_type,mc_type,sl_no,amc_from,amc_to)
+                                           values('$transDt',$transNo,'S',$mcType,$devSl[$i],'$saleDt','$amcDt')";
 
                 $result2 = mysqli_query($db,$sql);
             }

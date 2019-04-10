@@ -23,12 +23,12 @@
 			<th style="text-align:center;">
 				Quantity
 			</th>
-			<th style="text-align:center;">
+			<!--<th style="text-align:center;">
 				Sl.From
 			</th>
 			<th style="text-align:center;">
 				Sl.To
-			</th>
+			</th>-->
 		</tr>
 		<tr>
 
@@ -47,18 +47,20 @@
 					   class="form-control"	
 					   required >
 			</td>
-			<td><input type="number" min="1" 
+			<!--<td><input type="number" min="1" 
 					   name="c_slfrm[]" id="c_slfrm" 
 					   style="text-align:center;"
 					   class="form-control"			
-					   required>
+					   value=0
+					   >
 			</td>
 			<td><input type="number" min="1" 
 					   name="c_slto[]" id="c_slto" 
 					   style="text-align:center;"
-					   class="form-control"			
-					   required>
-			</td>
+					   class="form-control"	
+					   value=0		
+					   >
+			</td>-->
 			
 		</tr>	
 	</table>
@@ -70,7 +72,7 @@ $(document).ready(function(){
 
 	$('#addRow').click(function(){
 
-		$('#addAnother').append('<tr><td><select class="form-control required blkSelected" name="dev_name[]"><option value="">Select Device</option><?php $select = "select mc_id,mc_type from md_mc_type"; $device  = mysqli_query($db,$select);while($data = mysqli_fetch_assoc($device)){echo ("<option value=".$data['mc_id'].">".$data['mc_type']."</option>");}?></select></td><td><input type="number" min="1"name="c_qty[]" id="c_qty"style="text-align:center;"class="form-control"required></td><td><input type="text" name="c_slfrm[]" id="c_slfrm" style="text-align:center; class="form-control" required></td><td><input type="text" name="c_slto[]" id="c_slto" style="text-align:center;"class="form-control" required></td><td><button class="removeRow removebtn" type="button" ><i class="fa fa-times" aria-hidden="true"></i></button></td></tr>');
+		$('#addAnother').append('<tr><td><select class="form-control required blkSelected" name="dev_name[]"><option value="">Select Device</option><?php $select = "select mc_id,mc_type from md_mc_type"; $device  = mysqli_query($db,$select);while($data = mysqli_fetch_assoc($device)){echo ("<option value=".$data['mc_id'].">".$data['mc_type']."</option>");}?></select></td><td><input type="number" min="1"name="c_qty[]" id="c_qty"style="text-align:center;"class="form-control"required></td><!--<td><input type="text" name="c_slfrm[]" id="c_slfrm" style="text-align:center; class="form-control" value=0></td><td><input type="text" name="c_slto[]" id="c_slto" style="text-align:center;"class="form-control"value=0></td>--><td><button class="removeRow removebtn" type="button" ><i class="fa fa-times" aria-hidden="true"></i></button></td></tr>');
 		     $('.blkSelected').change();
 
 	});
