@@ -66,7 +66,7 @@
       <li><a href="../reports/engg_dt.php">Technician's Service Detail</a></li>
       <li><a href="../reports/cust_dt.php">Customer Wise Device Submitted</a></li>
       <li><hr></li>
-      <li><a href="../reports/item_dt.php">Item Wise Sale</a></li>
+      <li><a href="../reports/status.php">Warranty Status</a></li>
       <li><a href="../reports/item_dt.php">Item Wise Sale</a></li>
       <li><a href="../reports/cust_sale_dt.php">Customer Wise Sale</a></li>
       <li><a href="../reports/invoice_dt.php">Date Wise Invoice</a></li>
