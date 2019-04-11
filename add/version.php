@@ -78,9 +78,9 @@
                                                 }elseif($type=='P'){
                                                     $devType = "Printer";
                                                 }elseif($type=='B'){
-                                                    $devType = "ETIM-Banking";
+                                                    $devType = "Banking & Others";
                                                 }else{
-                                                    $devType = "ETIM-Others";
+                                                    $devType = "Others";
                                                 }
                                 ?>
                                 <tr>
