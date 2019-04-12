@@ -45,6 +45,7 @@
                                where comp_sl_no = $parts_type[$i] 
                                and trans_dt <= '$trans_dt'
                                and serv_ctr = $srv";
+
                     $result =  mysqli_query($db,$sum);
                     $row    =  mysqli_fetch_assoc($result);
 
@@ -91,6 +92,8 @@
 
             $in    =  "select mc_type,mc_name,sum(mc_qty)in_nos from td_device_trans
                        where  arrival_dt <= '$trans_dt'
+                       and    serv_ctr      = $srv
+                       and    approval_status = 'U'
                        group by mc_type,mc_name";
 
             $i=1;           

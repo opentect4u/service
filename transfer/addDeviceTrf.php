@@ -16,8 +16,8 @@
             $dev            = implode('*/*',$_POST["dev_name"]);
             $dev            = explode('*/*',$dev);
             $devqty         = $_POST['c_qty'];
-            $slf            = $_POST['c_slfrm'];
-            $slt            = $_POST['c_slto'];
+           /* $slf            = $_POST['c_slfrm'];
+            $slt            = $_POST['c_slto'];*/
             $serv           = $_POST['srv_ctr'];
             $srvto          = $_POST['srv_to'];
             $trfmd          = $_POST['trf_mode'];
@@ -48,7 +48,7 @@
                                   mc_type,mc_name,mc_qty,serv_ctr,srv_to,trf_mode,sl_no_from,sl_no_to,
                                   remarks,created_by,created_dt)
                                   values('$transDt',$transNo,'T','$billNo','$arvdt',$dev[$i],'$mname',-$devqty[$i],
-                                          $serv,$srvto,'$trfmd',$slf[$i],$slt[$i],'$rkms','$crtby','$crtdt')";
+                                          $serv,$srvto,'$trfmd',0,0,'$rkms','$crtby','$crtdt')";
 
                 echo $sql;
 
