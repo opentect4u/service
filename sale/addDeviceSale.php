@@ -19,6 +19,7 @@
             $slFrm        = $_POST['sl_frm'];
             $slTo         = $_POST['sl_to'];
             $rkms         = checkInput($_POST['remarks']);
+            $slctr        = $_POST['sale_ctr'];
 
             $devSl        = implode('*/*',$_POST['c_sl']); 
             $devSl        = explode('*/*',$devSl);
@@ -48,7 +49,7 @@
                              arrival_dt,mc_type,mc_name,mc_version,mc_qty,serv_ctr,remarks,sl_no_from,
                              sl_no_to,warranty_period,created_by,created_dt)
                              values('$transDt',$transNo,'S','$invNo',$cust,'Power Craft','$saleDt',$mcType,
-                                    '$mcName',$mcVer,-$mcQty,1,'$rkms',$slFrm,$slTo,$prd,'$crtby','$crtdt')";
+                                    '$mcName',$mcVer,-$mcQty,$slctr,'$rkms',$slFrm,$slTo,$prd,'$crtby','$crtdt')";
 
             $result       = mysqli_query($db,$insert);
 
@@ -91,7 +92,7 @@
         $select = "select sl_no,center_name from md_service_centre";
                    
         $serviceCenter  = mysqli_query($db,$select);
-        $serviceCenter1 = mysqli_query($db,$select);
+        
 
         $select = "select cust_cd,cust_name from md_customers";
         $cust   = mysqli_query($db,$select);
@@ -250,6 +251,25 @@
                                                     while($data = mysqli_fetch_assoc($ver)){
                                                         echo ("<option value=".$data['sl_no'].">".
                                                                $data['version_name']."</option>");
+                                                    }
+                                                ?>    
+                                            </Select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="mc_type" class="col-sm-2 col-form-label">Sale Center:</label>
+
+                                        <div class="col-sm-8">
+                                            <Select class="form-control required"
+                                                    name ="sale_ctr"
+                                                    id="sale_ctr">
+                                                <option value="">Select Center</option>
+                                                <?php
+
+                                                    while($data = mysqli_fetch_assoc($serviceCenter)){
+                                                        echo ("<option value=".$data['sl_no'].">".
+                                                               $data['center_name']."</option>");
                                                     }
                                                 ?>    
                                             </Select>
