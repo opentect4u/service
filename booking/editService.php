@@ -153,6 +153,8 @@
 
             $transNo    = $row['trans_no'];
 
+            
+if ($_POST["comp_sl_no"][0] > 0){
 
             for($i = 0; $i < sizeof($parts); $i++){
 
@@ -194,7 +196,7 @@
                 $result2       = mysqli_query($db,$out);
 
             }
-
+           } 
 
             if($result){
                     $_SESSION['flag'] = true;

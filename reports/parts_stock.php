@@ -10,24 +10,28 @@
         $data['sl_no']    = [];
         $data['slno']     = [];
         $data['mcname']   = [];
-        $data['qty']      = [];  
+        $data['kol_qty']  = [];  
+        $data['sil_qty']  = [];
+        $data['mal_qty']  = [];
+        $data['bap_qty']  = [];
+        $data['tot_qty']  = [];
 
         $data['mc_id']    = [];
 
         if($_SERVER['REQUEST_METHOD']=="POST"){  
 
             $trans_dt         = $_POST['trans_dt'];
-            $srv              = $_POST['srv_ctr'];
+            //$srv              = $_POST['srv_ctr'];
             $item             = $_POST['item'];
 
-            $select = "select sl_no,center_name from md_service_centre
+            /*$select = "select sl_no,center_name from md_service_centre
                        where sl_no  = $srv";
                    
             $result = mysqli_query($db,$select);
 
-            $row1   = mysqli_fetch_assoc($result);
+            $row1   = mysqli_fetch_assoc($result);*/
 
-            $srvCtr = $row1['center_name'];
+            $srvCtr = 'NA';
 
             if($item=='C'){
                 $item_desc = "Component";
@@ -90,11 +94,44 @@
         }else{
             $item_desc        = "New Device";
 
-            $in    =  "select mc_type,mc_name,sum(mc_qty)in_nos from td_device_trans
-                       where  arrival_dt <= '$trans_dt'
-                       and    serv_ctr      = $srv
-                       and    approval_status = 'U'
-                       group by mc_type,mc_name";
+            $in    =  "select mc_type,mc_name,sum(kol_qty)kol_qty,sum(sil_qty)sil_qty,
+                        sum(mal_qty)mal_qty,sum(bap_qty)bap_qty,sum(tot_qty)tot_qty
+                        from(
+                                select mc_type,mc_name,sum(mc_qty)kol_qty,0 sil_qty,0 mal_qty,0 bap_qty,0 tot_qty 
+                                from td_device_trans
+                                where  arrival_dt <= '$trans_dt'
+                                and    approval_status = 'U'
+                                and    serv_ctr = 1
+                                group by mc_type,mc_name,serv_ctr
+                                UNION
+                                select mc_type,mc_name,0 kol_qty,sum(mc_qty)sil_qty,0 mal_qty,0 bap_qty,0 tot_qty 
+                                from td_device_trans
+                                where  arrival_dt <= '$trans_dt'
+                                and    approval_status = 'U'
+                                and    serv_ctr = 2
+                                group by mc_type,mc_name,serv_ctr
+                                UNION
+                                select mc_type,mc_name,0 kol_qty,0 sil_qty,sum(mc_qty)mal_qty,0 bap_qty,0 tot_qty 
+                               from td_device_trans
+                                where  arrival_dt <= '$trans_dt'
+                                and    approval_status = 'U'
+                                and    serv_ctr = 3
+                                group by mc_type,mc_name,serv_ctr
+                                UNION
+                                select mc_type,mc_name,0 kol_qty,0 sil_qty,0 mal_qty,sum(mc_qty) bap_qty,0 tot_qty 
+                                from td_device_trans
+                                where  arrival_dt <= '$trans_dt'
+                                and    approval_status = 'U'
+                                and    serv_ctr = 4
+                                group by mc_type,mc_name,serv_ctr
+                                UNION
+                                select mc_type,mc_name,0 kol_qty,0 sil_qty,0 mal_qty,0 bap_qty, sum(mc_qty)tot_qty
+                                from td_device_trans
+                                where  arrival_dt <= '$trans_dt'
+                                and    approval_status = 'U'
+                                group by mc_type,mc_name,serv_ctr)a
+                        group by mc_type,mc_name
+                        order by mc_type";
 
             $i=1;           
                        
@@ -102,7 +139,11 @@
             while($row    =  mysqli_fetch_assoc($result)){
                 array_push($data['slno']    ,$i);
                 array_push($data['mcname']  ,$row['mc_name']);
-                array_push($data['qty']     ,$row['in_nos']);
+                array_push($data['kol_qty']     ,$row['kol_qty']);
+                array_push($data['sil_qty']     ,$row['sil_qty']);
+                array_push($data['mal_qty']     ,$row['mal_qty']);
+                array_push($data['bap_qty']     ,$row['bap_qty']);
+                array_push($data['tot_qty']     ,$row['tot_qty']);
 
                 $i++;
             }
@@ -184,27 +225,27 @@
         <h2 style="margin-left:60px;text-align:center"><?php echo $item_desc.' Stock Position As On : '.date('d/m/Y',strtotime($trans_dt)); ?></h2>
         <hr class="new">
         <div class="card mb-3">
-            <div class="card-header" style="margin-left:60px;">
+            <!--<div class="card-header" style="margin-left:60px;">
 
                  <i class="fa fa-home btn btn-primary" >
                     <span><?php echo "Service Center : ".$srvCtr; ?></span>
                 </i>
-                
-                
-            </div>
+            </div>-->
             <hr class="new">
                 <div class="card-body">
                     <div class="w3-responsive" style="margin-left:60px;" id="divToPrint">
                         <table id="dta" class="w3-table-all" width="50%">
-                            <caption><h3><u><?php echo $item_desc.' Stock Position As On : '.date('d/m/Y',strtotime($trans_dt)).
-                                                ' for '.$srvCtr;
-                                     ?></u></h3>
+                            <caption><h3><u><?php echo $item_desc.' Stock Position As On : '.date('d/m/Y',strtotime($trans_dt));?></u></h3>
                             </caption>
                             <thead>
                                 <tr class="w3-light-grey">
                                     <th>Sl.No.</th>
                                     <th>Type</th>
-                                    <th>Quantity</th>
+                                    <th>Kolkata</th>
+                                    <th>Siliguri</th>
+                                    <th>Malda</th>
+                                    <th>Bappa</th>
+                                    <th>Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -213,7 +254,11 @@
                                         <tr>
                                             <td><?php echo $data['slno'][$i]; ?></td>
                                             <td><?php echo $data['mcname'][$i]; ?></td>
-                                            <td><?php echo $data['qty'][$i]; ?></td>
+                                            <td><?php echo $data['kol_qty'][$i]; ?></td>
+                                            <td><?php echo $data['sil_qty'][$i]; ?></td>
+                                            <td><?php echo $data['mal_qty'][$i]; ?></td>
+                                            <td><?php echo $data['bap_qty'][$i]; ?></td>
+                                            <td><?php echo $data['tot_qty'][$i]; ?></td>
                                         </tr>    
                                  <?php
                                      }         

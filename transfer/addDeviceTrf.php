@@ -35,8 +35,6 @@
 
             $transNo      = $trans_no['trans_no']; 
 
-
-
             for($i = 0; $i < sizeof($dev); $i++){
 
                 $select = "select mc_id,mc_type from md_mc_type where mc_id = $dev[$i]";
@@ -50,15 +48,12 @@
                                   values('$transDt',$transNo,'T','$billNo','$arvdt',$dev[$i],'$mname',-$devqty[$i],
                                           $serv,$srvto,'$trfmd',0,0,'$rkms','$crtby','$crtdt')";
 
-                echo $sql;
-
                  $result       = mysqli_query($db,$sql);
+            }
 
-                if($result){
+            if($result){
                     $_SESSION['flag'] = true;
                     header("location:../device/device.php");
-                }
-
             }
 
         }
@@ -74,9 +69,6 @@
                    
         $serviceCenter  = mysqli_query($db,$select);
         $serviceCenter1 = mysqli_query($db,$select);
-
-
-
 ?>		
 
 <head>

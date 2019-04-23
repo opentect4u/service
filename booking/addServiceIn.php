@@ -32,7 +32,7 @@
             $crtby          = $_SESSION['userId'];
             $crtdt          = date('Y-m-d h:i:s');
 
-            $select         = "select ifnull(max(substr(trans_cd,5)),0) + 1 trans_no
+            $select         = "Select ifnull(max(cast(substr(trans_cd,5) As UNSIGNED)),0) + 1 trans_no
                                from td_mc_trans
                                where year(trans_dt) = year(CURRENT_DATE);";
 

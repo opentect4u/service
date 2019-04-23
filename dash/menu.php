@@ -70,6 +70,7 @@
       <li><a href="../reports/item_dt.php">Item Wise Sale</a></li>
       <li><a href="../reports/cust_sale_dt.php">Customer Wise Sale</a></li>
       <li><a href="../reports/invoice_dt.php">Date Wise Invoice</a></li>
+      <li><a href="../reports/new_device_dt.php">Device Ledger</a></li>
     </ul>  
   </div>
 

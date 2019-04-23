@@ -26,7 +26,7 @@
 		</tr>
 		<tr>
 			<td><select class="form-control required" name="comp_sl_no[]">
-					<option value="">Select Parts</option>?>
+					<option value="0">Select Parts</option>?>
 					<?php 
 						   while($data = mysqli_fetch_assoc($parts)){
 						   		echo ("<option value=".$data['sl_no'].">".$data['parts_desc']."</option>");

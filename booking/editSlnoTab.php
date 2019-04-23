@@ -60,8 +60,8 @@
 				</select>
 			</td>
 			<td><select name="status[]" id="status" class="form-control required">
-					<option value='I'<?php echo($data1[5]=='I')?'selected':''?>>In Warranty</option>
-					<option value='O'<?php echo($data1[5]=='O')?'selected':''?>>Out Warranty</option>
+					<option value='I'<?php echo($data1[7]=='I')?'selected':'';?>>In Warranty</option>
+					<option value='O'<?php echo($data1[7]=='O')?'selected':'';?>>Out Warranty</option>
 				</select>	
 			</td>
 			

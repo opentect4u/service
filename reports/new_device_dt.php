@@ -13,13 +13,21 @@
                 return $data;
         }
 
-        /*$select = "select sl_no,center_name from md_service_centre";
+        $select = "select mc_id,mc_type from md_mc_type";
                    
-        $serviceCenter = mysqli_query($db,$select);*/
+        $device = mysqli_query($db,$select);
+
+        /*$select1 = "select sl_no,parts_desc from md_parts";
+
+        $parts   = mysqli_query($db,$select1);*/
+
+        $select1 = "select sl_no,center_name from md_service_centre";
+                   
+        $serviceCenter = mysqli_query($db,$select1);
 ?>		
 
 <head>
-    <title>Component Stock Position</title>
+    <title>Device Ledger</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -52,7 +60,7 @@
     <div class="content-wrapper">
 
         <div class="container-fluid">
-            <h2 style="margin-left:60px;text-align:center">Component Stock Position</h2>
+            <h2 style="margin-left:60px;text-align:center">Device Ledger</h2>
             <hr class="new">
 
             <div class="card mb-3">
@@ -66,20 +74,20 @@
                             <div class="col-md-6 container form-wraper">
 
                                 <form method="POST" id="form"
-                                      action="parts_stock.php" >
+                                      action="new_device_ledger.php" >
 
                                     <div class="form-header">
-                                        <h4>Supply Date & Type</h4>
+                                        <h4>Supply Date & Device</h4>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="trans_dt" class="col-sm-2 col-form-label">Date:</label>
+                                        <label for="from_dt" class="col-sm-2 col-form-label">From Date:</label>
 
                                         <div class="col-sm-6">
                                             <input type="date"
-                                                   name="trans_dt"
+                                                   name="from_dt"
                                                    class="form-control required"
-                                                   id="trans_dt"
+                                                   id="from_dt"
                                                    value=<?php echo date('Y-m-d'); ?>
                                                    required
                                             />
@@ -87,24 +95,42 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="item" class="col-sm-2 col-form-label">Item:</label>
+                                        <label for="to_dt" class="col-sm-2 col-form-label">To Date:</label>
+
+                                        <div class="col-sm-6">
+                                            <input type="date"
+                                                   name="to_dt"
+                                                   class="form-control required"
+                                                   id="to_dt"
+                                                   value=<?php echo date('Y-m-d'); ?>
+                                                   required
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="parts_desc" class="col-sm-2 col-form-label">Device Name:</label>
 
                                         <div class="col-sm-6">
                                             <Select class="form-control required"
-                                                    name ="item"
-                                                    id="item">
-                                                <option value="">Select Item</option>
-                                                <option value="C">Component</option>
-                                                <option value="N">New Device</option>
-                                                <option value="D">Device(Service)</option>
+                                                    name ="device_desc"
+                                                    id="device_desc">
+                                                <option value="">Select Device</option>
+                                                <?php
+
+                                                    while($data = mysqli_fetch_assoc($device)){
+                                                        echo ("<option value=".$data['mc_id'].">".
+                                                               $data['mc_type']."</option>");
+                                                    }
+                                                ?>    
                                             </Select>
                                         </div>
                                     </div>
 
-                                    <!--<div class="form-group row">
+                                    <div class="form-group row">
                                         <label for="serv_ctr" class="col-sm-2 col-form-label">Service Center:</label>
 
-                                       <div class="col-sm-6">
+                                        <div class="col-sm-6">
                                             <Select class="form-control required"
                                                     name ="srv_ctr"
                                                     id="srv_ctr">
@@ -118,7 +144,7 @@
                                                 ?>    
                                             </Select>
                                         </div>
-                                    </div>-->
+                                    </div>
 
                                     <div class="form-group row">
 
