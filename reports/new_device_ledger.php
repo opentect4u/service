@@ -35,6 +35,38 @@
             $row1    = mysqli_fetch_assoc($result1);
             $srvCtr  = $row1['center_name'];
 
+            $sql = "select max(trans_dt)trans_dt from td_device_trans 
+                    where mc_type    = $mc
+                    and   trans_dt   < '$from_dt'
+                    and    serv_ctr   = $srv
+                    and    approval_status = 'U'";
+
+            $sqlResult = mysqli_query($db,$sql);
+            $data = mysqli_fetch_assoc($sqlResult);
+
+
+            $opnSelect = "select sum(mc_qty)opn from td_device_trans
+                          where  mc_type    = $mc
+                          and    trans_dt   < '$from_dt'
+                          and    serv_ctr   = $srv
+                          and    approval_status = 'U'";
+
+            $opnResult =  mysqli_query($db,$opnSelect);
+
+            $opn       = mysqli_fetch_assoc($opnResult);
+
+            $opnBal    = $opn['opn'];
+
+            array_push($row['date']             ,$data['trans_dt']);
+            array_push($row['transType']        ,'O');
+            array_push($row['billNo']           ,'');
+            array_push($row['custCd']           ,'');
+            array_push($row['remarks']          ,'');
+            array_push($row['qty']              ,$opnBal);
+            array_push($row['nos']              ,1);
+
+
+
             $select =  "select * from td_device_trans
                         where trans_dt between '$from_dt' and '$to_dt'
                         and   mc_type    = $mc
@@ -184,7 +216,7 @@
                                                       }elseif($row['transType'][$i]=="T"){
                                                          echo "Transfer Out";
                                                       }elseif($row['transType'][$i]=="O"){
-                                                         echo "Service Out";
+                                                         echo "Opening Balance";
                                                       }elseif($row['transType'][$i]=="S"){
                                                          echo "Sale Out";
                                                       }else{

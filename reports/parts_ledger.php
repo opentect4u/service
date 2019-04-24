@@ -30,6 +30,35 @@
             $row1   = mysqli_fetch_assoc($result);
             $srvCtr = $row1['center_name'];
 
+            $sql = "select max(trans_dt)trans_dt from td_parts_trans 
+                    where comp_sl_no    = $parts_desc
+                    and   trans_dt   < '$from_dt'
+                    and    serv_ctr   = $srv";
+
+            $sqlResult = mysqli_query($db,$sql);
+            $data = mysqli_fetch_assoc($sqlResult);
+
+            $opnSelect = "select sum(comp_qty)opn from td_parts_trans
+                          where  comp_sl_no    = $parts_desc
+                          and    trans_dt      < '$from_dt'
+                          and    serv_ctr      = $srv";
+                           
+
+            $opnResult =  mysqli_query($db,$opnSelect);
+
+            $opn       = mysqli_fetch_assoc($opnResult);
+
+            $opnBal    = $opn['opn'];
+
+             array_push($row['date']             ,$data['trans_dt']);
+             array_push($row['transType']        ,'N');
+             array_push($row['billNo']           ,'');
+             array_push($row['qty']              ,$opnBal);
+             array_push($row['remarks']          ,'');
+             array_push($row['nos']              ,1);
+
+
+
             $sql              = "select sl_no,parts_desc from md_parts
                                  where sl_no = $parts_desc";
             $query            = mysqli_query($db,$sql);
@@ -170,6 +199,8 @@
                                                          echo "Service Out";
                                                       }elseif($row['transType'][$i]=="L"){
                                                          echo "Sale Out";
+                                                      }elseif($row['transType'][$i]=="N"){
+                                                         echo "Opening";
                                                       }else{
                                                          echo "Damage Out";   
                                                       } 

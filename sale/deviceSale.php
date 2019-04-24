@@ -16,6 +16,7 @@
                    where  approval_status = 'U'
                    and    trans_dt = CURDATE()
                    and trans_type = 'S'
+                   or     bill_no  = 1
                    order by trans_dt";
 
         $result = mysqli_query($db,$sql);
@@ -66,7 +67,7 @@
                                     <th>Invoice No.</th>
                                     <th>Item</th>
                                     <th>Quantity</th>
-                                    <!--<th>Edit</th>-->
+                                    <th>Edit</th>
                                     <th>Delete</th>
                                 </tr>
                             </thead>
@@ -94,10 +95,10 @@
                                     <td><?php echo $bill; ?></td>
                                     <td><?php echo $mcname; ?></td>
                                     <td><?php echo $qty; ?></td>
-                                    <!--<td><a href="<?php echo $path; ?>?trans_dt=<?php echo$data['trans_dt'];?>&trans_no=<?php echo$transNo; ?>">
+                                     <td><a href="editSale.php?trans_dt=<?php echo $actDt; ?>&trans_cd=<?php echo $transNo;?>">
                                         <i class="fa fa-edit fa-2x" style="color: #57b846"></i>
                                         <a>
-                                    </td>-->
+                                    </td>
                                     <td>
                                         <a href="javascript: void(0)" class="del" id="<?php echo $actDt;?>" id1="<?php echo $transNo;?>">
                                             <i class="fa fa-eraser fa-2x"style="color: #57b846"></i>
@@ -117,7 +118,7 @@
                                     <th>Invoice No.</th>
                                     <th>Item</th>
                                     <th>Quantity</th>
-                                    <!--<th>Edit</th>-->
+                                    <th>Edit</th>
                                     <th>Delete</th>
                                 </tr>
                             </tfoot>

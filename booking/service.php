@@ -62,6 +62,7 @@
                                 <tr class="w3-light-grey">
                                     <th>Date</th>
                                     <th>Ticket No.</th>
+                                    <th>Center</th>
                                     <th>Serial No.</th>
                                     <th>Device Type</th>
                                     <th>Customer</th>
@@ -103,12 +104,21 @@
 
                                                  $mcName    = $name['mc_type'];
 
-                                                
+                                                 $sc        = $data['srv_ctr'];
 
+                                                 $sql1      = "select sl_no,center_name from md_service_centre 
+                                                                where  sl_no = $sc"; 
+
+                                                 $result1  = mysqli_query($db,$sql1);
+
+                                                 $data1    = mysqli_fetch_assoc($result1);
+
+                                                 $srv = $data1['center_name'];
                                 ?>
                                 <tr>
                                     <td><?php echo $date; ?></td>
                                     <td><?php echo $transNo; ?></td>
+                                    <td><?php echo $srv; ?></td>
                                     <td ><?php echo $no; ?></td>
                                     <td><?php echo $mcName; ?></td>
                                     <td><?php echo $cName; ?></td>
@@ -134,6 +144,7 @@
                                 <tr>
                                     <th>Date</th>
                                     <th>Ticket No.</th>
+                                    <th>Center</th>
                                     <th>Serial No.</th>
                                     <th>Device Type</th>
                                     <th>Customer</th>

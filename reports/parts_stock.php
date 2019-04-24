@@ -45,10 +45,36 @@
                 $parts_type = $data['sl_no'];
 
                 for($i=0;$i<sizeof($parts_type);$i++){
-                    $sum    = "select ifnull(sum(comp_qty),0)nos from td_parts_trans 
-                               where comp_sl_no = $parts_type[$i] 
-                               and trans_dt <= '$trans_dt'
-                               and serv_ctr = $srv";
+                    $sum    = "Select sum(kol)kol,sum(sil)sil,sum(mal)mal,sum(bap)bap,sum(tot)tot
+                               from (select sum(comp_qty)kol,0 sil,0 mal,0 bap,0 tot 
+                                     from td_parts_trans 
+                                       where comp_sl_no = $parts_type[$i]
+                                       and trans_dt <= '$trans_dt'
+                                       and serv_ctr = 1
+                                       UNION
+                                       select 0 kol,sum(comp_qty)sil,0 mal,0 bap,0 tot
+                                       from td_parts_trans 
+                                       where comp_sl_no = $parts_type[$i]
+                                       and trans_dt <= '$trans_dt'
+                                       and serv_ctr = 2
+                                       UNION
+                                       select 0 kol,0 sil,sum(comp_qty)mal,0 bap,0 tot
+                                       from td_parts_trans 
+                                       where comp_sl_no = $parts_type[$i]
+                                       and trans_dt <= '$trans_dt'
+                                       and serv_ctr = 3
+                                       UNION
+                                       select 0 kol,0 sil,0 mal,sum(comp_qty)bap,0 tot
+                                       from td_parts_trans 
+                                       where comp_sl_no = $parts_type[$i]
+                                       and trans_dt <= '$trans_dt'
+                                       and serv_ctr = 4
+                                       UNION
+                                       select 0 kol,0 sil,0 mal,0 bap,sum(comp_qty)tot
+                                       from td_parts_trans 
+                                       where comp_sl_no = $parts_type[$i]
+                                       and trans_dt <= '$trans_dt'
+                                       )a";
 
                     $result =  mysqli_query($db,$sum);
                     $row    =  mysqli_fetch_assoc($result);
@@ -59,7 +85,11 @@
 
                     array_push($data['slno']    ,$parts_type[$i]);
                     array_push($data['mcname']  ,$desc['parts_desc']);
-                    array_push($data['qty']     ,$row['nos']);
+                    array_push($data['kol_qty'] ,$row['kol']);
+                    array_push($data['sil_qty'] ,$row['sil']);
+                    array_push($data['mal_qty'] ,$row['mal']);
+                    array_push($data['bap_qty'] ,$row['bap']);
+                    array_push($data['tot_qty'] ,$row['tot']);
                 }
             }elseif($item=='D'){
                 $item_desc        = "Device(Service)";
@@ -73,12 +103,27 @@
                 $mc_type = $data['mc_id'];
 
                 for($i=0;$i<sizeof($mc_type);$i++){
-                    $in    =  "select count(mc_type_id)in_nos from td_mc_trans 
-                               where mc_type_id = $mc_type[$i] 
-                               and trans_type   in ('I','S')
-                               and trans_dt    <= '$trans_dt'
-                               and srv_ctr      = $srv
-                               and approval_status = 'U'";
+                    $in    =  "select sum(kol)kol,sum(sil)sil,sum(tot)tot
+                               from(
+                                       select count(mc_type_id)kol,0 sil,0 tot from td_mc_trans 
+                                       where mc_type_id = $mc_type[$i] 
+                                       and trans_type   in ('I','S')
+                                       and trans_dt    <= '$trans_dt'
+                                       and srv_ctr      = 1
+                                       and approval_status = 'U'
+                                       UNION
+                                       select 0 kol,count(mc_type_id) sil,0 tot from td_mc_trans 
+                                       where mc_type_id = $mc_type[$i] 
+                                       and trans_type   in ('I','S')
+                                       and trans_dt    <= '$trans_dt'
+                                       and srv_ctr      = 2
+                                       and approval_status = 'U'
+                                       UNION
+                                       select 0 kol,0 sil,count(mc_type_id) tot from td_mc_trans 
+                                       where mc_type_id = $mc_type[$i] 
+                                       and trans_type   in ('I','S')
+                                       and trans_dt    <= '$trans_dt'
+                                       and approval_status = 'U')a";
 
                     $result =  mysqli_query($db,$in);
                     $row    =  mysqli_fetch_assoc($result);
@@ -89,7 +134,11 @@
 
                     array_push($data['slno']    ,$mc_type[$i]);
                     array_push($data['mcname']  ,$desc['mc_type']);
-                    array_push($data['qty']     ,$row['in_nos']);
+                    array_push($data['kol_qty'] ,$row['kol']);
+                    array_push($data['sil_qty'] ,$row['sil']);
+                    array_push($data['mal_qty'] ,0);
+                    array_push($data['bap_qty'] ,0);
+                    array_push($data['tot_qty'] ,$row['tot']);
             }   
         }else{
             $item_desc        = "New Device";

@@ -36,7 +36,7 @@
                        md_mc_type c
                 where  a.cust_cd = b.cust_cd
                 and    a.mc_type_id = c.mc_id
-                and    a.trans_type   in ('I','S')
+                and    a.trans_type   in ('I')
                 and    a.trans_dt    <= '$trans_dt'
                 and    a.srv_ctr      = $srv
                 and    a.approval_status = 'U'

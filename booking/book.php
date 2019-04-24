@@ -11,7 +11,7 @@
             $_SESSION['flag']=false;
         }
 
-        $sql    = "select Distinct trans_dt,trans_cd,cust_cd,mc_type_id
+        $sql    = "select Distinct trans_dt,trans_cd,srv_ctr,cust_cd,mc_type_id
                    from   td_mc_trans where trans_type = 'I' and approval_status = 'U'";
 
         $result = mysqli_query($db,$sql);
@@ -60,6 +60,7 @@
                                 <tr class="w3-light-grey">
                                     <th>Date</th>
                                     <th>Ticket No.</th>
+                                    <th>Center</th>
                                     <th>Customer</th>
                                     <th>M/C Type</th>
                                     <!--<th>Quantity</th>-->
@@ -98,13 +99,23 @@
 
                                                  $mcName    = $name['mc_type'];
 
-                                               // $mcQty        = $data['mc_qty'];  
+                                                 $sc        = $data['srv_ctr'];
+
+                                                 $sql1      = "select sl_no,center_name from md_service_centre 
+                                                                where  sl_no = $sc"; 
+
+                                                 $result1  = mysqli_query($db,$sql1);
+
+                                                 $data1    = mysqli_fetch_assoc($result1);
+
+                                                 $srv = $data1['center_name'];
 
 
                                 ?>
                                 <tr>
                                     <td><?php echo $date; ?></td>
                                     <td style="text-align:center"><?php echo $no; ?></td>
+                                    <td><?php echo $srv; ?></td>
                                     <td><?php echo $cName; ?></td>
                                     <td><?php echo $mcName; ?></td>
                                     <!--<td style="text-align:center"><?php echo $mcQty; ?></td>-->
@@ -130,6 +141,7 @@
                                 <tr>
                                     <th>Date</th>
                                     <th>Ticket No.</th>
+                                    <th>Center</th>
                                     <th>Customer</th>
                                     <th>M/C Type</th>
                                     <!--<th>Quantity</th>-->
