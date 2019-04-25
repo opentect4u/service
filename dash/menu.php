@@ -17,6 +17,9 @@
 <div class="sidenav">
   <a href="../dash/dashboard.php">Home</a>
   <hr class="new">
+
+<?php if($_SESSION['userType']=='A') { ?>
+
   <button class="dropdown-btn">Add New
     <i class="fa fa-caret-down"></i>
   </button>
@@ -32,6 +35,7 @@
   </ul>
   </div>
   <hr class="new">
+<?php } ?>
   <button class="dropdown-btn">Stock
     <i class="fa fa-caret-down"></i>
   </button>
@@ -42,6 +46,8 @@
       <li><a href="../sale/deviceSale.php">Device Sale</a></li>
     </ul>  
   </div>
+
+<?php if($_SESSION['userType']=='A' || $_SESSION['userType']=='E') { ?>
   <hr class="new">
   <button class="dropdown-btn">Service
     <i class="fa fa-caret-down"></i>
@@ -54,6 +60,8 @@
       <li><a href="../track/slNo.php">Track Device History</a></li>
     </ul>  
   </div>
+<?php } ?>
+
   <hr class="new">
   <button class="dropdown-btn">Reports 
     <i class="fa fa-caret-down"></i>
@@ -80,8 +88,9 @@
   </button>
   <div class="dropdown-container">
     <ul>
-      
+      <?php if($_SESSION['userType']=='A') { ?>
         <li><a href="../user/user.php">Add User</a></li>
+      <?php } ?>
       
       <li><a href="../user/cngPwd.php">Change Password</a></li>
     </ul>  

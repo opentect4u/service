@@ -141,8 +141,11 @@
                                                 <option value="A"<?php echo($userType=='A')?'selected':'';?>>
                                                         Admin
                                                 </option>
-                                                <option value="G"<?php echo($userType=='G')?'selected':'';?>>
-                                                        General
+                                                <option value="G"<?php echo($userType=='S')?'selected':'';?>>
+                                                        Stock
+                                                </option>
+                                                <option value="G"<?php echo($userType=='E')?'selected':'';?>>
+                                                        Service
                                                 </option>
                                             </Select>
                                         </div>

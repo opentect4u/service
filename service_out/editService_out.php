@@ -9,13 +9,12 @@
         if($_SERVER['REQUEST_METHOD']=="GET"){
             $trans_dt = $_GET['trans_dt'];
             $trans_cd = $_GET['trans_cd'];
-            $sl_no    = $_GET['sl_no'];
 
-            $sql    = "select * from td_mc_trans 
+            $sql    = "select Distinct cust_cd,mc_type_id,srv_ctr,cust_per_ph from td_mc_trans 
                        where trans_dt = '$trans_dt' 
                        and   trans_cd =  $trans_cd
-                       and   sl_no    =  '$sl_no'
-                       and   trans_type = 'S'";
+                       and   trans_type = 'S'
+                       and   approval_status = 'U'";
 
 
             $result = mysqli_query($db,$sql);
@@ -24,11 +23,13 @@
 
             $cust_cd = $data['cust_cd'];
             $mc_type = $data['mc_type_id'];
-            $mc_prob = $data['mc_prob'];
-            $srv_ctr = $data['srv_ctr'];
-            $tech    = $data['engg_invol'];
-            $status  = $data['warr_status'];
             $phone   = $data['cust_per_ph'];
+            $srv_ctr = $data['srv_ctr'];
+            
+            /*$tech    = $data['engg_invol'];
+            $status  = $data['warr_status'];
+            
+            $mc_prob = $data['mc_prob'];*/
             
 
 /////////////
@@ -46,23 +47,16 @@
             $result     = mysqli_query($db,$machine);
 
             $mc        = mysqli_fetch_assoc($result);
+
+
+
 /////////////
+            $srvSql      = "select sl_no,center_name from md_service_centre
+                            where sl_no = $srv_ctr";
 
-            $problem    = "select * from md_problem
-                           where sl_no = $mc_prob";
+            $result2     = mysqli_query($db,$srvSql);
 
-            $result     = mysqli_query($db,$problem);
-
-            $prob       = mysqli_fetch_assoc($result);
-/////////////
-
-
-            $engg       = "select * from md_tech 
-                           where emp_code = $tech";
-
-            $result     = mysqli_query($db,$engg);
-
-            $data       = mysqli_fetch_assoc($result);
+            $srv         = mysqli_fetch_assoc($result2);
 
         }
 
@@ -70,86 +64,93 @@
 
             $transDt      = $_POST['trans_dt'];
             $transCd      = $_POST['trans_cd'];
-            $slNo         = $_POST['sl_no'];
-            $rcvDt        = $_POST['in_dt'];
-            $srv          = $_POST['srv_ctr'];
-            $bill_no      = $_POST['bill_no'];
-            $amt          = $_POST['amount'];
-            
-            $sql    = "select * from td_mc_trans 
-                       where trans_dt = '$rcvDt' 
-                       and   trans_cd =  $transCd
-                       and   sl_no    =  '$slNo'
-                       and   trans_type = 'S'
-                       and   approval_status = 'U'";
+            $trans        = 'O';
+
+            $sql    = "select Distinct cust_cd,mc_type_id,srv_ctr from td_mc_trans 
+                       where trans_cd =  $transCd and   trans_type = 'S' and   approval_status = 'U'";
 
             $result = mysqli_query($db,$sql);
-
             $data   = mysqli_fetch_assoc($result);
 
-            $custCd       = $data['cust_cd'];
-            $trans        = 'O';
-            $mcType       = $data['mc_type_id'];
-            
-            $prob         = $data['mc_prob'];
-            $warr         = $data['warr_status'];
-            //$srv          = $data['srv_ctr'];
-            $cust         = $_POST['delv_to'];
-            $ph           = $_POST['delv_ph'];
-            $tech         = $data['engg_invol'];
-            $rkms         = $_POST['remarks'];
-             
+            $custCd = $data['cust_cd'];
+            $mcType = $data['mc_type_id'];
+            $srv    = $data['srv_ctr'];
+
+            $otSts  = $_POST["out"];
+
+            $cust   = $_POST['delv_to'];
+            $ph     = $_POST['delv_ph'];
+            $rkms   = $_POST['remarks'];
+            $bill_no   = $_POST['bill_no'];
+            $amt       = $_POST['amount'];
+         
             $crtby        = $_SESSION['userId'];
             $crtdt        = date('Y-m-d h:i:s');
 
-            $sql          = "insert into td_mc_trans(trans_dt,
-                                                     trans_cd,
-                                                     cust_cd,
-                                                     trans_type,
-                                                     mc_type_id,
-                                                     sl_no,
-                                                     mc_prob,
-                                                     warr_status,
-                                                     mc_qty,
-                                                     srv_ctr,
-                                                     cust_person,
-                                                     cust_per_ph,
-                                                     engg_invol,
-                                                     bill_no,
-                                                     amount,
-                                                     remarks,
-                                                     approval_status,
-                                                     created_by,
-                                                     created_dt,
-                                                     approved_by,
-                                                     approved_dt)
-                                             values('$transDt',
-                                                     $transCd,
-                                                     $custCd,
-                                                    '$trans',
-                                                     $mcType,
-                                                    '$slNo',
-                                                     $prob,
-                                                    '$warr',
-                                                     0,
-                                                     $srv,
-                                                    '$cust',
-                                                    '$ph',
-                                                    '$tech',
-                                                    '$bill_no',
-                                                     $amt,
-                                                    '$rkms',
-                                                    'A',
-                                                    '$crtby',
-                                                    '$crtdt',
-                                                    '$crtby',
-                                                    '$crtdt')";
+            for($i = 0; $i < sizeof($otSts); $i++){
 
-            //echo $sql;
+                $slNo = $otSts[$i];
 
-            $result         = mysqli_query($db,$sql);
+                $sql  = "select * from td_mc_trans 
+                         where trans_cd = '$transCd'
+                         and   trans_type = 'S'
+                         and   sl_no      = $slNo   
+                         and   approval_status = 'U'";
 
-            $updt = "Update td_mc_trans
+                $result = mysqli_query($db,$sql);
+                $row    = mysqli_fetch_assoc($result);
+
+                $mcProb     = $row['mc_prob']; 
+                $mcStatus   = $row['warr_status'];
+                $rcvDt      = $row['trans_dt'];
+                $tech       = $row['engg_invol'];
+
+                $insert     = "insert into td_mc_trans(trans_dt,
+                                             trans_cd,
+                                             cust_cd,
+                                             trans_type,
+                                             mc_type_id,
+                                             sl_no,
+                                             mc_prob,
+                                             warr_status,
+                                             mc_qty,
+                                             srv_ctr,
+                                             cust_person,
+                                             cust_per_ph,
+                                             engg_invol,
+                                             bill_no,
+                                             amount,
+                                             remarks,
+                                             approval_status,
+                                             created_by,
+                                             created_dt,
+                                             approved_by,
+                                             approved_dt)
+                                     values('$transDt',
+                                             $transCd,
+                                             $custCd,
+                                            '$trans',
+                                             $mcType,
+                                            '$slNo',
+                                             $mcProb,
+                                            '$mcStatus',
+                                             0,
+                                             $srv,
+                                            '$cust',
+                                            '$ph',
+                                            '$tech',
+                                            '$bill_no',
+                                             $amt,
+                                            '$rkms',
+                                            'A',
+                                            '$crtby',
+                                            '$crtdt',
+                                            '$crtby',
+                                            '$crtdt')";
+
+                $result         = mysqli_query($db,$insert);
+
+                $updt = "Update td_mc_trans
                      set    approval_status = 'A',
                             approved_by     = '$crtby',
                             approved_dt     = '$crtdt'
@@ -159,13 +160,13 @@
                      and    trans_type      = 'S'
                      and    approval_status = 'U'";
 
-            $result1       = mysqli_query($db,$updt);
+                $result1       = mysqli_query($db,$updt);
+            }
 
             if($result){
-                    $_SESSION['flag'] = true;
-                    header("location:service_out.php");
-                }
-            
+                $_SESSION['flag'] = true;
+                header("location:service_out.php");
+            }
         }
 
         function checkInput($data) {
@@ -260,7 +261,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group row">
+                                    <!--<div class="form-group row">
                                         <label for="sl_no" class="col-sm-2 col-form-label">Serial No.:</label>
 
                                         <div class="col-sm-8">
@@ -272,16 +273,24 @@
                                                    readonly
                                             />
                                         </div>
-                                    </div>
+                                    </div>-->
 
                                     <div class="form-group row">
                                         <label for="cust_cd" class="col-sm-2 col-form-label">Customer:</label>
 
                                         <div class="col-sm-8">
-                                            <input type="text"
+                                            <input type="hidden"
                                                     name="cust_cd"
                                                     class="form-control required"
                                                     id="cust_cd"
+                                                    value="<?php echo $cust_cd; ?>"
+                                                    readonly 
+                                            />
+
+                                            <input type="text"
+                                                    name="cust_name"
+                                                    class="form-control required"
+                                                    id="cust_name"
                                                     value="<?php echo $cust['cust_name']; ?>"
                                                     readonly 
                                             />
@@ -303,18 +312,20 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        <div class="col-sm-8">
-                                             <input type="hidden"
-                                                    name="srv_ctr"
-                                                    class="form-control required"
-                                                    id="srv_ctr"
-                                                    value="<?php echo $srv_ctr;?>"
-                                                    readonly
-                                            />
-                                        </div>
+                                        <label for="srv_ctr" class="col-sm-2 col-form-label">Service Center:</label>
+
+                                            <div class="col-sm-8">
+                                                 <input type="text"
+                                                        name="srv_ctr"
+                                                        class="form-control required"
+                                                        id="srv_ctr"
+                                                        value="<?php echo $srv['center_name'];?>"
+                                                        readonly
+                                                />
+                                            </div>
                                     </div>
 
-                                    <div class="form-group row">
+                                    <!--<div class="form-group row">
                                         <label for="in_dt" class="col-sm-2 col-form-label">Service On:</label>
 
                                         <div class="col-sm-8">
@@ -374,7 +385,7 @@
                                                    readonly
                                             />
                                         </div>
-                                    </div>
+                                    </div>-->
 
                                     <div class="form-group row">
                                         <label for="cust_person" class="col-sm-2 col-form-label">Delivered To:</label>

@@ -75,8 +75,10 @@
 
                                                 if($type=='A'){
                                                     $uType = 'Admin';        
+                                                }elseif($type=='S'){
+                                                    $uType = 'Stock';
                                                 }else{
-                                                    $uType = 'General';
+                                                    $uType = 'Service';
                                                 }  
                                 ?>
                                 <tr>

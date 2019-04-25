@@ -11,14 +11,11 @@
             $_SESSION['flag']=false;
         }
 
-        $sql    = "select * from td_mc_trans 
-                   where trans_type = 'S'
-                   and   approval_status = 'U'
-                   order by trans_dt,trans_cd,sl_no";
+        $sql    = "select Distinct trans_dt,trans_cd,srv_ctr,mc_type_id,cust_cd
+                   from td_mc_trans where trans_type = 'S' and   approval_status = 'U'
+                   order by trans_dt,trans_cd";
 
-        $result = mysqli_query($db,$sql);
-
-        
+        $result = mysqli_query($db,$sql);        
 ?>
 
 <html>
@@ -64,7 +61,6 @@
                                     <th>Date</th>
                                     <th>Ticket No.</th>
                                     <th>Center</th>
-                                    <th>Serial No.</th>
                                     <th>Device Type</th>
                                     <th>Customer</th>
                                     <th>Edit</th>
@@ -79,10 +75,7 @@
 
                                                 $date       = date('d/m/Y',strtotime($data['trans_dt']));
                                                 $transNo    = $data['trans_cd'];
-                                                $no         = $data['sl_no']; 
-
-
-
+                                                
                                                 $cust = $data['cust_cd'];
 
                                                  $cname = "select cust_cd,cust_name from md_customers
@@ -121,10 +114,9 @@
                                     <td><?php echo $date; ?></td>
                                     <td><?php echo $transNo; ?></td>
                                     <td><?php echo $srv; ?></td>
-                                    <td ><?php echo $no; ?></td>
                                     <td><?php echo $mcName; ?></td>
                                     <td><?php echo $cName; ?></td>
-        <td><a href="editService_out.php?trans_dt=<?php echo$data['trans_dt']; ?>&trans_cd=<?php echo $transNo;?>&sl_no=<?php echo $no;?>">
+        <td><a href="editService_out.php?trans_dt=<?php echo$data['trans_dt']; ?>&trans_cd=<?php echo $transNo;?>">
                                         <i class="fa fa-edit fa-2x" style="color: #57b846"></i>
                                         <a>
                                     </td>
@@ -147,7 +139,6 @@
                                     <th>Date</th>
                                     <th>Ticket No.</th>
                                     <th>Center</th>
-                                    <th>Serial No.</th>
                                     <th>Device Type</th>
                                     <th>Customer</th>
                                     <th>Edit</th>

@@ -147,7 +147,8 @@
                                                     id="user_type">
                                                 <option value="">Select User Type</option>
                                                 <option value="A">Admin</option>
-                                                <option value="G">General</option>
+                                                <option value="S">Stock</option>
+                                                <option value="E">Service</option>
                                             </Select>
                                         </div>
                                     </div>

@@ -163,9 +163,11 @@
                                                    id   = "user_type"
                                                    value = "<?php if($userType=='A'){
                                                                      echo "Admin";
+                                                                  }elseif($userType=='E'){
+                                                                     echo "Service"; 
                                                                   }else{
-                                                                     echo "General"; 
-                                                                  } 
+                                                                      echo "Stock";
+                                                                  }
                                                             ?>"
                                                    readonly
                                             />
