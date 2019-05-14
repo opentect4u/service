@@ -92,9 +92,9 @@
                 $slNo = $otSts[$i];
 
                 $sql  = "select * from td_mc_trans 
-                         where trans_cd = '$transCd'
+                         where trans_cd = $transCd
                          and   trans_type = 'S'
-                         and   sl_no      = $slNo   
+                         and   sl_no      = '$slNo' 
                          and   approval_status = 'U'";
 
                 $result = mysqli_query($db,$sql);
@@ -324,68 +324,6 @@
                                                 />
                                             </div>
                                     </div>
-
-                                    <!--<div class="form-group row">
-                                        <label for="in_dt" class="col-sm-2 col-form-label">Service On:</label>
-
-                                        <div class="col-sm-8">
-                                            <input type="date"
-                                                   class= "form-control"
-                                                   name = "in_dt"
-                                                   id   = "in_dt"
-                                                   value="<?php echo $trans_dt; ?>"
-                                                   readonly
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="mc_prob" class="col-sm-2 col-form-label">Problem:</label>
-
-                                        <div class="col-sm-8">
-                                             <input type="text"
-                                                   class= "form-control"
-                                                   name = "mc_prob"
-                                                   id   = "mc_prob"
-                                                   value ="<?php echo $prob['problem_desc']; ?>"
-                                                   readonly
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="mc_prob" class="col-sm-2 col-form-label">Status:</label>
-
-                                        <div class="col-sm-8">
-                                             <input type="text"
-                                                   class= "form-control"
-                                                   name = "status"
-                                                   id   = "status"
-                                                   value ="<?php if($status=='O'){
-                                                                    $sts = "Out of Warranty";
-                                                                 }else{
-                                                                    $sts = "In Warranty";    
-                                                                 }
-                                                                 echo $sts; 
-                                                            ?>"
-                                                   readonly
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="cust_person" class="col-sm-2 col-form-label">Technician:</label>
-
-                                        <div class="col-sm-8">
-                                            <input type="text"
-                                                   class= "form-control"
-                                                   name = "service_by"
-                                                   id   = "service_by"
-                                                   value ="<?php echo $data['tech_name']; ?>"
-                                                   readonly
-                                            />
-                                        </div>
-                                    </div>-->
 
                                     <div class="form-group row">
                                         <label for="cust_person" class="col-sm-2 col-form-label">Delivered To:</label>
