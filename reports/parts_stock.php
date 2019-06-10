@@ -12,8 +12,10 @@
         $data['mcname']   = [];
         $data['kol_qty']  = [];  
         $data['sil_qty']  = [];
-        $data['mal_qty']  = [];
+        $data['acc_qty']  = [];
         $data['bap_qty']  = [];
+        $data['bng_qty']  = [];
+        $data['dcb_qty']  = [];
         $data['tot_qty']  = [];
 
         $data['mc_id']    = [];
@@ -45,32 +47,45 @@
                 $parts_type = $data['sl_no'];
 
                 for($i=0;$i<sizeof($parts_type);$i++){
-                    $sum    = "Select sum(kol)kol,sum(sil)sil,sum(mal)mal,sum(bap)bap,sum(tot)tot
-                               from (select sum(comp_qty)kol,0 sil,0 mal,0 bap,0 tot 
+                    $sum    = "Select sum(kol)kol,sum(sil)sil,sum(acc)acc,sum(bap)bap,sum(ban)ban,sum(dcb)dcb,
+                               sum(tot)tot
+                               from (select sum(comp_qty)kol,0 sil,0 acc,0 bap,0 ban,0 dcb,0 tot 
                                      from td_parts_trans 
                                        where comp_sl_no = $parts_type[$i]
                                        and trans_dt <= '$trans_dt'
                                        and serv_ctr = 1
                                        UNION
-                                       select 0 kol,sum(comp_qty)sil,0 mal,0 bap,0 tot
+                                       select 0 kol,sum(comp_qty)sil,0 acc,0 bap,0 ban,0 dcb,0 tot
                                        from td_parts_trans 
                                        where comp_sl_no = $parts_type[$i]
                                        and trans_dt <= '$trans_dt'
                                        and serv_ctr = 2
                                        UNION
-                                       select 0 kol,0 sil,sum(comp_qty)mal,0 bap,0 tot
+                                       select 0 kol,0 sil,sum(comp_qty)acc,0 bap,0 ban,0 dcb,0 tot
                                        from td_parts_trans 
                                        where comp_sl_no = $parts_type[$i]
                                        and trans_dt <= '$trans_dt'
                                        and serv_ctr = 3
                                        UNION
-                                       select 0 kol,0 sil,0 mal,sum(comp_qty)bap,0 tot
+                                       select 0 kol,0 sil,0 acc,sum(comp_qty)bap,0 ban,0 dcb,0 tot
                                        from td_parts_trans 
                                        where comp_sl_no = $parts_type[$i]
                                        and trans_dt <= '$trans_dt'
                                        and serv_ctr = 4
                                        UNION
-                                       select 0 kol,0 sil,0 mal,0 bap,sum(comp_qty)tot
+                                       select 0 kol,0 sil,0 acc,0 bap,sum(comp_qty) ban,0 dcb,0 tot
+                                       from td_parts_trans 
+                                       where comp_sl_no = $parts_type[$i]
+                                       and trans_dt <= '$trans_dt'
+                                       and serv_ctr = 5
+                                       UNION
+                                       select 0 kol,0 sil,0 acc,0 bap,0 ban,sum(comp_qty) dcb,0 tot
+                                       from td_parts_trans 
+                                       where comp_sl_no = $parts_type[$i]
+                                       and trans_dt <= '$trans_dt'
+                                       and serv_ctr = 6
+                                       UNION
+                                       select 0 kol,0 sil,0 acc,0 bap,0 ban,0 dcb,sum(comp_qty)tot
                                        from td_parts_trans 
                                        where comp_sl_no = $parts_type[$i]
                                        and trans_dt <= '$trans_dt'
@@ -87,8 +102,10 @@
                     array_push($data['mcname']  ,$desc['parts_desc']);
                     array_push($data['kol_qty'] ,$row['kol']);
                     array_push($data['sil_qty'] ,$row['sil']);
-                    array_push($data['mal_qty'] ,$row['mal']);
+                    array_push($data['acc_qty'] ,$row['acc']);
                     array_push($data['bap_qty'] ,$row['bap']);
+                    array_push($data['bng_qty'] ,$row['ban']);
+                    array_push($data['dcb_qty'] ,$row['dcb']);
                     array_push($data['tot_qty'] ,$row['tot']);
                 }
             }elseif($item=='D'){
@@ -136,45 +153,69 @@
                     array_push($data['mcname']  ,$desc['mc_type']);
                     array_push($data['kol_qty'] ,$row['kol']);
                     array_push($data['sil_qty'] ,$row['sil']);
-                    array_push($data['mal_qty'] ,0);
+                    array_push($data['acc_qty'] ,0);
                     array_push($data['bap_qty'] ,0);
+                    array_push($data['bng_qty'] ,0);
+                    array_push($data['dcb_qty'] ,0);
                     array_push($data['tot_qty'] ,$row['tot']);
             }   
         }else{
             $item_desc        = "New Device";
 
             $in    =  "select mc_type,mc_name,sum(kol_qty)kol_qty,sum(sil_qty)sil_qty,
-                        sum(mal_qty)mal_qty,sum(bap_qty)bap_qty,sum(tot_qty)tot_qty
+                        sum(acc_qty)acc_qty,sum(bap_qty)bap_qty,sum(bng_qty)bng_qty,sum(dcb_qty)dcb_qty,
+                        sum(tot_qty)tot_qty
                         from(
-                                select mc_type,mc_name,sum(mc_qty)kol_qty,0 sil_qty,0 mal_qty,0 bap_qty,0 tot_qty 
+                                select mc_type,mc_name,sum(mc_qty)kol_qty,0 sil_qty,0 acc_qty,0 bap_qty,
+                                0 bng_qty,0 dcb_qty,0 tot_qty 
                                 from td_device_trans
                                 where  arrival_dt <= '$trans_dt'
                                 and    approval_status = 'U'
                                 and    serv_ctr = 1
                                 group by mc_type,mc_name,serv_ctr
                                 UNION
-                                select mc_type,mc_name,0 kol_qty,sum(mc_qty)sil_qty,0 mal_qty,0 bap_qty,0 tot_qty 
+                                select mc_type,mc_name,0 kol_qty,sum(mc_qty)sil_qty,0 acc_qty,0 bap_qty,
+                                0 bng_qty,0 dcb_qty,0 tot_qty 
                                 from td_device_trans
                                 where  arrival_dt <= '$trans_dt'
                                 and    approval_status = 'U'
                                 and    serv_ctr = 2
                                 group by mc_type,mc_name,serv_ctr
                                 UNION
-                                select mc_type,mc_name,0 kol_qty,0 sil_qty,sum(mc_qty)mal_qty,0 bap_qty,0 tot_qty 
+                                select mc_type,mc_name,0 kol_qty,0 sil_qty,sum(mc_qty)acc_qty,0 bap_qty,
+                                0 bng_qty,0 dcb_qty,0 tot_qty 
                                from td_device_trans
                                 where  arrival_dt <= '$trans_dt'
                                 and    approval_status = 'U'
                                 and    serv_ctr = 3
                                 group by mc_type,mc_name,serv_ctr
                                 UNION
-                                select mc_type,mc_name,0 kol_qty,0 sil_qty,0 mal_qty,sum(mc_qty) bap_qty,0 tot_qty 
+                                select mc_type,mc_name,0 kol_qty,0 sil_qty,0 acc_qty,sum(mc_qty) bap_qty,
+                                0 bng_qty,0 dcb_qty,0 tot_qty 
                                 from td_device_trans
                                 where  arrival_dt <= '$trans_dt'
                                 and    approval_status = 'U'
                                 and    serv_ctr = 4
                                 group by mc_type,mc_name,serv_ctr
                                 UNION
-                                select mc_type,mc_name,0 kol_qty,0 sil_qty,0 mal_qty,0 bap_qty, sum(mc_qty)tot_qty
+                                select mc_type,mc_name,0 kol_qty,0 sil_qty,0 acc_qty,0 bap_qty,
+                                sum(mc_qty) bng_qty,0 dcb_qty,0 tot_qty 
+                                from td_device_trans
+                                where  arrival_dt <= '$trans_dt'
+                                and    approval_status = 'U'
+                                and    serv_ctr = 5
+                                group by mc_type,mc_name,serv_ctr
+                                UNION
+                                select mc_type,mc_name,0 kol_qty,0 sil_qty,0 acc_qty,0 bap_qty,
+                                0 bng_qty,sum(mc_qty) dcb_qty,0 tot_qty 
+                                from td_device_trans
+                                where  arrival_dt <= '$trans_dt'
+                                and    approval_status = 'U'
+                                and    serv_ctr = 6
+                                group by mc_type,mc_name,serv_ctr
+                                UNION
+                                select mc_type,mc_name,0 kol_qty,0 sil_qty,0 acc_qty,0 bap_qty, 
+                                0 bng_qty,0 dcb_qty,sum(mc_qty)tot_qty
                                 from td_device_trans
                                 where  arrival_dt <= '$trans_dt'
                                 and    approval_status = 'U'
@@ -190,8 +231,10 @@
                 array_push($data['mcname']  ,$row['mc_name']);
                 array_push($data['kol_qty']     ,$row['kol_qty']);
                 array_push($data['sil_qty']     ,$row['sil_qty']);
-                array_push($data['mal_qty']     ,$row['mal_qty']);
+                array_push($data['acc_qty']     ,$row['acc_qty']);
                 array_push($data['bap_qty']     ,$row['bap_qty']);
+                array_push($data['bng_qty']     ,$row['bng_qty']);
+                array_push($data['dcb_qty']     ,$row['dcb_qty']);
                 array_push($data['tot_qty']     ,$row['tot_qty']);
 
                 $i++;
@@ -292,8 +335,10 @@
                                     <th>Type</th>
                                     <th>Kolkata</th>
                                     <th>Siliguri</th>
-                                    <th>Malda</th>
+                                    <th>Accropolis</th>
                                     <th>Bappa</th>
+                                    <th>Bangladesh</th>
+                                    <th>Darjeeling(CCB)</th>
                                     <th>Total</th>
                                 </tr>
                             </thead>
@@ -305,8 +350,10 @@
                                             <td><?php echo $data['mcname'][$i]; ?></td>
                                             <td><?php echo $data['kol_qty'][$i]; ?></td>
                                             <td><?php echo $data['sil_qty'][$i]; ?></td>
-                                            <td><?php echo $data['mal_qty'][$i]; ?></td>
+                                            <td><?php echo $data['acc_qty'][$i]; ?></td>
                                             <td><?php echo $data['bap_qty'][$i]; ?></td>
+                                            <td><?php echo $data['bng_qty'][$i]; ?></td>
+                                            <td><?php echo $data['dcb_qty'][$i]; ?></td>
                                             <td><?php echo $data['tot_qty'][$i]; ?></td>
                                         </tr>    
                                  <?php
