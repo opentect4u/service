@@ -219,7 +219,7 @@
                                 from td_device_trans
                                 where  arrival_dt <= '$trans_dt'
                                 and    approval_status = 'U'
-                                group by mc_type,mc_name,serv_ctr)a
+                                group by mc_type,mc_name)a
                         group by mc_type,mc_name
                         order by mc_type";
 
