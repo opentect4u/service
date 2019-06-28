@@ -54,7 +54,7 @@
                                   and   trans_type      =  'L'
                                   and   comp_sl_no      =  $comp[$i]"; 
 
-                 echo $update;                  
+                 //echo $update;                  
 
             $result       = mysqli_query($db,$update);
 
