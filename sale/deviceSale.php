@@ -95,7 +95,7 @@
                                     <td><?php echo $bill; ?></td>
                                     <td><?php echo $mcname; ?></td>
                                     <td><?php echo $qty; ?></td>
-                                     <td><a href="editSale.php?trans_dt=<?php echo $actDt; ?>&trans_cd=<?php echo $transNo;?>">
+                                     <td><a href="editDevSale.php?trans_dt=<?php echo $actDt; ?>&trans_no=<?php echo $transNo;?>">
                                         <i class="fa fa-edit fa-2x" style="color: #57b846"></i>
                                         <a>
                                     </td>

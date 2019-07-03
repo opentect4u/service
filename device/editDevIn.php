@@ -209,6 +209,7 @@
                                                 <option value="">Select Make</option>
                                                 <option value="Power Craft"<?php echo('Power Craft'==$mke)?'selected':'';?>>Power Craft</option>
                                                 <option value="ABI"<?php echo('ABI'==$mke)?'selected':'';?>>ABI</option>
+                                                <option value="APPL"<?php echo('APPL'==$mke)?'selected':'';?>>APPL</option>
                                             </Select>
                                         </div>
                                     </div>
