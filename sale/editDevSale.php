@@ -28,12 +28,17 @@
             $slTo    = $data['sl_no_to'];
             $rkms    = $data['remarks'];
 
+            $sql1     = "select * from td_device_amc where trans_dt = '$transDt' and trans_no = $transNo";
+            $result1  =  mysqli_query($db,$sql1);
+
+
         }
 
         if($_SERVER['REQUEST_METHOD']=="POST"){
 
             $transDt      = $_POST['trans_dt'];
             $saleDt       = $_POST['sale_dt'];
+            $transNo      = $_POST['trans_no'];
             $invNo        = checkInput($_POST['bill_no']);
             $cust         = checkInput($_POST['cust_cd']);
             $mcType       = checkInput($_POST['mc_type']);
@@ -53,7 +58,7 @@
 
             $amcDt        = date('Y-m-d', strtotime("+$prd months", strtotime($saleDt)));
 
-            $select       = "select ifnull(max(trans_no),0) + 1 trans_no
+            /*$select       = "select ifnull(max(trans_no),0) + 1 trans_no
                              from td_device_trans
                              where trans_dt = '$transDt'";
 
@@ -61,7 +66,7 @@
 
             $trans_no     = mysqli_fetch_assoc($no);
 
-            $transNo      = $trans_no['trans_no']; 
+            $transNo      = $trans_no['trans_no']; */
 
             $select       = "select mc_id,mc_type from md_mc_type where mc_id = $mcType";
             $result1      = mysqli_query($db,$select);
@@ -69,15 +74,33 @@
             $mcName       = $data['mc_type'];
 
 
-            $insert       = "insert into td_device_trans(trans_dt,trans_no,trans_type,bill_no,cust_cd,make,
+            /*$insert       = "insert into td_device_trans(trans_dt,trans_no,trans_type,bill_no,cust_cd,make,
                              arrival_dt,mc_type,mc_name,mc_version,mc_qty,serv_ctr,remarks,sl_no_from,
                              sl_no_to,warranty_period,created_by,created_dt)
                              values('$transDt',$transNo,'S','$invNo',$cust,'Power Craft','$saleDt',$mcType,
-                                    '$mcName',$mcVer,-$mcQty,$slctr,'$rkms',$slFrm,$slTo,$prd,'$crtby','$crtdt')";
+                                    '$mcName',$mcVer,-$mcQty,$slctr,'$rkms',$slFrm,$slTo,$prd,'$crtby','$crtdt')";*/
 
-            $result       = mysqli_query($db,$insert);
+            $update       = "update td_device_trans
+                             set    bill_no     = '$invNo',
+                                    cust_cd     =  $cust,
+                                    arrival_dt  = '$saleDt',
+                                    mc_type     =  $mcType,
+                                    mc_name     = '$mcName',
+                                    mc_version  =  $mcVer,
+                                    mc_qty      =  -$mcQty,
+                                    serv_ctr    =  $slctr,
+                                    remarks     =  '$rkms',
+                                    sl_no_from  =  $slFrm,
+                                    sl_no_to    =  $slTo,
+                                    warranty_period = $prd,
+                                    modified_by = '$crtby',
+                                    modified_dt = '$crtdt'
+                             where  trans_dt    = '$transDt'
+                             and    trans_no    = $transNo";
 
-            if($slFrm > 0){
+            $result       = mysqli_query($db,$update);
+
+            /*if($slFrm > 0){
 
                 while($slFrm <= $slTo){
 
@@ -88,15 +111,15 @@
 
                     $slFrm ++;
                 }
-            }    
+            }    */
 
-            for($i = 0; $i < sizeof($devSl); $i++){
+            /*for($i = 0; $i < sizeof($devSl); $i++){
 
                 $sql = "insert into td_device_amc(trans_dt,trans_no,trans_type,mc_type,sl_no,amc_from,amc_to)
                                            values('$transDt',$transNo,'S',$mcType,$devSl[$i],'$saleDt','$amcDt')";
 
                 $result2 = mysqli_query($db,$sql);
-            }
+            }*/
 
 
              if($result){
@@ -193,7 +216,21 @@
                                                    name="trans_dt"
                                                    class="form-control required"
                                                    id="trans_dt"
-                                                   value=<?php echo date('Y-m-d'); ?>
+                                                   value=<?php echo $transDt; ?>
+                                                   readonly
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="trans_no" class="col-sm-2 col-form-label">Trans No.:</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="text"
+                                                   name="trans_no"
+                                                   class="form-control required"
+                                                   id="trans_no"
+                                                   value=<?php echo $transNo; ?>
                                                    readonly
                                             />
                                         </div>
@@ -208,7 +245,6 @@
                                                    class="form-control required"
                                                    id="trans_dt"
                                                    value=<?php echo $saleDt; ?>
-                                                   readonly
                                             />
                                         </div>
                                     </div>
@@ -355,11 +391,12 @@
                                         <label for="sl_frm" class="col-sm-2 col-form-label">Sl.No.From:</label>
 
                                         <div class="col-sm-8">
-                                            <input type="number"
+                                            <input type="text"
                                                    class= "form-control"
                                                    name = "sl_frm"
                                                    id   = "sl_frm"
                                                    value = <?php echo $slFrm; ?>
+                                                   readonly
                                             />
                                         </div>
                                     </div>
@@ -368,11 +405,12 @@
                                         <label for="sl_to" class="col-sm-2 col-form-label">Sl.No.To:</label>
 
                                         <div class="col-sm-8">
-                                            <input type="number"
+                                            <input type="text"
                                                    class= "form-control"
                                                    name = "sl_to"
                                                    id   = "sl_to"
                                                    value = <?php echo $slTo; ?>
+                                                   readonly
                                             />
                                         </div>
                                     </div>
@@ -387,14 +425,14 @@
 
                                     <div class="form-group row">
 
-                                    <?php require("../sale/slnotab.php");?>
+                                    <?php require("../sale/slnotabedit.php");?>
 
                                   </div>
                                   
                                     <div class="form-group row">
 
                                         <div class="col-sm-10">
-                                            <input type="button" 
+                                            <input type="submit" 
                                                    class="subbtn"
                                                    style="margin-left: 25px;"
                                                    id = "subbtn"

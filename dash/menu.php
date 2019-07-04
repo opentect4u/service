@@ -79,6 +79,7 @@
       <li><a href="../reports/cust_sale_dt.php">Customer Wise Sale</a></li>
       <li><a href="../reports/invoice_dt.php">Date Wise Invoice</a></li>
       <li><a href="../reports/new_device_dt.php">Device Ledger</a></li>
+      <li><a href="../reports/trf_device_dt.php">Device Transfer</a></li>
     </ul>  
   </div>
 
