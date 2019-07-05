@@ -1,12 +1,15 @@
 <div class="form-group row">
 	
-	<table id="addAnother" style="margin-left: 40px;">
+	<table id="addAnother" class= "table" style="margin-left: 40px;">
+		<thead>
 		<tr>
 			<th style="text-align: center;">
 				Serial No.
 			</th>
-			<th style="text-align: center;">
+			<!--<th style="text-align: center;">
 				Problem
+			</th>-->
+			<th style="text-align: center;">
 			</th>
 			<th style="text-align: center;">
 				Service On
@@ -21,6 +24,8 @@
 				Option
 			</th>
 		</tr>
+	</thead>
+	<tbody class="tbody">
 
 		<?php
 
@@ -52,13 +57,17 @@
 				       class= "form-control" value="<?php echo $data1[5];?>" readonly>
 			</td>
 
-			<td><input type = "text" name="prob[]" 
+			<!--<td><input type = "text" name="prob[]" 
 				       class= "form-control" 
 				       value="<?php 
-				       			    while($data = mysqli_fetch_assoc($result1)){
-				       			   		  echo $data['problem_desc'];}
+				       			    //while($data = mysqli_fetch_assoc($result1)){
+				       			   		  //echo $data['problem_desc'];}
 				       		  ?>" readonly>
-			</td>	
+			</td>-->	
+
+			<!--<td><a href="http://www.synergicsoftek.in/">redirect</a></td>-->
+
+			<td><button type="button" data-toggle="modal" class="trigger" id="<?php echo $data1[5];?>" data-target="#myModal">Details</button></td>
 
 			<td><input type = "text" name="transdt" 
 				       class= "form-control" value="<?php echo date('d/m/Y',strtotime($trans_dt));?>" readonly>
@@ -86,5 +95,53 @@
 		<?php
 				}
 			?>
+	</tbody>
 	</table>
+<!--------------------------------------------------------------->
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+          <p>Some text in the modal.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
 </div>
+
+
+<!---------------------------------------------------------------->
+
+
+</div>
+
+<script>
+
+	$('.trigger').click(function(){
+
+		$.get('./viewDtls.php', {
+
+			mcSlNo: $(this).attr('id')
+
+		}).done(function(data){
+			$('.modal-body').html(data);
+			$('#myModal').show();
+
+		});
+
+	})
+
+</script>

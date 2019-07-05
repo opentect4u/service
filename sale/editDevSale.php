@@ -6,6 +6,7 @@
 		require("../login/session.php");
 		require("../dash/menu.php");
 
+
         if($_SERVER['REQUEST_METHOD']=="GET"){
             $transDt = $_GET['trans_dt'];
             $transNo = $_GET['trans_no'];
@@ -50,8 +51,10 @@
             $rkms         = checkInput($_POST['remarks']);
             $slctr        = $_POST['sale_ctr'];
 
-            $devSl        = implode('*/*',$_POST['c_sl']); 
-            $devSl        = explode('*/*',$devSl);
+            if (!empty($_POST['c_sl'])){
+                $devSl        = implode('*/*',$_POST['c_sl']); 
+                $devSl        = explode('*/*',$devSl);
+            }
 
             $crtby        = $_SESSION['userId'];
             $crtdt        = date('Y-m-d h:i:s');
@@ -126,6 +129,7 @@
                     $_SESSION['flag'] = true;
                     header("location:deviceSale.php");
                 }
+                exit();
 
         }
 

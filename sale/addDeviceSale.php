@@ -2,9 +2,11 @@
 		ini_set("display_errors",1);
 		error_reporting(E_ALL);
 
-		require("../login/connect.php");
+		require_once("../login/connect.php");
 		require("../login/session.php");
 		require("../dash/menu.php");
+
+
 
         if($_SERVER['REQUEST_METHOD']=="POST"){
 
@@ -103,9 +105,7 @@
         $sql1   = "select sl_no,mc_type,version_name from md_version";
         $ver    = mysqli_query($db,$sql1); 
 
-
-
-?>		
+?>
 
 <head>
     <title>Device Sale</title>
@@ -214,7 +214,7 @@
                                                         echo ("<option value=".$data['cust_cd'].">".
                                                                $data['cust_name']."</option>");
                                                     }
-                                                ?>    
+                                                ?>
                                             </Select>
                                         </div>
                                     </div>
@@ -233,7 +233,7 @@
                                                         echo ("<option value=".$data['mc_id'].">".
                                                                $data['mc_type']."</option>");
                                                     }
-                                                ?>    
+                                                ?>
                                             </Select>
                                         </div>
                                     </div>
@@ -252,7 +252,7 @@
                                                         echo ("<option value=".$data['sl_no'].">".
                                                                $data['version_name']."</option>");
                                                     }
-                                                ?>    
+                                                ?>
                                             </Select>
                                         </div>
                                     </div>
@@ -271,7 +271,7 @@
                                                         echo ("<option value=".$data['sl_no'].">".
                                                                $data['center_name']."</option>");
                                                     }
-                                                ?>    
+                                                ?>
                                             </Select>
                                         </div>
                                     </div>

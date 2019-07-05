@@ -2,7 +2,7 @@
       ini_set("display_errors",1);
       error_reporting(E_ALL);
 
-      require("../login/connect.php");
+      require_once("../login/connect.php");
       
       $sql    = "select user_name from md_users where user_id = '".$_SESSION['userId']."'";
 
