@@ -1,6 +1,6 @@
 <div class="form-group row">
 	
-	<table id="addAnother" class= "table" style="margin-left: 40px;">
+	<table id="addAnother" class= "table" style="margin-left: 10px;">
 		<thead>
 		<tr>
 			<th style="text-align: center;">
@@ -107,10 +107,10 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Modal Header</h4>
+          <h4 class="modal-title">Parts Details</h4>
         </div>
         <div class="modal-body">
-          <p>Some text in the modal.</p>
+          
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -134,12 +134,21 @@
 
 		$.get('./viewDtls.php', {
 
-			mcSlNo: $(this).attr('id')
+			mcSlNo: $(this).attr('id'),
+			tktNo: $('#trans_cd').val()
 
-		}).done(function(data){
-			$('.modal-body').html(data);
-			$('#myModal').show();
+		}).done(function(result){
 
+			var string = '';
+			count = 0;
+			var data = JSON.parse(result);
+
+			for(var i=0; i < data.parts_desc.length; i++){
+				 string += "Part's Name: "+data.parts_desc[i]+" Quantity: "+data.comp_qty[i]+"<br>";
+			}	
+			
+			$('.modal-body').html(string);
+			
 		});
 
 	})

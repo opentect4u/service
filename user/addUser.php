@@ -11,12 +11,17 @@
             $pwd        = checkInput($_POST['password']);
             $pwdHash    = password_hash($pwd,PASSWORD_DEFAULT);
             $userName   = checkInput($_POST['user_name']);
+            $email      = checkInput($_POST['email']);
+            $mobile_no  = checkInput($_POST['mobileNo']);
             $userType   = checkInput($_POST['user_type']);
             $crtby      = $_SESSION['userId'];
             $crtdt      = date('Y-m-d h:i:s');
 
-            $sql        = "insert into md_users(user_id,password,user_type,user_name,user_status,created_by,created_dt)
-                           values('$userId','$pwdHash','$userType','$userName','A','$crtby','$crtdt')";
+            $sql        = "insert into md_users(user_id,password,user_type,user_name,email,mobile_no,
+                           user_status,created_by,created_dt)
+                           values('$userId','$pwdHash','$userType','$userName','$email','$mobile_no',
+                                  'A','$crtby','$crtdt')";
+
                            
             $result   = mysqli_query($db,$sql);
 
@@ -110,6 +115,7 @@
                                                    class= "form-control"
                                                    name = "password"
                                                    id   = "password"
+                                                   required
                                             />
                                         </div>
                                     </div> 
@@ -122,6 +128,7 @@
                                                    class= "form-control"
                                                    name = "re_password"
                                                    id   = "re_password"
+                                                   required
                                             />
                                         </div>
                                     </div>
@@ -134,9 +141,36 @@
                                                    class= "form-control"
                                                    name = "user_name"
                                                    id   = "user_name"
+                                                   required
                                             />
                                         </div>
                                     </div> 
+
+                                    <div class="form-group row">
+                                        <label for="email" class="col-sm-2 col-form-label">Email:</label>
+
+                                        <div class="col-sm-8">
+                                            <input type="email"
+                                                   class= "form-control"
+                                                   name = "email"
+                                                   id   = "email"
+                                                   required
+                                            />  
+                                        </div>    
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="mobile_no" class="col-sm-2 col-form-label">Mobile No.:</label>
+
+                                        <div class="col-sm-8">
+                                            <input type  ="text"
+                                                   class = "form-control"
+                                                   name  = "mobileNo"
+                                                   id    = "mobileNo"
+                                                   required 
+                                            />
+                                        </div>    
+                                    </div>
 
                                     <div class="form-group row">
                                         <label for="user_type" class="col-sm-2 col-form-label">User Type:</label>
@@ -170,6 +204,28 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function(){
+        $("#mobileNo").change(function(){
+            var mob_no = $("#mobileNo").val();
+            var filter = /^\d*(?:\.\d{1,2})?$/;
+
+            if(filter.test(mob_no)){
+                if(mob_no.length!==10){
+                    alert("Invalid Mobile No.");
+                }
+
+            }else{
+                alert("Please enter a valid mobile no.");
+                return false;
+            }
+
+            
+
+        });
+    });
+</script>    
 
 
 <script>

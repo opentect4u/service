@@ -235,7 +235,7 @@
 
                         <div class="wraper">
 
-                            <div class="col-md-6 container form-wraper">
+                            <div class="col-md-6 container form-wraper" style="width:700px">
 
                                 <form method="POST" id="form"
                                       action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>"
