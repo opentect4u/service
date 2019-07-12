@@ -178,7 +178,8 @@
                                         <div class="col-sm-8">
                                             <Select class="form-control required"
                                                     name ="user_type"
-                                                    id="user_type">
+                                                    id="user_type"
+                                                    required>
                                                 <option value="">Select User Type</option>
                                                 <option value="A">Admin</option>
                                                 <option value="S">Stock</option>
@@ -213,16 +214,19 @@
 
             if(filter.test(mob_no)){
                 if(mob_no.length!==10){
+                    $("#mobileNo").css("border","solid 3px red");
                     alert("Invalid Mobile No.");
+                    $("#mobileNo").val('');
+                    return false;
+                }else{
+                    $("#mobileNo").css("border","1px solid #ccc");
                 }
-
             }else{
+                $("#mobileNo").css("border","solid 3px red");
                 alert("Please enter a valid mobile no.");
+                $("#mobileNo").val('');
                 return false;
             }
-
-            
-
         });
     });
 </script>    
