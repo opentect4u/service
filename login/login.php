@@ -59,7 +59,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login V8</title>
+	<title>Synergic Service Login</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -100,9 +100,12 @@
 						<span class="focus-input100"></span>
 					</div>
 
-					<div class="wrap-input100 validate-input" data-validate = "Please enter password">
-						<input class="input100" type="password" name="pass" placeholder="Password">
-						<span class="focus-input100"></span>
+					<div class="wrap-input100 validate-input" data-validate= "Please enter password">
+						<input class="input100" type="password" id="pwd" name="pass" placeholder="Password">
+						<i class="fa fa-eye-slash" style="margin-top: -35px; position: absolute; margin-left: 350px; cursor: pointer;" aria-hidden="true" id="eye"></i>
+						<span class="focus-input100">
+
+						</span>
 					</div>
 
 					<div class="text-right p-t-13 p-b-23">
@@ -155,3 +158,19 @@
 
 </body>
 </html>
+
+<script>
+	$(document).ready(function(){
+		$("#eye").hover(function(){
+			var iptype = $("#pwd").attr("type");
+
+			if(iptype == "password"){
+				$("#pwd").attr("type","text");
+				$("#eye").attr("class","fa fa-eye");
+			}else{
+				$("#pwd").attr("type","password");	
+				$("#eye").attr("class","fa fa-eye-slash");
+			}
+		});
+	});
+</script>
