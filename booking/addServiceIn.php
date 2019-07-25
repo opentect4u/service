@@ -148,7 +148,7 @@
                                                    class="form-control required"
                                                    id="trans_dt"
                                                    value=<?php echo date('Y-m-d'); ?>
-                                                   readonly
+                                                   required
                                             />
                                         </div>
                                     </div>

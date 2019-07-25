@@ -37,7 +37,7 @@
 
             $sql = "select max(trans_dt)trans_dt from td_device_trans 
                     where mc_type    = $mc
-                    and   trans_dt   < '$from_dt'
+                    and   arrival_dt   < '$from_dt'
                     and    serv_ctr   = $srv
                     and    approval_status = 'U'";
 
@@ -47,7 +47,7 @@
 
             $opnSelect = "select sum(mc_qty)opn from td_device_trans
                           where  mc_type    = $mc
-                          and    trans_dt   < '$from_dt'
+                          and    arrival_dt   < '$from_dt'
                           and    serv_ctr   = $srv
                           and    approval_status = 'U'";
 
@@ -68,7 +68,7 @@
 
 
             $select =  "select * from td_device_trans
-                        where trans_dt between '$from_dt' and '$to_dt'
+                        where arrival_dt between '$from_dt' and '$to_dt'
                         and   mc_type    = $mc
                         and   serv_ctr   = $srv
                         and   approval_status = 'U'
