@@ -6,62 +6,50 @@
         require("../login/session.php");
         require("../dash/menu.php");
 
-        $data['trf_dt']         = [];
-        $data['item']           = [];
-        $data['from']           = [];
-        $data['to']             = [];
-        $data['mode']           = [];
-        $data['qty']            = [];
-        $data['rkms']           = [];
+        $data['name']     = [];
+       // $data['ver']      = [];
+        $data['qty']      = [];
         
 
         if($_SERVER['REQUEST_METHOD']=="POST"){  
 
             $from_dt         = $_POST['from_dt'];
             $to_dt           = $_POST['to_dt'];
+            //$srv_ctr         = $_POST['srv_ctr'];
             
-            $sql    = "SELECT trans_dt,
-                              trans_no,
-                              mc_type,
-                              mc_name,
-                              abs(mc_qty)mc_qty,
-                              serv_ctr,
-                              srv_to,
-                              trf_mode,
-                              remarks
-                       from   td_device_trans 
-                       where  arrival_dt between '$from_dt' and '$to_dt'
-                       and    trans_type = 'T'
-                       order by trans_dt,trans_no";
-           
+            $sql    = "SELECT a.mc_type mc_type,
+                              sum(abs(a.mc_qty))mc_qty,
+                              b.mc_type mc_desc
+                       from   td_device_trans a,md_mc_type b
+                       where  a.mc_type = b.mc_id
+                       and    a.arrival_dt between '$from_dt' and '$to_dt'
+                       and    a.trans_type = 'I'
+                       group by a.mc_type ,
+                                b.mc_type";
+                                
             $result =  mysqli_query($db,$sql);
 
             while($row   =  mysqli_fetch_assoc($result)){
-
-                $srvFrm         = $row['serv_ctr'];
-                $frmSql         = "select sl_no,center_name from md_service_centre where sl_no = $srvFrm";
-                $frmResult      = mysqli_query($db,$frmSql);
-                $frmRow         = mysqli_fetch_assoc($frmResult);
-
-                $srvTo          = $row['srv_to'];
-                $toSql          = "select sl_no,center_name from md_service_centre where sl_no = $srvTo";
-                $toResult       = mysqli_query($db,$toSql);
-                $toRow          = mysqli_fetch_assoc($toResult);
-
-                array_push($data['trf_dt']      ,$row['trans_dt']);
-                array_push($data['item']        ,$row['mc_name']);
-                array_push($data['from']        ,$frmRow['center_name']);
-                array_push($data['to']          ,$toRow['center_name']);
-                array_push($data['mode']        ,$row['trf_mode']);
-                array_push($data['qty']         ,$row['mc_qty']);
-                array_push($data['rkms']        ,$row['remarks']);
+                
+                array_push($data['name']    ,$row['mc_desc']);
+                array_push($data['qty']     ,$row['mc_qty']);
                }
+
+            /*$select  = "select sl_no,center_name from md_service_centre where sl_no = $srv_ctr";
+
+            $result1 = mysqli_query($db,$select);
+
+            $row1    = mysqli_fetch_assoc($result1); 
+
+            $srvCtr  = $row1['center_name'];*/
+
+
         }    
 ?>
 
 <html>
 <head>
-    <title>Date Wise Invoice</title>
+    <title>Item Wise In</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -130,58 +118,40 @@
 <div style="min-height: 500px;">
 <div class="content-wrapper">
     <div class="container-fluid">
-        <h2 style="margin-left:60px;text-align:center"><?php echo 'Device Transfer Between : '.date('d/m/Y',strtotime($from_dt)).' To '.date('d/m/Y',strtotime($to_dt)); ?></h2>
+        <h2 style="margin-left:60px;text-align:center"><?php echo 'Item Wise In Between : '.date('d/m/Y',strtotime($from_dt)).' To '.date('d/m/Y',strtotime($to_dt)); ?></h2>
         <hr class="new">
         <div class="card mb-3">
-            <!--<div class="card-header" style="margin-left:60px;">
+            <div class="card-header" style="margin-left:60px;">
 
                  <i class="fa fa-asterisk btn btn-primary" >
-                    <span><?php echo "Service Center : ".$srvCtr; ?></span>
+                    <span><?php echo "All Branch"; ?></span>
                 </i>
                 
                 
-            </div>-->
+            </div>
             <hr class="new">
                 <div class="card-body">
                     <div class="w3-responsive" style="margin-left:60px;" id="divToPrint">
                         <table id="dta" class="w3-table-all" width="50%">
-                            <caption><h3><u><?php echo 'Device Transfer Between : '.date('d/m/Y',strtotime($from_dt)).
+                            <caption><h3><u><?php echo 'Item Wise In Between : '.date('d/m/Y',strtotime($from_dt)).
                                                 ' To '.date('d/m/Y',strtotime($to_dt));
                                      ?></u></h3>
                             </caption>
-                            <!--<caption><h5><u><?php echo 'Service Center : '.$srvCtr;?></u></h5></caption>-->
+                            <caption><h5><u><?php echo "All Branch";?></u></h5></caption>
                             <thead>
                                 <tr class="w3-light-grey">
                                     <th>Sl.No.</th>
-                                    <th>Date</th>
-                                    <th>Item</th>
-                                    <th>From</th>
-                                    <th>To</th>
-                                    <th>Mode</th>
+                                    <th>Device Type</th>
                                     <th>Quantity</th>
-                                    <th>Remarks</th>
                                 </tr>
                             </thead>
                             <tbody>
                                  <?php
-                                    for($i=0;$i<sizeof($data['trf_dt']);$i++){?>
+                                    for($i=0;$i<sizeof($data['name']);$i++){?>
                                         <tr>
                                             <td><?php echo ($i+1);?></td>
-                                            <td><?php echo date('d/m/Y',strtotime($data['trf_dt'][$i])); ?></td>
-                                            <td><?php echo $data['item'][$i]; ?></td>
-                                            <td><?php echo $data['from'][$i]; ?></td>
-                                            <td><?php echo $data['to'][$i]; ?></td>
-                                            <td><?php if($data['mode'][$i]=='C'){
-                                                        echo "Courier";  
-                                                      }elseif($data['mode'][$i]=='T'){
-                                                        echo "Transport";  
-                                                      }else{
-                                                        echo "Manual";
-                                                      }
-                                                ?>
-                                            </td>
+                                            <td><?php echo $data['name'][$i]; ?></td>
                                             <td><?php echo $data['qty'][$i]; ?></td>
-                                            <td><?php echo $data['rkms'][$i]; ?></td>
                                         </tr>    
                                  <?php
                                     }         

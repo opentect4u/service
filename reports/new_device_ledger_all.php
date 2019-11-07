@@ -22,7 +22,7 @@
             $from_dt         = $_POST['from_dt'];
             $to_dt           = $_POST['to_dt'];
             $mc              = $_POST['device_desc'];
-            $srv             = $_POST['srv_ctr'];
+            //$srv             = $_POST['srv_ctr'];
     
             $sql              = "select mc_id,mc_type from md_mc_type
                                  where mc_id = $mc";
@@ -30,15 +30,14 @@
             $dev              = mysqli_fetch_assoc($query);
             $mcDesc           = $dev['mc_type'];
 
-            $select1 = "select sl_no,center_name from md_service_centre where sl_no  = ".$srv."";
+            /*$select1 = "select sl_no,center_name from md_service_centre where sl_no  = ".$srv."";
             $result1 = mysqli_query($db,$select1);
             $row1    = mysqli_fetch_assoc($result1);
-            $srvCtr  = $row1['center_name'];
+            $srvCtr  = $row1['center_name'];*/
 
             $sql = "select max(arrival_dt)trans_dt from td_device_trans 
                     where mc_type    = $mc
                     and   arrival_dt   < '$from_dt'
-                    and    serv_ctr   = $srv
                     and    approval_status = 'U'";
 
             $sqlResult = mysqli_query($db,$sql);
@@ -48,7 +47,6 @@
             $opnSelect = "select sum(mc_qty)opn from td_device_trans
                           where  mc_type    = $mc
                           and    arrival_dt   < '$from_dt'
-                          and    serv_ctr   = $srv
                           and    approval_status = 'U'";
 
             $opnResult =  mysqli_query($db,$opnSelect);
@@ -68,13 +66,13 @@
 
 
             $select =  "select arrival_dt trans_dt,trans_type,bill_no,
-                               cust_cd,remarks,mc_qty 
+                               cust_cd,remarks,sum(mc_qty)mc_qty 
                         from td_device_trans
                         where arrival_dt between '$from_dt' and '$to_dt'
                         and   mc_type    = $mc
-                        and   serv_ctr   = $srv
                         and   approval_status = 'U'
-                        order by arrival_dt,trans_no";
+                        group by arrival_dt,trans_type,bill_no,cust_cd,remarks
+                        order by arrival_dt";
 
             
             $result = mysqli_query($db,$select);
@@ -183,7 +181,7 @@
         <div class="card mb-3">
             <div class="card-header" style="margin-left:60px;">
                  <i class="fa fa-home btn btn-primary" >
-                    <span><?php echo "Service Center : ".$srvCtr; ?></span>
+                    <span><?php echo "All Branch"; ?></span>
                 </i>
             </div>
 

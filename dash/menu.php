@@ -75,10 +75,15 @@
       <li><a href="../reports/cust_dt.php">Customer Wise Device Submitted</a></li>
       <li><hr></li>
       <li><a href="../reports/status.php">Warranty Status</a></li>
-      <li><a href="../reports/item_dt.php">Item Wise Sale</a></li>
+      <!--<li><a href="../reports/item_dt.php">Item Wise Sale Branchwise</a></li>-->
+      <li><a href="../reports/item_dt_all.php">Item Wise Sale</a></li>
+      <li><a href="../reports/item_dt_in.php">Item Wise In</a></li>
+      <li><a href="../reports/item_dt_trf.php">Item Wise Transfer</a></li>
+      <li><hr></li>
       <li><a href="../reports/cust_sale_dt.php">Customer Wise Sale</a></li>
       <li><a href="../reports/invoice_dt.php">Date Wise Invoice</a></li>
-      <li><a href="../reports/new_device_dt.php">Device Ledger</a></li>
+      <!--<li><a href="../reports/new_device_dt.php">Device Ledger Branchwise</a></li>-->
+      <li><a href="../reports/new_device_dt_all.php">Device Ledger</a></li>
       <li><a href="../reports/trf_device_dt.php">Device Transfer</a></li>
     </ul>  
   </div>
@@ -92,7 +97,7 @@
       <?php if($_SESSION['userType']=='A') { ?>
         <li><a href="../user/user.php">Add User</a></li>
       <?php } ?>
-      
+
       <li><a href="../user/cngPwd.php">Change Password</a></li>
     </ul>  
   </div>
