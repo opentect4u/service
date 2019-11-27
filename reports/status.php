@@ -13,9 +13,9 @@
                 return $data;
         }
 
-        $select1 = "select mc_id,mc_type from md_mc_type order by mc_type";
+       // $select1 = "select mc_id,mc_type from md_mc_type order by mc_type";
 
-        $tech   = mysqli_query($db,$select1);
+      //  $tech   = mysqli_query($db,$select1);
 ?>		
 
 <head>
@@ -69,10 +69,10 @@
                                       action="warranty_status.php" >
 
                                     <div class="form-header">
-                                        <h4>Supply Item & Serial No.</h4>
+                                        <h4>Supply Serial No.</h4>
                                     </div>
 
-                                    <div class="form-group row">
+                                   <!-- <div class="form-group row">
                                         <label for="mc_type" class="col-sm-2 col-form-label">Item:</label>
 
                                         <div class="col-sm-6">
@@ -81,14 +81,14 @@
                                                     id="mc_type">
                                                 <option value="">Select Item</option>
                                                 <?php
-                                                    while($data = mysqli_fetch_assoc($tech)){
+                                                    /*while($data = mysqli_fetch_assoc($tech)){
                                                         echo ("<option value=".$data['mc_id'].">".
                                                                $data['mc_type']."</option>");
-                                                    }
+                                                    }*/
                                                 ?>    
                                             </Select>
                                         </div>
-                                    </div>
+                                    </div>-->
 
                                     <div class="form-group row">
                                         <label for="sl_no" class="col-sm-2 col-form-label">Serial No.:</label>
@@ -126,3 +126,27 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function(){
+        $("#sl_no").on('change',function(){
+            var sl_no = $("#sl_no").val();
+
+            $.get("/service/others/checkSlNo.php",{sl_no:sl_no},function(data){
+
+                if(data > 0){
+                    $("#sl_no").css("border","1px solid #ccc");
+                    $("#subbtn").attr("disabled",false);
+                    return true;
+                }else{
+                    $("#sl_no").val('');
+                    $("#sl_no").css("border","1px solid red");
+                    alert("Invalid Serial No.");
+                    $("#subbtn").attr("disabled",true);
+                    return false;
+                }
+            });
+        });
+
+    });
+</script>

@@ -8,17 +8,31 @@
 
         if($_SERVER['REQUEST_METHOD']=="POST"){  
 
-            $item            = $_POST['mc_type'];
+            //$item            = $_POST['mc_type'];
             $serial          = $_POST['sl_no'];
 
-            $select = "select a.cust_cd cust_cd,a.bill_no bill_no,a.arrival_dt sale_dt,
+            $selectDt = "select max(a.arrival_dt)sale_dt 
+                         from   td_device_trans a,td_device_amc b
+                         where  a.trans_dt = b.trans_dt
+                         and    a.trans_no = b.trans_no
+                         and    b.sl_no    = '$serial'";
+
+            $resultDt = mysqli_query($db,$selectDt);
+
+            $dataDt   = mysqli_fetch_assoc($resultDt);
+
+
+            $slDate     = $dataDt['sale_dt'];
+            
+
+            $select = "select a.cust_cd cust_cd,a.bill_no bill_no,
                               a.mc_version version,a.warranty_period period,
-                              b.amc_from amc_from,b.amc_to amc_to
+                              b.amc_from amc_from,b.amc_to amc_to,b.mc_type mc_type
                        from   td_device_trans a,td_device_amc b
                        where  a.trans_dt = b.trans_dt
                        and    a.trans_no = b.trans_no
-                       and    b.mc_type  = $item
-                       and    b.sl_no    = '$serial'";
+                       and    b.sl_no    = '$serial'
+                       and    a.arrival_dt = '$slDate'";
 
             $result = mysqli_query($db,$select);
 
@@ -27,9 +41,10 @@
             $custCd     = $data['cust_cd'];
             $version    = $data['version'];
             $invNo      = $data['bill_no'];
-            $slDate     = $data['sale_dt'];
+            
             $frmDate    = $data['amc_from'];
             $toDate     = $data['amc_to'];
+            $item       = $data['mc_type'];
             
             $sql        = "select cust_cd,cust_name from md_customers where cust_cd = $custCd";
             $result     = mysqli_query($db,$sql);

@@ -58,8 +58,8 @@
                         <table id="dta" class="w3-table-all">
                             <thead>
                                 <tr class="w3-light-grey">
-                                    <th>Date</th>
                                     <th>Ticket No.</th>
+                                    <th>Date</th>
                                     <th>Center</th>
                                     <th>Customer</th>
                                     <th>M/C Type</th>
@@ -113,8 +113,8 @@
 
                                 ?>
                                 <tr>
+                                    <td style="text-align:center"><?php echo $no; ?></td>            
                                     <td><?php echo $date; ?></td>
-                                    <td style="text-align:center"><?php echo $no; ?></td>
                                     <td><?php echo $srv; ?></td>
                                     <td><?php echo $cName; ?></td>
                                     <td><?php echo $mcName; ?></td>
@@ -124,12 +124,14 @@
                                         <a>
                                     </td>
                                     <td>
-                                        <a href="javascript: void(0)" class="del" 
-                                           id="<?php echo $data['trans_dt']; ?>" 
-                                           id1 ="<?php echo $no; ?>" >
+                                        <a href="<?php echo('delServicein.php?trans_dt='.$data['trans_dt'].'&trans_cd='.$no);?>" 
+                                        onclick="return confirm('Are you sure you want to delete this item?');">
                                             <i class="fa fa-eraser fa-2x"style="color: #57b846"></i>
-                                        </a>    
-                                    </td>  
+
+                                            
+                                        </a>
+
+                                        
                                 </tr>
                                 <?php
                                             }
@@ -139,8 +141,8 @@
                             </tbody>    
                             <tfoot>
                                 <tr>
-                                    <th>Date</th>
                                     <th>Ticket No.</th>
+                                    <th>Date</th>
                                     <th>Center</th>
                                     <th>Customer</th>
                                     <th>M/C Type</th>
@@ -159,7 +161,13 @@
 </body>
 
 <script>
-    $(document).ready(function() {
+   /* $(document).ready(function() {
+        $('#dta').DataTable();
+    });*/
+</script>
+
+<script>
+$(document).ready(function() {
         $('#dta').DataTable();
 
         $('.del').click(function(){
