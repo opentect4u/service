@@ -48,6 +48,11 @@
       <li><a href="../stock/partsIn.php">Component</a></li>
       <li><a href="../device/device.php">Device</a></li>
       <li><a href="../sale/deviceSale.php">Device Sale</a></li>
+      <?php if($_SESSION['userType']=='A' || $_SESSION['userType']=='E') { ?>
+        <li><a href="../device/invNo.php">Delete Invoice</a></li>
+      <?php
+      }
+      ?>
     </ul>  
   </div>
 
