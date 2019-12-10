@@ -91,21 +91,15 @@
       <li><a href="../reports/cust_sale_dt.php">Customer Wise Sale</a></li>
       <li><a href="../reports/invoice_dt.php">Date Wise Invoice</a></li>
       <li><a href="../reports/new_device_dt_all.php">Device Ledger</a></li>
+      <li><a href="../reports/new_device_dt.php">Device Ledger Branch</a></li>
       <li><a href="../reports/trf_device_dt.php">Device Transfer</a></li>
     </ul>  
   </div>
   <hr class="new">
-  <?php if($_SESSION['userType']=='A') { ?>
-  <a href="../user/user.php">Add User</a>
-  <?php } ?>
-  <hr class="new">
+  
   <a href="../user/cngPwd.php">Change Password</a>
-  <hr class="new">
   <a href="../dash/logout.php">Logout</a>
 </div>
-
-
-
 <script>
 /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
 var dropdown = document.getElementsByClassName("dropdown-btn");
