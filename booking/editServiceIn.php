@@ -4,7 +4,7 @@
 
 		require("../login/connect.php");
 		require("../login/session.php");
-		require("../dash/menu.php");
+		//require("../dash/menu.php");
 
         if($_SERVER['REQUEST_METHOD']=="GET"){
             $transDt  = $_GET['trans_dt'];
@@ -134,6 +134,9 @@
     <script src="../form/js/select2.js"></script>
     <script src="../form/js/validation.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
 </head>
 
 <div style="min-height: 500px;">
@@ -193,7 +196,7 @@
                                         <label for="cust_cd" class="col-sm-2 col-form-label">Customer:</label>
 
                                         <div class="col-sm-8">
-                                            <Select class="form-control required"
+                                            <Select class="form-control required js-example-basic-single"
                                                     name ="cust_cd"
                                                     id="cust_cd">
                                                 <option value="">Select Customer</option>
@@ -342,3 +345,9 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+    $('.js-example-basic-single').select2();
+});
+</script>

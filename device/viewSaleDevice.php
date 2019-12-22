@@ -10,7 +10,12 @@
 
             $inv_no  =   $_POST['inv_no'];
 
-            $sql    = "select * from td_device_trans where bill_no = '$inv_no'";
+            $sql    = "select a.trans_dt trans_dt,a.trans_no trans_no,
+                              a.bill_no bill_no,a.mc_name mc_name,
+                              a.mc_qty mc_qty,b.cust_name cust_name
+                       from td_device_trans a, md_customers b
+                       where a.cust_cd = b.cust_cd
+                       and   a.bill_no = '$inv_no'";
                         
             $result = mysqli_query($db,$sql);
         }
@@ -56,12 +61,12 @@
     <div class="container-fluid">
         <h2 style="margin-left:60px;text-align:center">Delete Invoice</h2>
         <hr class="new">
-        <div class="card mb-3">
+        <!--<div class="card mb-3">
             <div class="card-header" style="margin-left:60px;">
                 <a class="button" href="../sale/addDeviceSale.php"><i class="fa fa-plus"></i>
                     <span>New</span>
                 </a>
-            </div>
+            </div>-->
             <hr class="new">
                 <div class="card-body">
                     <div class="w3-responsive" style="margin-left:60px;">
@@ -70,6 +75,7 @@
                                 <tr class="w3-light-grey">
                                     <th>Date</th>
                                     <th>Transaction No.</th>
+                                    <th>Name</th>
                                     <th>Invoice No.</th>
                                     <th>Item</th>
                                     <th>Quantity</th>
@@ -93,10 +99,13 @@
                                                 $mcname = $data['mc_name'];
 
                                                 $qty    = $data['mc_qty'];
+
+                                                $cust   = $data['cust_name'];
                                 ?>
                                 <tr>
                                     <td><?php echo $date; ?></td>
                                     <td><?php echo $transNo; ?></td>
+                                    <td><?php echo $cust; ?></td>
                                     <td><?php echo $bill; ?></td>
                                     <td><?php echo $mcname; ?></td>
                                     <td><?php echo abs($qty); ?></td>
@@ -120,6 +129,7 @@
                                 <tr>
                                     <th>Date</th>
                                     <th>Transaction No.</th>
+                                    <th>Name</th>
                                     <th>Invoice No.</th>
                                     <th>Item</th>
                                     <th>Quantity</th>

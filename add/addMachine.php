@@ -4,7 +4,7 @@
 
 		require("../login/connect.php");
 		require("../login/session.php");
-		require("../dash/menu.php");
+		//require("../dash/menu.php");
 
         if($_SERVER['REQUEST_METHOD']=="POST"){
             $mcType   = checkInput($_POST['mc_type']);

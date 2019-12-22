@@ -4,7 +4,7 @@
 
         require("../login/connect.php");
         require("../login/session.php");
-        require("../dash/menu.php");
+        //require("../dash/menu.php");
 
         if($_SERVER['REQUEST_METHOD']=="GET"){
             $slno   = $_GET['mc_id'];

@@ -4,7 +4,7 @@
 
 		require("../login/connect.php");
 		require("../login/session.php");
-		require("../dash/menu.php");
+		//require("../dash/menu.php");
 
         if($_SERVER['REQUEST_METHOD']=="POST"){
             $custName = checkInput($_POST['cust_name']);
@@ -21,8 +21,8 @@
             $result   = mysqli_query($db,$sql);
 
             if($result){
-                $_SESSION['flag'] = true;
-                header("location:customer.php");
+                 $_SESSION['flag'] = true;
+                 header("location:customer.php");
             }
         }
 
