@@ -336,7 +336,7 @@
                                     <th>Kolkata</th>
                                     <th>Siliguri</th>
                                     <th>Accropolis</th>
-                                    <th>Bappa</th>
+                                    <th>Demo</th>
                                     <th>Bangladesh</th>
                                     <th>Darjeeling(CCB)</th>
                                     <th>Total</th>
