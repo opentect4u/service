@@ -92,7 +92,7 @@
                                         <div class="col-sm-6">
                                             <Select class="form-control required"
                                                     name ="item"
-                                                    id="item">
+                                                    id="item" required>
                                                 <option value="">Select Item</option>
                                                 <option value="C">Component</option>
                                                 <option value="N">New Device</option>

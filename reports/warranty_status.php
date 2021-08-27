@@ -11,11 +11,13 @@
             //$item            = $_POST['mc_type'];
             $serial          = $_POST['sl_no'];
 
-            $selectDt = "select max(a.arrival_dt)sale_dt 
+            $selectDt = "select ifnull(max(a.arrival_dt),'1970-01-01')sale_dt 
                          from   td_device_trans a,td_device_amc b
                          where  a.trans_dt = b.trans_dt
                          and    a.trans_no = b.trans_no
                          and    b.sl_no    = '$serial'";
+
+            //echo $selectDt;die;
 
             $resultDt = mysqli_query($db,$selectDt);
 
@@ -23,43 +25,52 @@
 
 
             $slDate     = $dataDt['sale_dt'];
+
+
+            if($slDate != '1970-01-01'){
             
 
-            $select = "select a.cust_cd cust_cd,a.bill_no bill_no,
-                              a.mc_version version,a.warranty_period period,
-                              b.amc_from amc_from,b.amc_to amc_to,b.mc_type mc_type
-                       from   td_device_trans a,td_device_amc b
-                       where  a.trans_dt = b.trans_dt
-                       and    a.trans_no = b.trans_no
-                       and    b.sl_no    = '$serial'
-                       and    a.arrival_dt = '$slDate'";
+                $select = "select a.cust_cd cust_cd,a.bill_no bill_no,
+                                a.mc_version version,a.warranty_period period,
+                                b.amc_from amc_from,b.amc_to amc_to,b.mc_type mc_type
+                        from   td_device_trans a,td_device_amc b
+                        where  a.trans_dt = b.trans_dt
+                        and    a.trans_no = b.trans_no
+                        and    b.sl_no    = '$serial'
+                        and    a.arrival_dt = '$slDate'";
 
-            $result = mysqli_query($db,$select);
+                $result = mysqli_query($db,$select);
 
-            $data   = mysqli_fetch_assoc($result);
+                $data   = mysqli_fetch_assoc($result);
 
-            $custCd     = $data['cust_cd'];
-            $version    = $data['version'];
-            $invNo      = $data['bill_no'];
+                $custCd     = $data['cust_cd'];
+                $version    = $data['version'];
+                $invNo      = $data['bill_no'];
             
-            $frmDate    = $data['amc_from'];
-            $toDate     = $data['amc_to'];
-            $item       = $data['mc_type'];
+                $frmDate    = $data['amc_from'];
+                $toDate     = $data['amc_to'];
+                $item       = $data['mc_type'];
             
-            $sql        = "select cust_cd,cust_name from md_customers where cust_cd = $custCd";
-            $result     = mysqli_query($db,$sql);
-            $row        = mysqli_fetch_assoc($result);
-            $custName   = $row['cust_name'];
+                $sql        = "select cust_cd,cust_name from md_customers where cust_cd = $custCd";
+                $result     = mysqli_query($db,$sql);
+                $row        = mysqli_fetch_assoc($result);
+                $custName   = $row['cust_name'];
 
-            $sql1       = "select mc_id,mc_type from md_mc_type where mc_id = $item";
-            $result1    = mysqli_query($db,$sql1);
-            $row1       = mysqli_fetch_assoc($result1);
-            $itemName   = $row1['mc_type'];
+                $sql1       = "select mc_id,mc_type from md_mc_type where mc_id = $item";
+                $result1    = mysqli_query($db,$sql1);
+                $row1       = mysqli_fetch_assoc($result1);
+                $itemName   = $row1['mc_type'];
 
-            $sql2       = "select sl_no,version_name from md_version where sl_no = $version";
-            $result2    = mysqli_query($db,$sql2);
-            $row2       = mysqli_fetch_assoc($result2);
-            $verName    = $row2['version_name'];
+                $sql2       = "select sl_no,version_name from md_version where sl_no = $version";
+                $result2    = mysqli_query($db,$sql2);
+                $row2       = mysqli_fetch_assoc($result2);
+                $verName    = $row2['version_name'];
+            }else{
+
+                echo "<h1 style='text-align:center'>Record Not Found!</h1>";
+                die;
+
+            }
 
         }
 ?>

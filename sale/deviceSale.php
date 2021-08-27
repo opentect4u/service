@@ -14,7 +14,7 @@
         $sql    = "select distinct trans_dt,trans_no,bill_no,arrival_dt,mc_name,abs(mc_qty)mc_qty
                    from   td_device_trans 
                    where  approval_status = 'U'
-                   and    trans_dt = CURDATE()
+                   and trans_dt >= DATE(CURDATE()) - INTERVAL 7 DAY
                    and trans_type = 'S'
                    or     bill_no  = 1
                    order by trans_dt";
